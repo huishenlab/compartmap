@@ -1,3 +1,7 @@
+## 1.9.3
+
+* add support for BSgenome for genome parameter.
+
 ## compartmap 1.0.2
 
 * Modified the overall smoothing parameters for (sc)ATAC-seq compartments from k=5 to k=2 (corresponds to 5 bin smoothing)

@@ -9,10 +9,10 @@
 #' @export
 #'
 #' @examples
-#' 
+#'
 #' dummy <- matrix(rnorm(10000), ncol=25)
 #' sing_vec <- getSVD(dummy, k = 1, sing.vec = "right")
-#' 
+#'
 extractOpenClosed <- function(gr, cutoff = 0,
                               assay = c("rna", "atac")){
   #check for input to be GRanges
@@ -64,24 +64,24 @@ getAssayNames <- function(se) {
 #' @examples
 #'
 #'   p <- runif(n=1000)
-#'   summary(p) 
-#' 
+#'   summary(p)
+#'
 #'   sqz <- 1 / (10**6)
 #'   x <- flogit(p, sqz=sqz)
-#'   summary(x) 
+#'   summary(x)
 #'
 #'   all( abs(p - fexpit(x, sqz=sqz)) < sqz )
-#'   all( abs(p - fexpit(flogit(p, sqz=sqz), sqz=sqz)) < sqz ) 
+#'   all( abs(p - fexpit(flogit(p, sqz=sqz), sqz=sqz)) < sqz )
 #'
-#' @export 
-flogit <- function(p, sqz=0.000001) { 
+#' @export
+flogit <- function(p, sqz=0.000001) {
 
   midpt <- 0.5
   deflate <- 1 - (sqz * midpt)
   if (any(p > 1 | p < 0, na.rm = TRUE)) stop("Values of p outside (0,1) detected.")
   squoze <- ((p - midpt) * deflate) + midpt
   return( log( squoze / (1 - squoze)) )
-  
+
 }
 
 #' Helper function: expanded expit
@@ -94,7 +94,7 @@ flogit <- function(p, sqz=0.000001) {
 #' @examples
 #'
 #'   x <- rnorm(n=1000)
-#'   summary(x) 
+#'   summary(x)
 #'
 #'   sqz <- 1 / (10**6)
 #'   p <- fexpit(x, sqz=sqz)
@@ -103,13 +103,13 @@ flogit <- function(p, sqz=0.000001) {
 #'   all( (abs(x - flogit(p)) / x) < sqz )
 #'   all( abs(x - flogit(fexpit(x))) < sqz )
 #'
-#' @export 
+#' @export
 fexpit <- function(x, sqz=0.000001) {
 
   midpt <- .5
   squoze <- exp(x)/(1 + exp(x))
   inflate <- 1 / (1 - (sqz * midpt))
-  p <- ((squoze - midpt) * inflate) + midpt 
+  p <- ((squoze - midpt) * inflate) + midpt
   return(p)
 
 }
@@ -124,7 +124,7 @@ fexpit <- function(x, sqz=0.000001) {
 #' @examples
 #' data("k562_scrna_chr14", package = "compartmap")
 #' getChrs(k562_scrna_chr14)
-#' 
+#'
 #' @export
 getChrs <- function(obj) {
   #get the chromosomes present in the object
@@ -147,7 +147,7 @@ removeEmptyBoots <- function(obj) {
 }
 
 #' Get the seqlengths of a chromosome
-#' 
+#'
 #' The goal for this function is to eliminate the need to lug around
 #' large packages when we only want seqlengths for things.
 #'
@@ -163,6 +163,9 @@ removeEmptyBoots <- function(obj) {
 #' @export
 getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
                           chr = "chr14") {
+  if(is(genome[1], "BSgenome")){
+    return(seqlengths(genome[1])[chr])
+  }
   #eventually we should support arbitrary genomes
   genome <- match.arg(genome)
   #check if the genome used exists in what is currently supported, stopping if not
@@ -179,9 +182,9 @@ getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
   sl <- seqlengths(get(genome.gr))[chr]
   return(sl)
 }
-  
-#' Get chunked sets of row-wise or column-wise indices of a matrix 
-#' 
+
+#' Get chunked sets of row-wise or column-wise indices of a matrix
+#'
 #' @name getMatrixBlocks
 #'
 #' @param mat Input matrix
@@ -198,7 +201,7 @@ getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
 #' n <- 1000
 #' mat <- round(matrix(runif(m*n), m, n))
 #' mat.sparse <- Matrix(mat, sparse = TRUE)
-#' 
+#'
 #' #get row-wise chunks of 10
 #' chunks <- getMatrixBlocks(mat.sparse, chunk.size = 10)
 #'
@@ -210,14 +213,14 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5,
     message("Breaking into row chunks.")
     return(split(1:nrow(mat), ceiling(seq_along(1:nrow(mat))/chunk.size)))
   }
-  
+
   #assumes column-wise chunking
   message("Breaking into column chunks.")
   return(split(1:ncol(mat), ceiling(seq_along(1:ncol(mat))/chunk.size)))
 }
 
-#' Convert a sparse matrix to a dense matrix in a block-wise fashion 
-#' 
+#' Convert a sparse matrix to a dense matrix in a block-wise fashion
+#'
 #' @name sparseToDenseMatrix
 #'
 #' @param mat Input sparse matrix
@@ -229,11 +232,11 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5,
 #' @param cores The number of cores to use in the parallel coercion
 #'
 #' @return A dense matrix of the same dimensions as the input
-#' 
+#'
 #' @import Matrix
 #' @import parallel
-#' 
-#' 
+#'
+#'
 #' @examples
 #' #make a sparse binary matrix
 #' library(Matrix)
@@ -241,54 +244,54 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5,
 #' n <- 1000
 #' mat <- round(matrix(runif(m*n), m, n))
 #' mat.sparse <- Matrix(mat, sparse = TRUE)
-#' 
+#'
 #' #coerce back
 #' mat.dense <- sparseToDenseMatrix(mat.sparse, chunk.size = 10)
-#' 
+#'
 #' #make sure they are the same dimensions
 #' dim(mat) == dim(mat.dense)
-#' 
+#'
 #' #make sure they are the same numerically
 #' all(mat == mat.dense)
 #'
-#' @export 
+#' @export
 sparseToDenseMatrix <- function(mat, blockwise = TRUE,
                                 by.row = TRUE, by.col = FALSE,
                                 chunk.size = 1e5, parallel = FALSE,
                                 cores = 2) {
   if (isFALSE(blockwise)) return(as(mat, "matrix"))
-  
+
   #do block-wise reconstruction of matrix
   chunks <- getMatrixBlocks(mat, chunk.size = chunk.size,
                             by.row = by.row, by.col = by.col)
-  
+
   if (by.row & parallel) {
     return(do.call("rbind", mclapply(chunks, function(r) {
       return(as(mat[r,], "matrix"))
     }, mc.cores = cores)))
   }
-  
+
   if (by.row & !parallel) {
     return(do.call("rbind", lapply(chunks, function(r) {
       return(as(mat[r,], "matrix"))
     })))
   }
-  
+
   #assumes column-wise conversion
   if (by.col & parallel) {
     return(do.call("cbind", mclapply(chunks, function(r) {
       return(as(mat[,r], "matrix"))
     }, mc.cores = cores)))
   }
-  
+
   return(do.call("cbind", lapply(chunks, function(r) {
     return(as(mat[,r], "matrix"))
   })))
-  
-}  
+
+}
 
 #' Import and optionally summarize a bigwig at a given resolution
-#' 
+#'
 #' @name importBigWig
 #'
 #' @param bw Path a bigwig file
@@ -297,10 +300,10 @@ sparseToDenseMatrix <- function(mat, blockwise = TRUE,
 #' @param genome Which genome is the bigwig from ("hg19", "hg38", "mm9", "mm10")
 #'
 #' @return SummerizedExperiment object with rowRanges corresponding to summarized features
-#' 
+#'
 #' @import SummarizedExperiment
 #' @import GenomicRanges
-#' 
+#'
 #' @export
 
 importBigWig <- function(bw, bins = NULL, summarize = FALSE,
@@ -315,12 +318,19 @@ importBigWig <- function(bw, bins = NULL, summarize = FALSE,
   #it is now a GRanges object
   if (any(is.na(seqlengths(bw.raw)))) stop("Imported bigwig does not have seqlengths")
   ## only supporting human and mouse for now
-  if (genome %in% c("hg19", "hg38")) {
+  if (is(genome, "BSgenome")){
+    species <- gsub(" ", "_", organism(genome))
+  }else if (genome %in% c("hg19", "hg38")) {
     species <- "Homo_sapiens"
   } else {
     species <- "Mus_musculus"
   }
-  bw.sub <- keepStandardChromosomes(bw.raw, species = species, pruning.mode = "coarse")
+  if(species %in% names(genomeStyles())){
+    bw.sub <- keepStandardChromosomes(bw.raw, species = species, pruning.mode = "coarse")
+  }else{
+    bw.sub <- keepStandardChromosomes(bw.raw, pruning.mode = "coarse")
+  }
+
   if (!is.null(bins)) {
     bins <- keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
   }
