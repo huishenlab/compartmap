@@ -151,11 +151,13 @@ removeEmptyBoots <- function(obj) {
 #' The goal for this function is to eliminate the need to lug around
 #' large packages when we only want seqlengths for things.
 #'
-#' @param genome The desired genome to use ("hg19", "hg38", "mm9", "mm10")
+#' @param genome The desired genome to use ("hg19", "hg38", "mm9", "mm10") or 
+#' an object of BSgenome or TxDb
 #' @param chr What chromosome to extract the seqlengths of
 #'
 #' @return The seqlengths of a specific chromosome
 #' @import GenomicRanges
+#' @importFrom GenomeInfoDb seqlengths
 #'
 #' @examples
 #' hg19.chr14.seqlengths <- getSeqLengths(genome = "hg19", chr = "chr14")
@@ -163,7 +165,7 @@ removeEmptyBoots <- function(obj) {
 #' @export
 getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
                           chr = "chr14") {
-  if(is(genome[1], "BSgenome")){
+  if(inherits(genome[1], c("BSgenome", "TxDb"))){
     return(seqlengths(genome[1])[chr])
   }
   #eventually we should support arbitrary genomes
@@ -177,7 +179,7 @@ getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
                       mm9 = data("mm9.gr", package = "compartmap"),
                       mm10 = data("mm10.gr", package = "compartmap"))
   #make sure that the chromosome specified exists in the seqlevels
-  if (!chr %in% seqlevels(get(genome.gr))) stop("Desired chromosome is not found in the seqlevels of ", genome)
+  if (any(!chr %in% seqlevels(get(genome.gr)))) stop("Desired chromosome is not found in the seqlevels of ", genome)
   #get the seqlengths
   sl <- seqlengths(get(genome.gr))[chr]
   return(sl)
@@ -303,6 +305,7 @@ sparseToDenseMatrix <- function(mat, blockwise = TRUE,
 #'
 #' @import SummarizedExperiment
 #' @import GenomicRanges
+#' @importFrom GenomeInfoDb keepSeqlevels organism
 #'
 #' @export
 
@@ -318,7 +321,7 @@ importBigWig <- function(bw, bins = NULL, summarize = FALSE,
   #it is now a GRanges object
   if (any(is.na(seqlengths(bw.raw)))) stop("Imported bigwig does not have seqlengths")
   ## only supporting human and mouse for now
-  if (is(genome, "BSgenome")){
+  if (inherits(genome, c("BSgenome", "TxDb"))){
     species <- gsub(" ", "_", organism(genome))
   }else if (genome %in% c("hg19", "hg38")) {
     species <- "Homo_sapiens"

@@ -27,6 +27,7 @@ Depends:
    HDF5Array
 Imports: 
    GenomicRanges,
+   GenomeInfoDb,
    parallel,
    grid,
    ggplot2,
@@ -36,14 +37,17 @@ Imports:
    rtracklayer,
    DelayedMatrixStats,
    Matrix,
-   RMTstat
+   RMTstat,
+   csaw
 Suggests:
    covr,
    testthat,
    knitr,
    Rcpp,
    rmarkdown,
-   markdown
+   markdown,
+   BSgenome.Hsapiens.UCSC.hg19,
+   TxDb.Hsapiens.UCSC.hg19.knownGene
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

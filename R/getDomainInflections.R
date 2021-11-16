@@ -27,17 +27,8 @@ getDomainInflections <- function(gr, what = "score", res = 1e6,
   stopifnot(is(gr, "GenomicRanges"))
   stopifnot(what %in% names(mcols(gr)))
   #determine which genome we are working with
-  if(is(genome[1], "BSgenome")){
-    seqlengths <- seqlengths(genome)[chrs]
-  }else{
-    genome <- match.arg(genome)
-    genome <- switch(genome,
-                     hg19=data("hg19.gr", package = "compartmap"),
-                     hg38=data("hg38.gr", package = "compartmap"),
-                     mm9=data("mm9.gr", package = "compartmap"),
-                     mm10=data("mm10.gr", package = "compartmap"))
-    seqlengths <- seqlengths(get(genome))[chrs]
-  }
+  seqlengths <- getSeqLengths(genome = genome, chr = chrs)
+  
   #we may not be able to assume continuous compartment structure here
   #so somehow, we need to find continuous runs
   message("Tiling genome.")

@@ -12,7 +12,8 @@
 #' @param chr.end    End position (in bp) to be analyzed
 #' @param res    Binning resolution (in bp)
 #' @param FUN    Function to be used to summarize information within a bin
-#' @param genome    Genome corresponding to the input data ("hg19", "hg38", "mm9", "mm10")
+#' @param genome    Genome corresponding to the input data ("hg19", "hg38", "mm9", "mm10") or 
+#' an object of BSgenome or TxDb
 #'
 #' @return    A list object to pass to getCorMatrix
 #'
@@ -52,24 +53,8 @@ getBinMatrix <- function(x, genloc, chr = "chr1", chr.start = 0,
     stop("Provided GRanges must have length equal to the matrix number of rows")
   }
 
-  #which genome do we have
-  genome <- genome[1] #match.arg(genome)
-
   if (is.null(chr.end)) {
-    if(is(genome[1], "BSgenome")) chr.end <- getSeqLengths(genome, chr=chr)
-    else{
-      if (genome %in% c("hg19", "hg38", "mm9", "mm10")) {
-        chr.end <- switch(genome,
-                          hg19 = getSeqLengths(genome = "hg19", chr = chr),
-                          hg38 = getSeqLengths(genome = "hg38", chr = chr),
-                          mm9 = getSeqLengths(genome = "mm9", chr = chr),
-                          mm10 = getSeqLengths(genome = "mm10", chr = chr))
-      }
-      else {
-        message("Don't know what to do with ", genome)
-        stop("If you'd like to use an unsupported genome, specify chr.end to an appropriate value...")
-      }
-    }
+    chr.end <- getSeqLengths(genome = genome, chr = chr)
   }
   start <- seq(chr.start, chr.end, res) #Build the possible bin ranges given resolution
   end <- c(start[-1], chr.end) - 1L #Set the end ranges for desired resolution

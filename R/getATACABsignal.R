@@ -11,7 +11,8 @@
 #' @param cores How many cores to use when running samples in parallel
 #' @param bootstrap Whether we should perform bootstrapping of inferred compartments
 #' @param num.bootstraps How many bootstraps to run
-#' @param genome What genome to work on ("hg19", "hg38", "mm9", "mm10")
+#' @param genome What genome to work on ("hg19", "hg38", "mm9", "mm10") or 
+#' an object of BSgenome or TxDb
 #' @param other Another arbitrary genome to compute compartments on
 #' @param group Whether to treat this as a group set of samples
 #' @param boot.parallel Whether to run the bootstrapping in parallel
