@@ -25,8 +25,8 @@ Transform/normalize compartment calls using TF-IDF on HDF5-backed objects
 
 m <- 1000
 n <- 100
-mat <- round(matrix(runif(m*n), m, n))
-#Input needs to be a tall matrix
+mat <- round(matrix(runif(m * n), m, n))
+# Input needs to be a tall matrix
 tfidf <- hdf5TFIDF(mat)
 
 }

@@ -20,15 +20,15 @@ This function returns the inverse (squeezed) Fisher's Z transformed Pearson's r
 }
 \examples{
 
-#Generate a random binary (-1, 1) matrix
-mat <- matrix(sample(c(1,-1), 10000, replace = TRUE), ncol = 100)
+# Generate a random binary (-1, 1) matrix
+mat <- matrix(sample(c(1, -1), 10000, replace = TRUE), ncol = 100)
 
-#Correct matrix diag
+# Correct matrix diag
 diag(mat) <- 1
 
-#Transform
+# Transform
 mat.transform <- fisherZ(mat)
 
-#Back transform
+# Back transform
 mat.transform.inverse <- apply(mat.transform, 1, ifisherZ)
 }

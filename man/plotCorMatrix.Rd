@@ -30,7 +30,7 @@ Either a ggplot object or plot
 Plot a denoised correlation matrix
 }
 \examples{
-dummy <- matrix(rnorm(10000), ncol=25)
+dummy <- matrix(rnorm(10000), ncol = 25)
 set.seed(1000)
 my_plot <- plotCorMatrix(dummy, return.plot.obj = TRUE)
 }

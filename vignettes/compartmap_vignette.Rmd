@@ -38,44 +38,45 @@ library(compartmap)
 # They have already been TF-IDF transformed with transformTFIDF()
 # See the full workflow below for more details
 data("k562_scrna_chr14", package = "compartmap")
-
 ```
 
 ### Inferring higher-order chromatin domains at the group and single-cell level
 
 ```{r processData, message=FALSE}
-
 #### Group level inference ####
-#Process chr14 of the example K562 scRNA-seq data and infer higher-order chromatin at 1Mb resolution
+# Process chr14 of the example K562 scRNA-seq data and infer higher-order chromatin at 1Mb resolution
 k562_compartments <- scCompartments(k562_scrna_chr14,
-                                    chr = "chr14",
-                                    res = 1e6,
-                                    group = TRUE,
-                                    bootstrap = FALSE,
-                                    genome = "hg19",
-                                    assay = "rna")
+  chr = "chr14",
+  res = 1e6,
+  group = TRUE,
+  bootstrap = FALSE,
+  genome = "hg19",
+  assay = "rna"
+)
 
 #### Single-cell level inference ####
 # To infer higher-order domains in single cells and quantifying sign coherence with the bootstrapping procedure, you can run:
 # Sub-sample to 10 cells as an example
-k562_scrna_chr14.sub <- k562_scrna_chr14[,sample(colnames(k562_scrna_chr14),
-                                                 size = 10, replace = FALSE)]
+k562_scrna_chr14.sub <- k562_scrna_chr14[, sample(colnames(k562_scrna_chr14),
+  size = 10, replace = FALSE
+)]
 k562_compartments.boot <- scCompartments(k562_scrna_chr14.sub,
-                                         chr = "chr14",
-                                         res = 1e6,
-                                         group = FALSE,
-                                         bootstrap = TRUE,
-                                         num.bootstraps = 10,
-                                         genome = "hg19",
-                                         assay = "rna")
+  chr = "chr14",
+  res = 1e6,
+  group = FALSE,
+  bootstrap = TRUE,
+  num.bootstraps = 10,
+  genome = "hg19",
+  assay = "rna"
+)
 
 # Flip the domain sign if the sign coherence is discordant in 80% of the bootstraps
 k562_compartments.boot.fix <- fixCompartments(k562_compartments.boot,
-                                              min.conf = 0.8)
+  min.conf = 0.8
+)
 
 # Look at the first cell in the GRangesList object
 k562_compartments.boot.fix[[1]]
-
 ```
 
 ### Visualization of inferred chromatin domains
@@ -83,11 +84,12 @@ k562_compartments.boot.fix[[1]]
 Once the data have been processed at either the group or single-cell level, one can visualize the results using the `plotAB` function in compartmap. Notably, we can include the confidence intervals and median, chromosome-wide confidence estimate derived from the bootstrap procedure for sign coherence. At 50%, this suggests that estimates are evenly split between open and closed states. This may be due to data sparsity or heterogeneity in the data. One possible approach to resolve this is to increase the number of bootstraps performed if initially set low (e.g. 10). Alternatively, it may be a region that is worth investigating for your data set.
 
 ```{r postprocessPlot, warning=FALSE}
-
 # Plot the "fixed" results in cell 1 from above with plotAB
 # Include the confidence intervals and median confidence estimate
-plotAB(k562_compartments.boot.fix[[1]], chr = "chr14",
-       what = "flip.score", with.ci = TRUE, median.conf = TRUE)
+plotAB(k562_compartments.boot.fix[[1]],
+  chr = "chr14",
+  what = "flip.score", with.ci = TRUE, median.conf = TRUE
+)
 
 # It is known that sometimes, the domains may be inverted relative to orthogonal data
 # This is also true in Hi-C and scHi-C domain inference
@@ -96,25 +98,22 @@ plotAB(k562_compartments.boot.fix[[1]], chr = "chr14",
 # plotAB(k562_compartments.boot.fix[[1]], chr = "chr14",
 #        what = "flip.score", with.ci = TRUE, median.conf = TRUE,
 #        reverse = TRUE)
-
-
 ```
 ### Extraction of domain inflections
 
 It is often of interest to extract the chromatin domain inflection points as they transition from "open" to "closed" states to look for nearby CTCF sites, etc. We can accomplish this task using the `getDomainInflections` function in compartmap.
 
 ```{r postprocessInflections, message=FALSE, warning=FALSE}
-
 # Extract single-cell domain inflections
 # Domain inflections can be used to look for nearby CTCF sites, etc.
 k562_cell_1_inflections <- getDomainInflections(k562_compartments.boot.fix[[1]],
-                                                what = "flip.score",
-                                                res = 1e6,
-                                                chrs = "chr14",
-                                                genome = "hg19")
+  what = "flip.score",
+  res = 1e6,
+  chrs = "chr14",
+  genome = "hg19"
+)
 # Show the inflection points
 k562_cell_1_inflections
-
 ```
 
 ## Importing bigWigs as input to compartmap
@@ -122,29 +121,32 @@ k562_cell_1_inflections
 The currently recommended input files to compartmap for scRNA-seq are single-cell bigWigs, though does work with a feature/counts based object as demonstrated in the next section. Single-cell bigWigs can be generated through several tools, such as deeptools (https://deeptools.readthedocs.io/en/latest/). To import bigWigs, we can use the `importBigWig` function in compartmap. This will read in a bigWig file and optionally summarize to an arbitrary bin size. The bin size used in the compartmap manuscript was 1kb and is what we do here as well.
 
 ```{r importbw, eval=FALSE}
-
 # We can import a list of bigWig files and merge them into a RangedSummarizedExperiment object
 
 # list the example bigWigs
 bigwigs <- list.files(system.file("extdata", package = "compartmap"),
-                      full.names = TRUE)
+  full.names = TRUE
+)
 
 # generate the 1kb bins
 data("hg19.gr", package = "compartmap")
-kb_bins <- tileGenome(seqlengths = seqlengths(hg19.gr)["chr14"],
-                      tilewidth = 1000,
-                      cut.last.tile.in.chrom = TRUE)
+kb_bins <- tileGenome(
+  seqlengths = seqlengths(hg19.gr)["chr14"],
+  tilewidth = 1000,
+  cut.last.tile.in.chrom = TRUE
+)
 
 # import
 bigwigs_lst <- lapply(bigwigs, function(x) {
-  importBigWig(x, bins = kb_bins,
-               summarize = TRUE, genome = "hg19")
+  importBigWig(x,
+    bins = kb_bins,
+    summarize = TRUE, genome = "hg19"
+  )
 })
 
 # combine
 bigwig_rse <- do.call(cbind, bigwigs_lst)
 colnames(bigwig_rse) <- c("cell_1", "cell_2")
-
 ```
 
 ## Starting with a feature or counts-based object
@@ -152,7 +154,6 @@ colnames(bigwig_rse) <- c("cell_1", "cell_2")
 In the cases where we do not have or can't start with bigWigs (e.g. scATAC), we can start with a feature-level or counts object (e.g. `SingleCellExperiment`). The two things that must be there are making sure `rowRanges` and `colnames` are set for each feature and cell/sample. We will use the scATAC-seq from K562 as an example of how the object should look, but will also show one way to add `rowRanges` to a `SingleCellExperiment`, which works the same way for a `SummarizedExperiment` object.
 
 ```{r processCounts, warnings=FALSE, message=FALSE}
-
 # load the scATAC-seq example
 # these data were pre-processed using the csaw package
 data("k562_scatac_chr14", package = "compartmap")
@@ -160,7 +161,6 @@ data("k562_scatac_chr14", package = "compartmap")
 # show the overall object structure
 # NOTE that the colnames are also there and the assay name is 'counts'
 k562_scatac_chr14
-
 ```
 
 Showing the `rowRanges` slot is a `GRanges` for each feature
@@ -172,13 +172,12 @@ rowRanges(k562_scatac_chr14)
 But if we don't have `rowRanges` for something like a `SingleCellExperiment` we are working with, we need to generate them. Thus, we will show an example of how to add `rowRanges` from a GTF file to a `SingleCellExperiment`.
 
 ```{r addrr, eval=FALSE}
-
 # define a helper function for adding rowRanges
 # modified from https://github.com/trichelab/velocessor/blob/master/R/import_plate_txis.R
 # NOTE that you can modify the rtracklayer::import to not subset to gene level
 # if using feature level information (e.g. a bed file of fragments for scATAC)
-getRowRanges <- function(gtf, asys) { 
-  gxs <- subset(rtracklayer::import(gtf), type=="gene")
+getRowRanges <- function(gtf, asys) {
+  gxs <- subset(rtracklayer::import(gtf), type == "gene")
   names(gxs) <- gxs$gene_id
   granges(gxs)[rownames(asys)]
 }
@@ -187,15 +186,17 @@ getRowRanges <- function(gtf, asys) {
 data("ss3_umi_sce", package = "compartmap")
 
 # import the example GTF with the helper function
-gtf_rowranges <- getRowRanges(system.file("extdata/grch38_91_hsapiens.gtf.gz",
-                                          package = "compartmap"),
-                              ss3_umi_sce)
+gtf_rowranges <- getRowRanges(
+  system.file("extdata/grch38_91_hsapiens.gtf.gz",
+    package = "compartmap"
+  ),
+  ss3_umi_sce
+)
 
 # add rowRanges to the SingleCellExperiment
 rowRanges(ss3_umi_sce) <- gtf_rowranges
 
 # we can now proceed to the next steps and run the compartmap workflow
-
 ```
 
 ## Running the compartmap workflow
@@ -203,7 +204,6 @@ rowRanges(ss3_umi_sce) <- gtf_rowranges
 Once we have data in a `RangedSummarizedExperiment` or other type of `SummarizedExperiment` with the `rowRanges` slot filled, we can proceed through the compartmap workflow. We will use the same K562 scRNA-seq data shown in the manuscript on chromosome 14 here as the example.
 
 ```{r workflow, message=FALSE, warning=FALSE}
-
 # Load example K562 data imported using importBigWig
 data("k562_scrna_raw", package = "compartmap")
 
@@ -215,13 +215,14 @@ assay(k562_scrna_se_chr14, "counts") <- t(k562_scrna_chr14_tfidf)
 
 # Compute chromatin domains at the group level
 k562_scrna_chr14_raw_domains <- scCompartments(k562_scrna_se_chr14,
-                                               chr = "chr14",
-                                               res = 1e6,
-                                               group = TRUE,
-                                               bootstrap = TRUE,
-                                               num.bootstraps = 10,
-                                               genome = "hg19",
-                                               assay = "rna")
+  chr = "chr14",
+  res = 1e6,
+  group = TRUE,
+  bootstrap = TRUE,
+  num.bootstraps = 10,
+  genome = "hg19",
+  assay = "rna"
+)
 
 # For single-cells, run the following
 # k562_scrna_chr14_raw_domains <- scCompartments(k562_scrna_se_chr14,
@@ -238,10 +239,11 @@ k562_scrna_chr14_raw_domains.fix <- fixCompartments(k562_scrna_chr14_raw_domains
 
 # Plot results
 plotAB(k562_scrna_chr14_raw_domains.fix,
-       chr = "chr14",
-       what = "flip.score",
-       with.ci = TRUE,
-       median.conf = TRUE)
+  chr = "chr14",
+  what = "flip.score",
+  with.ci = TRUE,
+  median.conf = TRUE
+)
 ```
 
 ## Higher-order chromatin interaction maps
@@ -249,17 +251,17 @@ plotAB(k562_scrna_chr14_raw_domains.fix,
 Another interesting aspect we can derive from scRNA and scATAC is the higher-order interacting domains through denoising of the correlation matrices using a Random Matrix Theory approach. This is often represented with the "plaid-like" patterning shown in Hi-C and scHi-C approaches where stronger correlations (e.g. greater intensity of red) indicates interacting domains relative to lesser correlation. We can do something similar here.
 
 ```{r denoisermt, fig.height=4}
-
 # Iterative denoising using Random Matrix Theory approach
 k562_scrna_chr14_rmt <- getDenoisedCorMatrix(k562_scrna_chr14,
-                                             res = 1e6,
-                                             chr = "chr14",
-                                             genome = "hg19",
-                                             assay = "rna",
-                                             iter = 2)
+  res = 1e6,
+  chr = "chr14",
+  genome = "hg19",
+  assay = "rna",
+  iter = 2
+)
 
 # Plot the interaction map
 plotCorMatrix(k562_scrna_chr14_rmt,
-              uppertri = TRUE)
-
+  uppertri = TRUE
+)
 ```

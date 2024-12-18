@@ -9,18 +9,22 @@
 #' @export
 #'
 #' @examples
-#' 
-#' dummy <- matrix(rnorm(10000), ncol=25)
+#'
+#' dummy <- matrix(rnorm(10000), ncol = 25)
 #' sing_vec <- getSVD(dummy, k = 1, sing.vec = "right")
-#' 
+#'
 extractOpenClosed <- function(gr, cutoff = 0,
-                              assay = c("rna", "atac", "array")){
-  #check for input to be GRanges
+                              assay = c("rna", "atac", "array")) {
+  # check for input to be GRanges
   if (!is(gr, "GRanges")) stop("Input needs to be a GRanges.")
   if (!("pc" %in% names(mcols(gr)))) stop("Need to have an mcols column be named 'pc'.")
   assay <- match.arg(assay)
-  if (assay %in% c("atac", "rna")) return(ifelse(gr$pc < cutoff, "closed", "open"))
-  if (assay %in% c("array")) return(ifelse(gr$pc < cutoff, "open", "closed"))
+  if (assay %in% c("atac", "rna")) {
+    return(ifelse(gr$pc < cutoff, "closed", "open"))
+  }
+  if (assay %in% c("array")) {
+    return(ifelse(gr$pc < cutoff, "open", "closed"))
+  }
 }
 
 #' Check if the assay is a SummarizedExperiment
@@ -33,9 +37,8 @@ extractOpenClosed <- function(gr, cutoff = 0,
 #' @examples
 #' data("k562_scrna_chr14", package = "compartmap")
 #' checkAssayType(k562_scrna_chr14)
-
 checkAssayType <- function(obj) {
-  #helper function to check the class of an object
+  # helper function to check the class of an object
   is(obj, "SummarizedExperiment")
 }
 
@@ -49,9 +52,8 @@ checkAssayType <- function(obj) {
 #' @examples
 #' data("k562_scrna_chr14", package = "compartmap")
 #' getAssayNames(k562_scrna_chr14)
-
 getAssayNames <- function(se) {
-  #helper function to check the assay slot names
+  # helper function to check the assay slot names
   names(assays(se))
 }
 
@@ -64,25 +66,23 @@ getAssayNames <- function(se) {
 #'
 #' @examples
 #'
-#'   p <- runif(n=1000)
-#'   summary(p) 
-#' 
-#'   sqz <- 1 / (10**6)
-#'   x <- flogit(p, sqz=sqz)
-#'   summary(x) 
+#' p <- runif(n = 1000)
+#' summary(p)
 #'
-#'   all( abs(p - fexpit(x, sqz=sqz)) < sqz )
-#'   all( abs(p - fexpit(flogit(p, sqz=sqz), sqz=sqz)) < sqz ) 
+#' sqz <- 1 / (10**6)
+#' x <- flogit(p, sqz = sqz)
+#' summary(x)
 #'
-#' @export 
-flogit <- function(p, sqz=0.000001) { 
-
+#' all(abs(p - fexpit(x, sqz = sqz)) < sqz)
+#' all(abs(p - fexpit(flogit(p, sqz = sqz), sqz = sqz)) < sqz)
+#'
+#' @export
+flogit <- function(p, sqz = 0.000001) {
   midpt <- 0.5
   deflate <- 1 - (sqz * midpt)
   if (any(p > 1 | p < 0, na.rm = TRUE)) stop("Values of p outside (0,1) detected.")
   squoze <- ((p - midpt) * deflate) + midpt
-  return( log( squoze / (1 - squoze)) )
-  
+  return(log(squoze / (1 - squoze)))
 }
 
 #' Helper function: expanded expit
@@ -94,25 +94,23 @@ flogit <- function(p, sqz=0.000001) {
 #'
 #' @examples
 #'
-#'   x <- rnorm(n=1000)
-#'   summary(x) 
+#' x <- rnorm(n = 1000)
+#' summary(x)
 #'
-#'   sqz <- 1 / (10**6)
-#'   p <- fexpit(x, sqz=sqz)
-#'   summary(p)
+#' sqz <- 1 / (10**6)
+#' p <- fexpit(x, sqz = sqz)
+#' summary(p)
 #'
-#'   all( (abs(x - flogit(p)) / x) < sqz )
-#'   all( abs(x - flogit(fexpit(x))) < sqz )
+#' all((abs(x - flogit(p)) / x) < sqz)
+#' all(abs(x - flogit(fexpit(x))) < sqz)
 #'
-#' @export 
-fexpit <- function(x, sqz=0.000001) {
-
+#' @export
+fexpit <- function(x, sqz = 0.000001) {
   midpt <- .5
-  squoze <- exp(x)/(1 + exp(x))
+  squoze <- exp(x) / (1 + exp(x))
   inflate <- 1 / (1 - (sqz * midpt))
-  p <- ((squoze - midpt) * inflate) + midpt 
+  p <- ((squoze - midpt) * inflate) + midpt
   return(p)
-
 }
 
 #' Get the chromosomes from an object
@@ -125,10 +123,10 @@ fexpit <- function(x, sqz=0.000001) {
 #' @examples
 #' data("k562_scrna_chr14", package = "compartmap")
 #' getChrs(k562_scrna_chr14)
-#' 
+#'
 #' @export
 getChrs <- function(obj) {
-  #get the chromosomes present in the object
+  # get the chromosomes present in the object
   return(unique(as.character(seqnames(obj))))
 }
 
@@ -139,16 +137,16 @@ getChrs <- function(obj) {
 #' @return A filtered list object
 #' @export
 removeEmptyBoots <- function(obj) {
-  #remove NAs from a bootstrap list
-  #this can happen if the correlation between the bins and eigenvector fails
-  #theoretically we can recover these but need an additional utility to find consensus
+  # remove NAs from a bootstrap list
+  # this can happen if the correlation between the bins and eigenvector fails
+  # theoretically we can recover these but need an additional utility to find consensus
   na.filt <- unlist(lapply(obj, function(n) ifelse(any(is.na(n)), FALSE, TRUE)))
   obj <- obj[na.filt]
   return(obj)
 }
 
 #' Get the seqlengths of a chromosome
-#' 
+#'
 #' The goal for this function is to eliminate the need to lug around
 #' large packages when we only want seqlengths for things.
 #'
@@ -164,25 +162,26 @@ removeEmptyBoots <- function(obj) {
 #' @export
 getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
                           chr = "chr14") {
-  #eventually we should support arbitrary genomes
+  # eventually we should support arbitrary genomes
   genome <- match.arg(genome)
-  #check if the genome used exists in what is currently supported, stopping if not
+  # check if the genome used exists in what is currently supported, stopping if not
   if (!genome %in% c("hg19", "hg38", "mm9", "mm10")) stop("Only human and mouse are supported for the time being.")
-  #import
+  # import
   genome.gr <- switch(genome,
-                      hg19 = data("hg19.gr", package = "compartmap"),
-                      hg38 = data("hg38.gr", package = "compartmap"),
-                      mm9 = data("mm9.gr", package = "compartmap"),
-                      mm10 = data("mm10.gr", package = "compartmap"))
-  #make sure that the chromosome specified exists in the seqlevels
+    hg19 = data("hg19.gr", package = "compartmap"),
+    hg38 = data("hg38.gr", package = "compartmap"),
+    mm9 = data("mm9.gr", package = "compartmap"),
+    mm10 = data("mm10.gr", package = "compartmap")
+  )
+  # make sure that the chromosome specified exists in the seqlevels
   if (!chr %in% seqlevels(get(genome.gr))) stop("Desired chromosome is not found in the seqlevels of ", genome)
-  #get the seqlengths
+  # get the seqlengths
   sl <- seqlengths(get(genome.gr))[chr]
   return(sl)
 }
-  
-#' Get chunked sets of row-wise or column-wise indices of a matrix 
-#' 
+
+#' Get chunked sets of row-wise or column-wise indices of a matrix
+#'
 #' @name getMatrixBlocks
 #'
 #' @param mat Input matrix
@@ -193,14 +192,14 @@ getSeqLengths <- function(genome = c("hg19", "hg38", "mm9", "mm10"),
 #' @return A set of chunked indices
 #'
 #' @examples
-#' #make a sparse binary matrix
+#' # make a sparse binary matrix
 #' library(Matrix)
 #' m <- 100
 #' n <- 1000
-#' mat <- round(matrix(runif(m*n), m, n))
+#' mat <- round(matrix(runif(m * n), m, n))
 #' mat.sparse <- Matrix(mat, sparse = TRUE)
-#' 
-#' #get row-wise chunks of 10
+#'
+#' # get row-wise chunks of 10
 #' chunks <- getMatrixBlocks(mat.sparse, chunk.size = 10)
 #'
 #' @export
@@ -209,16 +208,16 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5,
   message("Using chunk size: ", chunk.size)
   if (by.row) {
     message("Breaking into row chunks.")
-    return(split(1:nrow(mat), ceiling(seq_along(1:nrow(mat))/chunk.size)))
+    return(split(1:nrow(mat), ceiling(seq_along(1:nrow(mat)) / chunk.size)))
   }
-  
-  #assumes column-wise chunking
+
+  # assumes column-wise chunking
   message("Breaking into column chunks.")
-  return(split(1:ncol(mat), ceiling(seq_along(1:ncol(mat))/chunk.size)))
+  return(split(1:ncol(mat), ceiling(seq_along(1:ncol(mat)) / chunk.size)))
 }
 
-#' Convert a sparse matrix to a dense matrix in a block-wise fashion 
-#' 
+#' Convert a sparse matrix to a dense matrix in a block-wise fashion
+#'
 #' @name sparseToDenseMatrix
 #'
 #' @param mat Input sparse matrix
@@ -230,66 +229,69 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5,
 #' @param cores The number of cores to use in the parallel coercion
 #'
 #' @return A dense matrix of the same dimensions as the input
-#' 
+#'
 #' @import Matrix
 #' @import parallel
-#' 
-#' 
+#'
+#'
 #' @examples
-#' #make a sparse binary matrix
+#' # make a sparse binary matrix
 #' library(Matrix)
 #' m <- 100
 #' n <- 1000
-#' mat <- round(matrix(runif(m*n), m, n))
+#' mat <- round(matrix(runif(m * n), m, n))
 #' mat.sparse <- Matrix(mat, sparse = TRUE)
-#' 
-#' #coerce back
+#'
+#' # coerce back
 #' mat.dense <- sparseToDenseMatrix(mat.sparse, chunk.size = 10)
-#' 
-#' #make sure they are the same dimensions
+#'
+#' # make sure they are the same dimensions
 #' dim(mat) == dim(mat.dense)
-#' 
-#' #make sure they are the same numerically
+#'
+#' # make sure they are the same numerically
 #' all(mat == mat.dense)
 #'
-#' @export 
+#' @export
 sparseToDenseMatrix <- function(mat, blockwise = TRUE,
                                 by.row = TRUE, by.col = FALSE,
                                 chunk.size = 1e5, parallel = FALSE,
                                 cores = 2) {
-  if (isFALSE(blockwise)) return(as(mat, "matrix"))
-  
-  #do block-wise reconstruction of matrix
-  chunks <- getMatrixBlocks(mat, chunk.size = chunk.size,
-                            by.row = by.row, by.col = by.col)
-  
+  if (isFALSE(blockwise)) {
+    return(as(mat, "matrix"))
+  }
+
+  # do block-wise reconstruction of matrix
+  chunks <- getMatrixBlocks(mat,
+    chunk.size = chunk.size,
+    by.row = by.row, by.col = by.col
+  )
+
   if (by.row & parallel) {
     return(do.call("rbind", mclapply(chunks, function(r) {
-      return(as(mat[r,], "matrix"))
+      return(as(mat[r, ], "matrix"))
     }, mc.cores = cores)))
   }
-  
+
   if (by.row & !parallel) {
     return(do.call("rbind", lapply(chunks, function(r) {
-      return(as(mat[r,], "matrix"))
+      return(as(mat[r, ], "matrix"))
     })))
   }
-  
-  #assumes column-wise conversion
+
+  # assumes column-wise conversion
   if (by.col & parallel) {
     return(do.call("cbind", mclapply(chunks, function(r) {
-      return(as(mat[,r], "matrix"))
+      return(as(mat[, r], "matrix"))
     }, mc.cores = cores)))
   }
-  
+
   return(do.call("cbind", lapply(chunks, function(r) {
-    return(as(mat[,r], "matrix"))
+    return(as(mat[, r], "matrix"))
   })))
-  
-}  
+}
 
 #' Import and optionally summarize a bigwig at a given resolution
-#' 
+#'
 #' @name importBigWig
 #'
 #' @param bw Path a bigwig file
@@ -298,22 +300,22 @@ sparseToDenseMatrix <- function(mat, blockwise = TRUE,
 #' @param genome Which genome is the bigwig from ("hg19", "hg38", "mm9", "mm10")
 #'
 #' @return SummerizedExperiment object with rowRanges corresponding to summarized features
-#' 
+#'
 #' @import SummarizedExperiment
 #' @import GenomicRanges
-#' 
+#'
 #' @export
 
 importBigWig <- function(bw, bins = NULL, summarize = FALSE,
                          genome = c("hg19", "hg38", "mm9", "mm10")) {
-  #read in the bigwig
+  # read in the bigwig
   bw.raw <- rtracklayer::import(bw)
-  #coerce to UCSC style seqlevels
+  # coerce to UCSC style seqlevels
   seqlevelsStyle(bw.raw) <- "UCSC"
   if (!is.null(bins)) {
     seqlevelsStyle(bins) <- "UCSC"
   }
-  #it is now a GRanges object
+  # it is now a GRanges object
   if (any(is.na(seqlengths(bw.raw)))) stop("Imported bigwig does not have seqlengths")
   ## only supporting human and mouse for now
   if (genome %in% c("hg19", "hg38")) {
@@ -326,16 +328,18 @@ importBigWig <- function(bw, bins = NULL, summarize = FALSE,
     bins <- keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
   }
   if (summarize) {
-    #make sure it's sorted
+    # make sure it's sorted
     bw.sub <- sort(bw.sub)
-    #this assumes seqlengths exist...
-    #this also assumes some bins exist
+    # this assumes seqlengths exist...
+    # this also assumes some bins exist
     if (is.null(bins)) stop("Specify bins as GRanges with tileGenome")
     bw.score <- GenomicRanges::coverage(bw.sub, weight = "score")
     bw.bin <- GenomicRanges::binnedAverage(bins, bw.score, "ave_score")
-    #cast to a SummarizedExperiment to bin them
-    bw.se <- SummarizedExperiment(assays = SimpleList(counts = as.matrix(mcols(bw.bin)$ave_score)),
-                                  rowRanges = granges(bw.bin))
+    # cast to a SummarizedExperiment to bin them
+    bw.se <- SummarizedExperiment(
+      assays = SimpleList(counts = as.matrix(mcols(bw.bin)$ave_score)),
+      rowRanges = granges(bw.bin)
+    )
     colnames(bw.se) <- as.character(bw)
     return(bw.se)
   }
@@ -354,13 +358,13 @@ importBigWig <- function(bw, bins = NULL, summarize = FALSE,
 #' @examples
 #' data("meth_array_450k_chr14", package = "compartmap")
 #' cleanAssayRows(array.data.chr14, assay = "array")
-
 cleanAssayRows <- function(se, rowmax = 0.5,
                            assay = c("array", "bisulfite")) {
   assay <- match.arg(assay)
   switch(assay,
-         array = se[rowMeans(is.na(assays(se)$Beta)) < rowmax,],
-         bisulfite = se[rowMeans(is.na(assays(se)$counts)) < rowmax,])
+    array = se[rowMeans(is.na(assays(se)$Beta)) < rowmax, ],
+    bisulfite = se[rowMeans(is.na(assays(se)$counts)) < rowmax, ]
+  )
 }
 
 #' Remove columns/cells/samples with NAs exceeding a threshold
@@ -379,8 +383,9 @@ cleanAssayCols <- function(se, colmax = 0.8,
                            assay = c("array", "bisulfite")) {
   assay <- match.arg(assay)
   switch(assay,
-         array = se[,colMeans(is.na(assays(se)$Beta)) < colmax],
-         bisulfite = se[,colMeans(is.na(assays(se)$counts)) < colmax])
+    array = se[, colMeans(is.na(assays(se)$Beta)) < colmax],
+    bisulfite = se[, colMeans(is.na(assays(se)$counts)) < colmax]
+  )
 }
 
 #' Filter to open sea CpG loci
@@ -396,32 +401,33 @@ cleanAssayCols <- function(se, colmax = 0.8,
 #' @examples
 #' data("meth_array_450k_chr14", package = "compartmap")
 #' opensea <- filterOpenSea(array.data.chr14, genome = "hg19")
-#' 
+#'
 #' @export
 filterOpenSea <- function(obj, genome = c("hg19", "hg38", "mm10", "mm9"), other = NULL) {
-  #get the desired open sea loci given the genome
+  # get the desired open sea loci given the genome
   genome <- match.arg(genome)
   if (is.null(other)) {
     openseas.genome <- switch(genome,
-                              hg19=data("openSeas.hg19", package="compartmap"),
-                              hg38=data("openSeas.hg38", package="compartmap"),
-                              mm10=data("openSeas.mm10", package="compartmap"),
-                              mm9=data("openSeas.mm9", package="compartmap"))
+      hg19 = data("openSeas.hg19", package = "compartmap"),
+      hg38 = data("openSeas.hg38", package = "compartmap"),
+      mm10 = data("openSeas.mm10", package = "compartmap"),
+      mm9 = data("openSeas.mm9", package = "compartmap")
+    )
   } else {
-    #check if it's a GRanges flavored object
+    # check if it's a GRanges flavored object
     if (!is(other, "GRanges")) stop("The 'other' input needs to be a GRanges of open sea regions")
     openseas.genome <- other
   }
-  #Subset by overlaps
+  # Subset by overlaps
   message("Filtering to open sea CpG loci...")
-  #subset to just CpG loci if CpH or rs probes still exist
-  obj <- obj[grep("cg", rownames(obj)),]
+  # subset to just CpG loci if CpH or rs probes still exist
+  obj <- obj[grep("cg", rownames(obj)), ]
   obj.openseas <- subsetByOverlaps(obj, get(openseas.genome))
   return(obj.openseas)
 }
 
 #' Gather open sea CpG from a GRanges of CpG islands
-#' 
+#'
 #' @description This function accepts a GRanges input of CpG islands that can
 #' be derived from UCSC table browser and rtracklayer::import(yourbed.bed)
 #'
@@ -437,8 +443,7 @@ filterOpenSea <- function(obj, genome = c("hg19", "hg38", "mm10", "mm9"), other 
 #' @examples
 #' cpgi <- rtracklayer::import(system.file("inst/extdata/mm10_cpgi.bed", package = "compartmap"))
 #' opensea_cpg <- getOpenSeas(cpgi)
-#' 
-
+#'
 getOpenSeas <- function(gr) {
   resorts <- trim(resize(gr, width(gr) + 8000, fix = "center"))
   openSeas <- subset(gaps(resorts), strand == "*")

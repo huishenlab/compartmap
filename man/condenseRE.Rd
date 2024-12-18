@@ -16,9 +16,11 @@ A list of SummarizedExperiments corresponding to the assays in the input
 Condense a RaggedExperiment to a list of SummarizedExperiments
 }
 \examples{
-grl <- GRangesList(GRanges(c("A:1-5", "A:4-6", "A:10-15"), score=1:3),
-GRanges(c("A:1-5", "B:1-3"), score=4:5))
-names(grl) <- c("A", "B")                  
+grl <- GRangesList(
+  GRanges(c("A:1-5", "A:4-6", "A:10-15"), score = 1:3),
+  GRanges(c("A:1-5", "B:1-3"), score = 4:5)
+)
+names(grl) <- c("A", "B")
 x <- RaggedExperiment(grl)
 x.condense <- condenseRE(x)
 }

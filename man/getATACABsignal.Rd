@@ -77,5 +77,5 @@ A RaggedExperiment of inferred compartments
 }}
 \examples{
 data("k562_scatac_chr14", package = "compartmap")
-atac_compartments <- getATACABsignal(k562_scatac_chr14, parallel=FALSE, chr="chr14", bootstrap=FALSE, genome="hg19", group = TRUE)
+atac_compartments <- getATACABsignal(k562_scatac_chr14, parallel = FALSE, chr = "chr14", bootstrap = FALSE, genome = "hg19", group = TRUE)
 }

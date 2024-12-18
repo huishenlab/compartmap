@@ -40,6 +40,6 @@ Impute missing values/NAs with KNN
 }
 \examples{
 data("meth_array_450k_chr14", package = "compartmap")
-#impute
+# impute
 imputed <- imputeKNN(array.data.chr14, assay = "array")
 }

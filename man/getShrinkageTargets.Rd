@@ -18,7 +18,7 @@ A matrix composed of samples to shrink towards
 Get the specified samples to shrink towards instead of the global mean
 }
 \examples{
-dummy <- matrix(rnorm(1000), ncol=25)
-dummy.sub <- getShrinkageTargets(dummy, group = c(1,5,8,10))
+dummy <- matrix(rnorm(1000), ncol = 25)
+dummy.sub <- getShrinkageTargets(dummy, group = c(1, 5, 8, 10))
 
 }

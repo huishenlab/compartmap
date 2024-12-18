@@ -36,20 +36,20 @@ A dense matrix of the same dimensions as the input
 Convert a sparse matrix to a dense matrix in a block-wise fashion
 }
 \examples{
-#make a sparse binary matrix
+# make a sparse binary matrix
 library(Matrix)
 m <- 100
 n <- 1000
-mat <- round(matrix(runif(m*n), m, n))
+mat <- round(matrix(runif(m * n), m, n))
 mat.sparse <- Matrix(mat, sparse = TRUE)
 
-#coerce back
+# coerce back
 mat.dense <- sparseToDenseMatrix(mat.sparse, chunk.size = 10)
 
-#make sure they are the same dimensions
+# make sure they are the same dimensions
 dim(mat) == dim(mat.dense)
 
-#make sure they are the same numerically
+# make sure they are the same numerically
 all(mat == mat.dense)
 
 }

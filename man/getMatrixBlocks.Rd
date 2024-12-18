@@ -22,14 +22,14 @@ A set of chunked indices
 Get chunked sets of row-wise or column-wise indices of a matrix
 }
 \examples{
-#make a sparse binary matrix
+# make a sparse binary matrix
 library(Matrix)
 m <- 100
 n <- 1000
-mat <- round(matrix(runif(m*n), m, n))
+mat <- round(matrix(runif(m * n), m, n))
 mat.sparse <- Matrix(mat, sparse = TRUE)
 
-#get row-wise chunks of 10
+# get row-wise chunks of 10
 chunks <- getMatrixBlocks(mat.sparse, chunk.size = 10)
 
 }

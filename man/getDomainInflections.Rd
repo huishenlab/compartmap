@@ -32,7 +32,8 @@ A wrapper function to generate a GRanges object of chromatin domain inflection p
 \examples{
 data("k562_scrna_chr14", package = "compartmap")
 chr14_domains <- scCompartments(k562_scrna_chr14,
-                                res = 1e6, genome = "hg19",
-                                group = TRUE, bootstrap = FALSE)
+  res = 1e6, genome = "hg19",
+  group = TRUE, bootstrap = FALSE
+)
 chr14_domain_inflections <- getDomainInflections(chr14_domains, what = "pc")
 }

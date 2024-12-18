@@ -49,7 +49,7 @@ which has since been deprecated on CRAN.
 \examples{
 rand_cor_mat <- cor(matrix(rnorm(100), nrow = 10))
 denoised_rand_cor_mat <- estRMT(rand_cor_mat)$cov
-       
+
 }
 \author{
 Rohit Arora

@@ -30,6 +30,6 @@ Preprocess arrays for compartment inference
 if (require(minfiData)) {
   grSet <- mapToGenome(ratioConvert(preprocessNoob(RGsetEx.sub)))
   preprocessArrays(grSet)
-} 
+}
 
 }

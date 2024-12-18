@@ -46,8 +46,10 @@ This function computes shrunken bin-level estimates using a James-Stein estimato
 }
 \examples{
 data("k562_scrna_chr14", package = "compartmap")
-shrunken.bin.scrna <- shrinkBins(x = k562_scrna_chr14,
-                                 original.x = k562_scrna_chr14,
-                                 chr = "chr14", assay = "rna")
+shrunken.bin.scrna <- shrinkBins(
+  x = k562_scrna_chr14,
+  original.x = k562_scrna_chr14,
+  chr = "chr14", assay = "rna"
+)
 
 }

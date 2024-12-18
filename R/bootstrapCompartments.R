@@ -22,58 +22,60 @@
 #' @import SummarizedExperiment
 #'
 #' @examples
-#'   
+#'
 #' # this needs a good example
-#' 
+#'
 #' @export
 bootstrapCompartments <- function(obj, original.obj, bootstrap.samples = 1000,
                                   chr = "chr14", assay = c("rna", "atac", "array"),
                                   parallel = TRUE, cores = 2, targets = NULL, res = 1e6,
                                   genome = c("hg19", "hg38", "mm9", "mm10"), q = 0.95,
                                   svd = NULL, group = FALSE, bootstrap.means = NULL) {
-  #function for nonparametric bootstrap of compartments and compute 95% CIs
-  #check input
-  #match the assay args
+  # function for nonparametric bootstrap of compartments and compute 95% CIs
+  # check input
+  # match the assay args
   assay <- match.arg(assay)
 
-  #double check the obj class is compatible
+  # double check the obj class is compatible
   if (!checkAssayType(original.obj)) stop("Input needs to be a SummarizedExperiment")
-  
-  #check the names of the assays
+
+  # check the names of the assays
   if (!any(getAssayNames(original.obj) %in% c("counts", "Beta"))) {
     message("The assay slot should contain 'counts' for atac/rna.")
     stop("The assay slot should contain 'Beta' for methylation arrays.")
   }
-  
-  #if we are using targeted means
-  if (!is.null(targets)) original.obj <- original.obj[,targets]
-  
-  #get the global means we are going to use
-  #this could theoretically break if you ask for more bootstraps here than were pre-computed...
-  #let's check for one more optimization
+
+  # if we are using targeted means
+  if (!is.null(targets)) original.obj <- original.obj[, targets]
+
+  # get the global means we are going to use
+  # this could theoretically break if you ask for more bootstraps here than were pre-computed...
+  # let's check for one more optimization
   if (bootstrap.samples == ncol(bootstrap.means)) {
     bmeans <- bootstrap.means
   } else {
     bmeans <- sample.int(bootstrap.means, size = bootstrap.samples, replace = FALSE)
     colnames(bmeans) <- rep("globalMean", ncol(bmeans))
-    }
-  
-  #if (ncol(original.obj) < 6) stop("We need more than 5 samples to bootstrap with for the results to be meaningful.")
+  }
+
+  # if (ncol(original.obj) < 6) stop("We need more than 5 samples to bootstrap with for the results to be meaningful.")
   if (!parallel) {
     message("Not bootstrapping in parallel will take a long time...")
-    #bootstrap and recompute compartments
+    # bootstrap and recompute compartments
     resamp.compartments <- lapply(1:ncol(bmeans), function(b) {
-      #resample the global means with replacement
+      # resample the global means with replacement
       message("Working on bootstrap ", b)
-      
-      #get the shrunken bins with new global mean
-      boot.mean <- as.matrix(bmeans[,b])
+
+      # get the shrunken bins with new global mean
+      boot.mean <- as.matrix(bmeans[, b])
       colnames(boot.mean) <- "globalMean"
-      s.bins <- shrinkBins(obj, original.obj, prior.means = boot.mean,
-                           chr = chr, res = res, assay = assay, genome = genome)
+      s.bins <- shrinkBins(obj, original.obj,
+        prior.means = boot.mean,
+        chr = chr, res = res, assay = assay, genome = genome
+      )
       if (group) cor.bins <- getCorMatrix(s.bins, squeeze = FALSE)
       if (isFALSE(group)) cor.bins <- getCorMatrix(s.bins, squeeze = TRUE)
-      #Stupid check for perfect correlation with global mean
+      # Stupid check for perfect correlation with global mean
       if (any(is.na(cor.bins$binmat.cor))) {
         absig <- matrix(rep(NA, nrow(cor.bins$binmat.cor)))
       } else {
@@ -83,15 +85,17 @@ bootstrapCompartments <- function(obj, original.obj, bootstrap.samples = 1000,
     })
   } else {
     message("Bootstrapping in parallel with ", cores, " cores.")
-    #bootstrap and recompute compartments
+    # bootstrap and recompute compartments
     resamp.compartments <- mclapply(1:ncol(bmeans), function(b) {
-      #get the shrunken bins with new global mean
-      boot.mean <- as.matrix(bmeans[,b])
+      # get the shrunken bins with new global mean
+      boot.mean <- as.matrix(bmeans[, b])
       colnames(boot.mean) <- "globalMean"
-      s.bins <- shrinkBins(obj, original.obj, prior.means = boot.mean,
-                           chr = chr, res = res, assay = assay, genome = genome)
+      s.bins <- shrinkBins(obj, original.obj,
+        prior.means = boot.mean,
+        chr = chr, res = res, assay = assay, genome = genome
+      )
       cor.bins <- getCorMatrix(s.bins, squeeze = TRUE)
-      #Stupid check for perfect correlation with global mean
+      # Stupid check for perfect correlation with global mean
       if (any(is.na(cor.bins$binmat.cor))) {
         absig <- matrix(rep(NA, nrow(cor.bins$binmat.cor)))
       } else {
@@ -101,15 +105,16 @@ bootstrapCompartments <- function(obj, original.obj, bootstrap.samples = 1000,
     }, mc.cores = cores)
   }
 
-  #summarize the bootstraps and compute confidence intervals
+  # summarize the bootstraps and compute confidence intervals
   resamp.compartments <- summarizeBootstraps(resamp.compartments, svd,
-                                             q = q, assay = assay)
+    q = q, assay = assay
+  )
   return(resamp.compartments)
 }
 
-#helper function to re-sample
-#this was inspired by https://github.com/sgibb/bootstrap/blob/master/R/helper-functions.R
-.resampleMatrix <- function(x, size=ncol(x)) {
-  samp.to.select <- sample.int(ncol(x), size=size, replace=TRUE)
+# helper function to re-sample
+# this was inspired by https://github.com/sgibb/bootstrap/blob/master/R/helper-functions.R
+.resampleMatrix <- function(x, size = ncol(x)) {
+  samp.to.select <- sample.int(ncol(x), size = size, replace = TRUE)
   return(x[, samp.to.select])
 }

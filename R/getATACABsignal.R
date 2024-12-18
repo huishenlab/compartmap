@@ -1,6 +1,6 @@
 #' @title Estimate A/B compartments from ATAC-seq data
 #'
-#' @description 
+#' @description
 #' \code{getATACABsignal} returns estimated A/B compartments from ATAC-seq data.
 #'
 #' @param obj Input SummarizedExperiment object
@@ -22,168 +22,192 @@
 #' @import parallel
 #' @import RaggedExperiment
 #' @export
-#' 
+#'
 #' @aliases getRNAABsignal
-#' 
+#'
 #' @examples
 #' data("k562_scatac_chr14", package = "compartmap")
-#' atac_compartments <- getATACABsignal(k562_scatac_chr14, parallel=FALSE, chr="chr14", bootstrap=FALSE, genome="hg19", group = TRUE)
-
+#' atac_compartments <- getATACABsignal(k562_scatac_chr14, parallel = FALSE, chr = "chr14", bootstrap = FALSE, genome = "hg19", group = TRUE)
 getATACABsignal <- function(obj, res = 1e6, parallel = FALSE, chr = NULL,
-                             targets = NULL, cores = 2,
-                             bootstrap = TRUE, num.bootstraps = 100,
-                             genome = c("hg19", "hg38", "mm9", "mm10"),
-                             other = NULL, group = FALSE,
-                             boot.parallel = FALSE, boot.cores = 2) {
-
+                            targets = NULL, cores = 2,
+                            bootstrap = TRUE, num.bootstraps = 100,
+                            genome = c("hg19", "hg38", "mm9", "mm10"),
+                            other = NULL, group = FALSE,
+                            boot.parallel = FALSE, boot.cores = 2) {
   if (length(seqinfo(rowRanges(obj))) == 0) {
     message("The SummarizedExperiment you have provided has no coordinates.")
     message("Compartment extraction will fail.")
     stop("Please provide rowRanges with genomic coordinates for the object.")
   }
 
-  #gather the chromosomes we are working on
+  # gather the chromosomes we are working on
   if (is.null(chr)) {
     message("Assuming we want to process all chromosomes.")
-    #get what chromosomes we want
+    # get what chromosomes we want
     chr <- getChrs(obj)
   }
-  
-  #get the column names
+
+  # get the column names
   if (is.null(colnames(obj))) stop("colnames needs to be sample names.")
   columns <- colnames(obj)
   names(columns) <- columns
-  
-  #precompute global means
+
+  # precompute global means
   prior.means <- getGlobalMeans(obj = obj, targets = targets, assay = "atac")
-  
+
   if (bootstrap) {
     message("Pre-computing the bootstrap global means.")
-    bmeans <- precomputeBootstrapMeans(obj = obj, targets = targets, num.bootstraps = num.bootstraps,
-                                       assay = "atac", parallel = parallel, num.cores = cores)
+    bmeans <- precomputeBootstrapMeans(
+      obj = obj, targets = targets, num.bootstraps = num.bootstraps,
+      assay = "atac", parallel = parallel, num.cores = cores
+    )
   }
-  
-  #worker function
+
+  # worker function
   atacCompartments <- function(obj, original.obj, res = 1e6, chr = NULL, targets = NULL,
-                                genome = c("hg19", "hg38", "mm9", "mm10"),
-                                prior.means = NULL, bootstrap = TRUE,
-                                num.bootstraps = 1000, parallel = FALSE,
-                                cores = 2, group = group, bootstrap.means = NULL) {
-    #this is the main analysis function for computing compartments from atacs
-    #make sure the input is sane
+                               genome = c("hg19", "hg38", "mm9", "mm10"),
+                               prior.means = NULL, bootstrap = TRUE,
+                               num.bootstraps = 1000, parallel = FALSE,
+                               cores = 2, group = group, bootstrap.means = NULL) {
+    # this is the main analysis function for computing compartments from atacs
+    # make sure the input is sane
     if (!checkAssayType(obj)) stop("Input needs to be a SummarizedExperiment")
 
-    #what genome do we have
+    # what genome do we have
     genome <- match.arg(genome)
-    
-    #set the parallel back-end core number
+
+    # set the parallel back-end core number
     if (parallel) options(mc.cores = cores)
-    
-    #update
+
+    # update
     message("Computing compartments for ", chr)
     obj <- keepSeqlevels(obj, chr, pruning.mode = "coarse")
     original.obj <- keepSeqlevels(original.obj, chr, pruning.mode = "coarse")
-    
-    #take care of the global means
+
+    # take care of the global means
     if (!is.null(prior.means)) {
-      #this assumes that we've alread computed the global means
+      # this assumes that we've alread computed the global means
       pmeans <- as(prior.means, "GRanges")
       pmeans <- keepSeqlevels(pmeans, chr, pruning.mode = "coarse")
-      #go back to a matrix
+      # go back to a matrix
       prior.means <- as(pmeans, "matrix")
       colnames(prior.means) <- "globalMean"
     }
-    
-    #get the shrunken bins
-    obj.bins <- shrinkBins(obj, original.obj, prior.means = prior.means, chr = chr,
-                           res = res, targets = targets, assay = "atac",
-                           genome = genome, jse = TRUE)
-    #compute correlations
+
+    # get the shrunken bins
+    obj.bins <- shrinkBins(obj, original.obj,
+      prior.means = prior.means, chr = chr,
+      res = res, targets = targets, assay = "atac",
+      genome = genome, jse = TRUE
+    )
+    # compute correlations
     if (group) obj.cor <- getCorMatrix(obj.bins, squeeze = FALSE)
     if (isFALSE(group)) obj.cor <- getCorMatrix(obj.bins, squeeze = TRUE)
     if (any(is.na(obj.cor$binmat.cor))) {
       obj.cor$gr$pc <- matrix(rep(NA, nrow(obj.cor$binmat.cor)))
       obj.svd <- obj.cor$gr
     } else {
-      #compute SVD of correlation matrix
+      # compute SVD of correlation matrix
       obj.svd <- getABSignal(obj.cor, assay = "atac")
     }
-    
-    if (isFALSE(bootstrap)) return(obj.svd)
-    
-    #bootstrap the estimates
-    #always compute confidence intervals too
-    #take care of the global means
+
+    if (isFALSE(bootstrap)) {
+      return(obj.svd)
+    }
+
+    # bootstrap the estimates
+    # always compute confidence intervals too
+    # take care of the global means
     if (bootstrap) {
-      #this assumes that we've alread computed the global means
+      # this assumes that we've alread computed the global means
       bmeans <- as(bootstrap.means, "GRanges")
       bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
-      #go back to a matrix
+      # go back to a matrix
       bmeans <- as(bmeans, "matrix")
       colnames(bmeans) <- rep("globalMean", ncol(bmeans))
     }
-    
-    obj.bootstrap <- bootstrapCompartments(obj, original.obj, bootstrap.samples = num.bootstraps,
-                                           chr = chr, assay = "atac", parallel = parallel, cores = cores,
-                                           targets = targets, res = res, genome = genome, q = 0.95,
-                                           svd = obj.svd, group = group, bootstrap.means = bmeans)
-    
-    #combine and return
+
+    obj.bootstrap <- bootstrapCompartments(obj, original.obj,
+      bootstrap.samples = num.bootstraps,
+      chr = chr, assay = "atac", parallel = parallel, cores = cores,
+      targets = targets, res = res, genome = genome, q = 0.95,
+      svd = obj.svd, group = group, bootstrap.means = bmeans
+    )
+
+    # combine and return
     return(obj.bootstrap)
   }
-  
-  #initialize global means
-  #gmeans <- getGlobalMeans(obj, targets = targets, assay = "atac")
-  
+
+  # initialize global means
+  # gmeans <- getGlobalMeans(obj, targets = targets, assay = "atac")
+
   if (parallel & isFALSE(group)) {
     atac.compartments <- mclapply(columns, function(s) {
-      obj.sub <- obj[,s]
+      obj.sub <- obj[, s]
       message("Working on ", s)
-      sort(unlist(as(lapply(chr, function(c) atacCompartments(obj.sub, obj, res = res,
-                                                               chr = c, targets = targets, genome = genome,
-                                                               bootstrap = bootstrap, prior.means = prior.means,
-                                                               num.bootstraps = num.bootstraps, parallel = boot.parallel,
-                                                               cores = boot.cores, group = group, bootstrap.means = bmeans)), "GRangesList")))
+      sort(unlist(as(lapply(chr, function(c) {
+        atacCompartments(obj.sub, obj,
+          res = res,
+          chr = c, targets = targets, genome = genome,
+          bootstrap = bootstrap, prior.means = prior.means,
+          num.bootstraps = num.bootstraps, parallel = boot.parallel,
+          cores = boot.cores, group = group, bootstrap.means = bmeans
+        )
+      }), "GRangesList")))
     }, mc.cores = cores)
   }
-  
+
   if (!parallel & isFALSE(group)) {
     atac.compartments <- lapply(columns, function(s) {
-      obj.sub <- obj[,s]
+      obj.sub <- obj[, s]
       message("Working on ", s)
-      sort(unlist(as(lapply(chr, function(c) atacCompartments(obj.sub, obj, res = res,
-                                                               chr = c, targets = targets, genome = genome,
-                                                               bootstrap = bootstrap, prior.means = prior.means,
-                                                               num.bootstraps = num.bootstraps, parallel = boot.parallel,
-                                                               cores = boot.cores, group = group, bootstrap.means = bmeans)), "GRangesList")))
+      sort(unlist(as(lapply(chr, function(c) {
+        atacCompartments(obj.sub, obj,
+          res = res,
+          chr = c, targets = targets, genome = genome,
+          bootstrap = bootstrap, prior.means = prior.means,
+          num.bootstraps = num.bootstraps, parallel = boot.parallel,
+          cores = boot.cores, group = group, bootstrap.means = bmeans
+        )
+      }), "GRangesList")))
     })
   }
-  
+
   if (parallel & isTRUE(group)) {
-    atac.compartments <- sort(unlist(as(mclapply(chr, function(c) {
-      atacCompartments(obj, obj, res = res,
-                        chr = c, targets = targets, genome = genome,
-                        bootstrap = bootstrap,num.bootstraps = num.bootstraps, prior.means = prior.means,
-                        parallel = boot.parallel, cores = boot.cores, group = group, bootstrap.means = bmeans)}, mc.cores = cores),
-      "GRangesList")))
+    atac.compartments <- sort(unlist(as(
+      mclapply(chr, function(c) {
+        atacCompartments(obj, obj,
+          res = res,
+          chr = c, targets = targets, genome = genome,
+          bootstrap = bootstrap, num.bootstraps = num.bootstraps, prior.means = prior.means,
+          parallel = boot.parallel, cores = boot.cores, group = group, bootstrap.means = bmeans
+        )
+      }, mc.cores = cores),
+      "GRangesList"
+    )))
   }
-  
+
   if (!parallel & isTRUE(group)) {
-    atac.compartments <- sort(unlist(as(lapply(chr, function(c) {
-      atacCompartments(obj, obj, res = res,
-                        chr = c, targets = targets, genome = genome, prior.means = prior.means,
-                        bootstrap = bootstrap,num.bootstraps = num.bootstraps,
-                        parallel = boot.parallel, cores = boot.cores, group = group, bootstrap.means = bmeans)}),
-      "GRangesList")))
+    atac.compartments <- sort(unlist(as(
+      lapply(chr, function(c) {
+        atacCompartments(obj, obj,
+          res = res,
+          chr = c, targets = targets, genome = genome, prior.means = prior.means,
+          bootstrap = bootstrap, num.bootstraps = num.bootstraps,
+          parallel = boot.parallel, cores = boot.cores, group = group, bootstrap.means = bmeans
+        )
+      }),
+      "GRangesList"
+    )))
   }
-  
-  #if group-level treat a little differently
+
+  # if group-level treat a little differently
   if (group) {
     return(atac.compartments)
   }
-  #convert to GRangesList
+  # convert to GRangesList
   atac.compartments <- as(atac.compartments, "CompressedGRangesList")
-  #return as a RaggedExperiment
+  # return as a RaggedExperiment
   return(RaggedExperiment(atac.compartments, colData = colData(obj)))
 }
 

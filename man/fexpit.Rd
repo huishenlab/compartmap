@@ -20,14 +20,14 @@ Helper function: expanded expit
 }
 \examples{
 
-  x <- rnorm(n=1000)
-  summary(x) 
+x <- rnorm(n = 1000)
+summary(x)
 
-  sqz <- 1 / (10**6)
-  p <- fexpit(x, sqz=sqz)
-  summary(p)
+sqz <- 1 / (10**6)
+p <- fexpit(x, sqz = sqz)
+summary(p)
 
-  all( (abs(x - flogit(p)) / x) < sqz )
-  all( abs(x - flogit(fexpit(x))) < sqz )
+all((abs(x - flogit(p)) / x) < sqz)
+all(abs(x - flogit(fexpit(x))) < sqz)
 
 }

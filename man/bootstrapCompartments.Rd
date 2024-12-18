@@ -57,7 +57,7 @@ Compartment estimates with summarized bootstraps and confidence intervals
 Non-parametric bootstrapping of compartments and summarization of bootstraps/compute confidence intervals
 }
 \examples{
-  
+
 # this needs a good example
 
 }

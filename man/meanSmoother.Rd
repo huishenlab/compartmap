@@ -27,9 +27,9 @@ meanSmoother(x, k = 1, iter = 2, na.rm = TRUE, delta = 0, w = NULL)
 TODO: farm out to C++ and test, at least when there are no NAs
 }
 \examples{
-dummy <- matrix(rnorm(10000), ncol=25)
+dummy <- matrix(rnorm(10000), ncol = 25)
 smooth.dummy <- meanSmoother(dummy)
-smooth.dummy <- meanSmoother(dummy, iter=3) 
-smooth.dummy <- meanSmoother(dummy, delta=1e-3) 
+smooth.dummy <- meanSmoother(dummy, iter = 3)
+smooth.dummy <- meanSmoother(dummy, delta = 1e-3)
 
 }

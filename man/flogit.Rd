@@ -20,14 +20,14 @@ Helper function: squeezed logit
 }
 \examples{
 
-  p <- runif(n=1000)
-  summary(p) 
+p <- runif(n = 1000)
+summary(p)
 
-  sqz <- 1 / (10**6)
-  x <- flogit(p, sqz=sqz)
-  summary(x) 
+sqz <- 1 / (10**6)
+x <- flogit(p, sqz = sqz)
+summary(x)
 
-  all( abs(p - fexpit(x, sqz=sqz)) < sqz )
-  all( abs(p - fexpit(flogit(p, sqz=sqz), sqz=sqz)) < sqz ) 
+all(abs(p - fexpit(x, sqz = sqz)) < sqz)
+all(abs(p - fexpit(flogit(p, sqz = sqz), sqz = sqz)) < sqz)
 
 }

@@ -21,8 +21,8 @@ Transform/normalize compartment calls using TF-IDF
 
 m <- 1000
 n <- 100
-mat <- round(matrix(runif(m*n), m, n))
-#Input needs to be a tall matrix
+mat <- round(matrix(runif(m * n), m, n))
+# Input needs to be a tall matrix
 tfidf <- transformTFIDF(mat)
 
 }
