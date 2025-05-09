@@ -46,6 +46,8 @@
         biocthis
         covr
         devtools
+        DT
+        htmltools
         styler
         usethis
       ];
