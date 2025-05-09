@@ -124,8 +124,7 @@ fexpit <- function(x, sqz = 0.000001) {
   midpt <- .5
   squoze <- exp(x) / (1 + exp(x))
   inflate <- 1 / (1 - (sqz * midpt))
-  p <- ((squoze - midpt) * inflate) + midpt
-  return(p)
+  ((squoze - midpt) * inflate) + midpt
 }
 
 #' Get the chromosomes from an object
