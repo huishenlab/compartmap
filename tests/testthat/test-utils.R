@@ -170,6 +170,15 @@ test_that("flogit", {
 })
 # }}}
 
+# fexpit {{{
+test_that("fexpit", {
+  input <- rnorm(10)
+  output <- fexpit(input)
+  expect_true(all(output > 0))
+  expect_true(all(output < 1))
+})
+# }}}
+
 # getChrs {{{
 test_that("getChrs", {
   expect_equal(
