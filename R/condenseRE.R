@@ -26,7 +26,7 @@ condenseRE <- function(obj) {
   # do NOT use getAssayNames here
   # for some reason it causes memory to skyrocket
   names(se_list) <- assayNames(obj)
-  return(se_list)
+  se_list
 }
 
 #' Condense the output of condenseRE to reconstruct per-sample GRanges objects to plot
