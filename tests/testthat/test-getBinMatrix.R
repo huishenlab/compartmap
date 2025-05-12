@@ -46,3 +46,34 @@ test_that(".makeBins", {
     expect_equal(gdf$seqnames, ex.chr)
   })
 })
+
+test_that(".summarizeBins", {
+  expected.base <- tapply(iris$Sepal.Length, iris$Species, mean) |> as.numeric()
+
+  get_indices <- function(indices) {
+    c(rep(indices[1], 50), rep(indices[2], 50), rep(indices[3], 50))
+  }
+
+  tester <- function(test.input) {
+    ind <- unlist(test.input$indices)
+    ind.full <- get_indices(ind)
+    test <- compartmap:::.summarizeBins(
+      iris$Sepal.Length,
+      test.input$binlength,
+      ind.full,
+      mean
+    )
+    expected <- rep(0, test.input$binlength)
+    expected[ind] <- expected.base
+    expect_equal(test, expected)
+  }
+
+  index_set <- list(
+    c(1, 2, 3),
+    c(1, 5, 10),
+    c(5, 50, 500)
+  )
+  binlength_set <- c(3, 5, 10, 50, 100, 500)
+  test_set <- expand.grid(binlength = binlength_set, indices = index_set)
+  apply(test_set, 1, tester)
+})
