@@ -48,7 +48,7 @@ condenseRE <- function(obj) {
 #' x <- RaggedExperiment(grl)
 #' condense.x <- condenseSE(x, sample.name = "A")
 condenseSE <- function(obj, sample.name = NULL) {
-  if (is.null(sample.name)) sample.name <- colnames(obj)
+  sample.name <- sample.name %||% colnames(obj)
 
   # make sure there are some assays to work with
   if (length(obj) < 1) stop("No assays found to condense.")
