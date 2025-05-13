@@ -34,13 +34,13 @@ fisherZ <- function(cormat) {
 
 #' @title Fisher's Z transformation
 #'
-#' @description
-#' \code{fisherZ} returns the inverse (squeezed) Fisher's Z transformed Pearson's r. This will fail if a matrix is used as input instead of a vector.
+#' `ifisherZ` returns the inverse (squeezed) Fisher's Z transformed
+#' Pearson's r.
 #'
 #' @details
 #' This function returns the inverse (squeezed) Fisher's Z transformed Pearson's r
-#'
-#' @param cormat    vector of Fisher's Z transformed Pearson correlations or an eignevector
+#' @param zmat matrix of Fisher's Z transformed Pearson correlations or an
+#' eignevector
 #'
 #' @return    Back transformed Fisher's Z
 #' @export
@@ -57,8 +57,7 @@ fisherZ <- function(cormat) {
 #' mat.transform <- fisherZ(mat)
 #'
 #' #Back transform
-#' mat.transform.inverse <- apply(mat.transform, 1, ifisherZ)
-
-ifisherZ <- function(cormat) {
-  tanh(cormat)
+#' ifisherZ(mat.transform)
+ifisherZ <- function(zmat) {
+  tanh(zmat)
 }

@@ -4,19 +4,18 @@
 \alias{ifisherZ}
 \title{Fisher's Z transformation}
 \usage{
-ifisherZ(cormat)
+ifisherZ(zmat)
 }
 \arguments{
-\item{cormat}{vector of Fisher's Z transformed Pearson correlations or an eignevector}
+\item{zmat}{matrix of Fisher's Z transformed Pearson correlations or an
+eignevector}
 }
 \value{
 Back transformed Fisher's Z
 }
 \description{
-\code{fisherZ} returns the inverse (squeezed) Fisher's Z transformed Pearson's r. This will fail if a matrix is used as input instead of a vector.
-}
-\details{
-This function returns the inverse (squeezed) Fisher's Z transformed Pearson's r
+\code{ifisherZ} returns the inverse (squeezed) Fisher's Z transformed
+Pearson's r.
 }
 \examples{
 
@@ -30,5 +29,5 @@ diag(mat) <- 1
 mat.transform <- fisherZ(mat)
 
 #Back transform
-mat.transform.inverse <- apply(mat.transform, 1, ifisherZ)
+ifisherZ(mat.transform)
 }
