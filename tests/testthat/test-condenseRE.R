@@ -9,6 +9,12 @@ re <- RaggedExperiment(grl)
 re.condenseRE <- condenseRE(re)
 re.condenseSE <- condenseSE(re)
 
+grl.single <- GRangesList(
+  GRanges(c("chr1:1-5", "chr1:4-6", "chr1:10-15"), score = 1:3, count = 1:3)
+)
+names(grl.single) <- "A"
+re.single <- RaggedExperiment(grl.single)
+re.single.condenseSE <- condenseSE(re.single)
 
 mat.score <- matrix(c(1, 2, 3, NA, 4, NA, NA, 5), nrow = 4)
 rownames(mat.score) <- c("chr1:1-5", "chr1:4-6", "chr1:10-15", "chr2:1-3")
@@ -72,6 +78,11 @@ test_that("condenseSE", {
     expect_equal(re.condenseSE[[i]], expected.gr)
   })
 
+  expected.gr <- unique(rowRanges(re.single))
+  names(expected.gr) <- as.character(expected.gr)
+  mcols(expected.gr)["score"] <- mat.score[1:3, 1]
+  mcols(expected.gr)["count"] <- mat.count[1:3, 1]
+  expect_equal(re.single.condenseSE, expected.gr)
 })
 # }}}
 
