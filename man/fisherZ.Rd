@@ -15,17 +15,14 @@ Fisher Z transformed Pearson correlations
 \description{
 \code{fisherZ} returns (squeezed) Fisher's Z transformed Pearson's r
 }
-\details{
-This function returns (squeezed) Fisher's Z transformed Pearson's r
-}
 \examples{
 
 #Generate a random binary (-1, 1) matrix
-mat <- matrix(sample(c(1,-1), 10000, replace = TRUE), ncol = 100)
+(mat <- matrix(sample(c(1,-1), 25, replace = TRUE), ncol = 5))
 
 #Correct matrix diag
 diag(mat) <- 1
 
 #Transform
-mat.transform <- fisherZ(mat)
+fisherZ(mat)
 }

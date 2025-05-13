@@ -2,7 +2,7 @@
 % Please edit documentation in R/fisherTransform.R
 \name{ifisherZ}
 \alias{ifisherZ}
-\title{Fisher's Z transformation}
+\title{Inverse Fisher's Z transformation}
 \usage{
 ifisherZ(zmat)
 }
@@ -11,7 +11,7 @@ ifisherZ(zmat)
 eignevector}
 }
 \value{
-Back transformed Fisher's Z
+Back transformed Fisher's Z Pearson correlations
 }
 \description{
 \code{ifisherZ} returns the inverse (squeezed) Fisher's Z transformed
@@ -19,14 +19,14 @@ Pearson's r.
 }
 \examples{
 
-#Generate a random binary (-1, 1) matrix
-mat <- matrix(sample(c(1,-1), 10000, replace = TRUE), ncol = 100)
+# Generate a random binary (-1, 1) matrix
+(mat <- matrix(sample(c(1,-1), 25, replace = TRUE), ncol = 5))
 
-#Correct matrix diag
+# Correct matrix diag
 diag(mat) <- 1
 
-#Transform
-mat.transform <- fisherZ(mat)
+# Transform
+(mat.transform <- fisherZ(mat))
 
 #Back transform
 ifisherZ(mat.transform)
