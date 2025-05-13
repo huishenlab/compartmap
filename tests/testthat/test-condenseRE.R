@@ -24,6 +24,7 @@ mat.count <- matrix(c(1, 2, 3, NA, 6, NA, NA, 7), nrow = 4)
 rownames(mat.count) <- c("chr1:1-5", "chr1:4-6", "chr1:10-15", "chr2:1-3")
 colnames(mat.count) <- c("A", "B")
 
+# condenseRE {{{
 test_that("condenseRE", {
   obj <- SummarizedExperiment()
   expect_error(
@@ -55,6 +56,7 @@ test_that("condenseRE", {
     mat.count
   )
 })
+# }}}
 
 # condenseSE {{{
 test_that("condenseSE", {
@@ -86,3 +88,28 @@ test_that("condenseSE", {
 })
 # }}}
 
+# .condenseGR {{{
+test_that(".condenseGR", {
+  expected.gr <- unique(rowRanges(re))
+  names(expected.gr) <- as.character(expected.gr)
+  sample.names <- c("A", "B")
+  assay.names <- c("score", "count")
+  test_sets <- expand.grid(sample = sample.names, assay = assay.names)
+
+  score.gr.A <- expected.gr
+  mcols(score.gr.A)["score"] <- DataFrame(mat.score[, 1])
+  expect_equal(score.gr.A, compartmap:::.condenseGR(1, re.condenseRE, "A"))
+
+  score.gr.B <- expected.gr
+  mcols(score.gr.B)["score"] <- DataFrame(mat.score[, 2])
+  expect_equal(score.gr.B, compartmap:::.condenseGR(1, re.condenseRE, "B"))
+
+  count.gr.A <- expected.gr
+  mcols(count.gr.A)["count"] <- DataFrame(mat.count[, 1])
+  expect_equal(count.gr.A, compartmap:::.condenseGR(2, re.condenseRE, "A"))
+
+  count.gr.B <- expected.gr
+  mcols(count.gr.B)["count"] <- DataFrame(mat.count[, 2])
+  expect_equal(count.gr.B, compartmap:::.condenseGR(2, re.condenseRE, "B"))
+})
+# }}}
