@@ -1,10 +1,14 @@
+sample_names <- c("A", "B")
+assay_names <- c("score", "count")
 grl <- GRangesList(
   GRanges(c("chr1:1-5", "chr1:4-6", "chr1:10-15"), score = 1:3, count = 1:3),
   GRanges(c("chr1:1-5", "chr2:1-3"), score = 4:5, count = 6:7)
 )
-names(grl) <- c("A", "B")
+names(grl) <- sample_names
 re <- RaggedExperiment(grl)
-re.condense <- condenseRE(re)
+re.condenseRE <- condenseRE(re)
+re.condenseSE <- condenseSE(re)
+
 
 mat.score <- matrix(c(1, 2, 3, NA, 4, NA, NA, 5), nrow = 4)
 rownames(mat.score) <- c("chr1:1-5", "chr1:4-6", "chr1:10-15", "chr2:1-3")
@@ -45,3 +49,29 @@ test_that("condenseRE", {
     mat.count
   )
 })
+
+# condenseSE {{{
+test_that("condenseSE", {
+  obj <- RaggedExperiment()
+  length(obj)
+  expect_error(condenseSE(obj), "No assays found to condense.")
+
+  expect_error(
+    condenseSE(re, sample.name = "NA"),
+    "sample.name <- sample.name %||% colnames(obj)"
+  )
+
+  expect_equal(length(re.condenseSE), 2)
+  expect_equal(names(re.condenseSE), sample_names)
+
+  lapply(1:length(re.condenseSE), function(i) {
+    expected.gr <- unique(rowRanges(re))
+    names(expected.gr) <- as.character(expected.gr)
+    mcols(expected.gr)["score"] <- mat.score[, i]
+    mcols(expected.gr)["count"] <- mat.count[, i]
+    expect_equal(re.condenseSE[[i]], expected.gr)
+  })
+
+})
+# }}}
+
