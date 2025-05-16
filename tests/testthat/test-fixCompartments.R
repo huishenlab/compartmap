@@ -86,4 +86,10 @@ test_that("fixCompartments", {
       gr.expected[[i]]
     )
   })
+
+  re <- RaggedExperiment(A = gr1, B = gr2, C = gr3)
+  fix_result <- fixCompartments(re)
+
+  expect_length(fix_result, length(colnames(re)))
+  expect_equal(names(fix_result), c("A", "B", "C"))
 })
