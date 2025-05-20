@@ -4,32 +4,33 @@
 \alias{meanSmoother}
 \title{Windowed mean smoother}
 \usage{
-meanSmoother(x, k = 1, iter = 2, na.rm = TRUE, delta = 0, w = NULL)
+meanSmoother(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights = NULL)
 }
 \arguments{
-\item{x}{Input data matrix: samples are columns, regions/loci are rows}
+\item{mat}{Input data matrix: samples are columns, regions/loci are rows}
 
-\item{k}{Number of windows to use (default k=1, i.e., 3 windows)}
+\item{k}{Number of windows to use (default = 1 to smooth with 1
+window on either side of a position)}
 
-\item{iter}{Number of iterations to smooth (default is 2)}
+\item{iters}{Number of iterations to smooth (default is 2)}
 
 \item{na.rm}{Whether to remove NAs prior to smoothing (TRUE)}
 
 \item{delta}{Convergence threshhold (overrides iter if > 0; default is 0)}
 
-\item{w}{Weights, if using any (NULL)}
+\item{weights}{Weights, if using any (NULL)}
 }
 \value{
 \if{html}{\out{<div class="sourceCode">}}\preformatted{ Smoothed data matrix
 }\if{html}{\out{</div>}}
 }
 \description{
-TODO: farm out to C++ and test, at least when there are no NAs
+Windowed mean smoother
 }
 \examples{
-dummy <- matrix(rnorm(10000), ncol=25)
+dummy <- matrix(rnorm(10000), ncol = 25)
 smooth.dummy <- meanSmoother(dummy)
-smooth.dummy <- meanSmoother(dummy, iter=3) 
-smooth.dummy <- meanSmoother(dummy, delta=1e-3) 
+smooth.dummy <- meanSmoother(dummy, iters = 3)
+smooth.dummy <- meanSmoother(dummy, delta = 1e-3)
 
 }

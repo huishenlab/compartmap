@@ -1,92 +1,90 @@
 #' Windowed mean smoother
 #'
-#' TODO: farm out to C++ and test, at least when there are no NAs
-#' 
 #' @name meanSmoother
 #'
-#' @param x     Input data matrix: samples are columns, regions/loci are rows
-#' @param k     Number of windows to use (default k=1, i.e., 3 windows)
-#' @param iter  Number of iterations to smooth (default is 2)
-#' @param na.rm Whether to remove NAs prior to smoothing (TRUE)
-#' @param delta Convergence threshhold (overrides iter if > 0; default is 0) 
-#' @param w     Weights, if using any (NULL)
+#' @param mat       Input data matrix: samples are columns, regions/loci are rows
+#' @param k         Number of windows to use (default = 1 to smooth with 1
+#'                  window on either side of a position)
+#' @param iters     Number of iterations to smooth (default is 2)
+#' @param na.rm     Whether to remove NAs prior to smoothing (TRUE)
+#' @param delta     Convergence threshhold (overrides iter if > 0; default is 0)
+#' @param weights   Weights, if using any (NULL)
 #'
 #' @importFrom stats median weighted.mean
 #'
 #' @return      Smoothed data matrix
 #'
 #' @examples
-#' dummy <- matrix(rnorm(10000), ncol=25)
+#' dummy <- matrix(rnorm(10000), ncol = 25)
 #' smooth.dummy <- meanSmoother(dummy)
-#' smooth.dummy <- meanSmoother(dummy, iter=3) 
-#' smooth.dummy <- meanSmoother(dummy, delta=1e-3) 
-#' 
+#' smooth.dummy <- meanSmoother(dummy, iters = 3)
+#' smooth.dummy <- meanSmoother(dummy, delta = 1e-3)
+#'
 #' @export
-meanSmoother <- function(x, k=1, iter=2, na.rm=TRUE, delta=0, w=NULL) {
-
+meanSmoother <- function(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights = NULL) {
   if (k == 0) {
-    message("Returning unsmoothed x. This is probably an error.") 
-    return(x) 
-  } 
-
-  stopifnot(length(x) >= k)
-
-  i <- 0 
-  eps <- delta + 1 
-  if (is.null(w)) w <- rep(1, length(x))
-
-  while (i < iter & eps > delta) {
-
-    x0 <- x 
-    i <- i + 1 
-#    if (!na.rm | !anyNA(x)) {
-#      x <- .meanSmoother.rcpp(x0, w=w, k=k)
-#    } else {
-      x <- .meanSmoother.internal(x0, w=w, k=k, na.rm=na.rm)
-#    }
-    eps <- median(abs(x - x0)) # R builtin is fastish
-
+    message("Returning unsmoothed mat as 'k' = 0")
+    return(mat)
   }
-  
-  return(x)
 
+  stopifnot(length(mat) >= k)
+
+  pos <- 0
+  eps <- delta + 1
+  weights <- weights %||% rep(1, length(mat))
+
+  while (pos < iters & eps > delta) {
+    mat0 <- mat
+    pos <- pos + 1
+    #    if (!na.rm | !anyNA(x)) {
+    #      x <- .meanSmoother.rcpp(x0, w=w, k=k)
+    #    } else {
+    mat <- .meanSmoother.internal(mat0, weights = weights, windows = windows, na.rm = na.rm)
+    #    }
+    eps <- median(abs(mat - mat0)) # R builtin is fastish
+  }
+
+  mat
 }
 
 
 # helper fn
-.meanSmoother.internal <- function(x, w, k, na.rm=TRUE) {
-
-  n <- length(x) 
+# finds the first and last eligible positions to smooth as well as excess bins
+# beyond eligible positions.
+.meanSmoother.internal <- function(mat, weights, k, na.rm = TRUE) {
+  n <- length(mat)
   y <- rep(NA, n)
 
-  first <- k + 1                # first eligible position to smooth
-  last <- n - k                 # last eligible position to smooth
-  excess <- seq((last + 1), n)  # excess bins beyond eligible
+  first_pos <- k + 1
+  last_pos <- n - k
+  excess_bins <- seq((last_pos + 1), n)
 
   # why, it even looks like C++ now. note that na.rm can create issues
-  for (i in first:last) y[i] <- .window.mean(x, w=w, j=i, k=k, na.rm=na.rm)
-  
-  # it is possible for k to be 0 in this loop, it appears
-  for (i in 1:k) y[i] <- .window.mean(x, w=w, j=i, k=i-1, na.rm=na.rm)
+  for (pos in first_pos:last_pos) {
+    y[pos] <- .window.mean(mat, weights, pos, k = k, na.rm = na.rm)
+  }
 
-  # it is definitely possible for k to be 0 in this loop
-  for (i in excess) y[i] <- .window.mean(x, w=w, j=i, k=n-i, na.rm=na.rm)
+  # it is possible for windows to be 0 in this loop, it appears
+  for (pos in 1:k) {
+    y[pos] <- .window.mean(mat, weights, pos, k = pos - 1, na.rm = na.rm)
+  }
 
-  return(y)
+  # it is definitely possible for windows to be 0 in this loop
+  for (pos in excess_bins) {
+    y[pos] <- .window.mean(mat, weights, pos, k = n - pos, na.rm = na.rm)
+  }
 
+  y
 }
 
 
 # helper fn
-.window.mean <- function(x, w, j, k, na.rm=na.rm) {
-  # span = k + 2 
-  # endpos = j + k
-  # startpos = j - k - 1
+.window.mean <- function(mat, weights, pos, k, na.rm = TRUE) {
   if (k < 1) {
-    return(x[j])
+    return(mat[pos])
   }
-  endpos <- j + k
-  startpos <- j - k - 1
+  endpos <- pos + k
+  startpos <- pos - k - 1
   stride <- seq(startpos, endpos)
-  weighted.mean(x[stride], w = w[stride], na.rm = na.rm)
+  weighted.mean(mat[stride], weights = weights[stride], na.rm = na.rm)
 }
