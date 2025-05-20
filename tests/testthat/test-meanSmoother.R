@@ -2,7 +2,7 @@ test_that("meanSmoother", {
   mat <- matrix(1:5, nrow = 5, ncol = 5)
   expect_message(
     meanSmoother(mat, k = 0),
-    "Returning unsmoothed x. This is probably an error.",
+    "Returning unsmoothed mat as 'k' = 0",
     fixed = TRUE
   )
   expect_equal(
@@ -13,7 +13,7 @@ test_that("meanSmoother", {
   # TODO get better error
   expect_error(
     meanSmoother(mat[1:2], k = 3),
-    "length(x) >= k is not TRUE",
+    "length(mat) >= k is not TRUE",
     fixed = TRUE
   )
 })
