@@ -79,17 +79,14 @@ meanSmoother <- function(x, k=1, iter=2, na.rm=TRUE, delta=0, w=NULL) {
 
 # helper fn
 .window.mean <- function(x, w, j, k, na.rm=na.rm) {
-
   # span = k + 2 
   # endpos = j + k
   # startpos = j - k - 1
-  if(k > 0) {
-    endpos <- j + k 
-    startpos <- j - k - 1
-    stride <- seq(startpos, endpos)
-    weighted.mean(x[stride], w=w[stride], na.rm=na.rm)
-  } else { 
-    x[j]
+  if (k < 1) {
+    return(x[j])
   }
-
+  endpos <- j + k
+  startpos <- j - k - 1
+  stride <- seq(startpos, endpos)
+  weighted.mean(x[stride], w = w[stride], na.rm = na.rm)
 }
