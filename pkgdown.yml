@@ -3,7 +3,7 @@ pkgdown: 2.1.2
 pkgdown_sha: ~
 articles:
   compartmap: compartmap.html
-last_built: 2025-05-13T13:36Z
+last_built: 2025-05-21T20:13Z
 urls:
-  reference: https://biobenkj.github.io/compartmap/reference
-  article: https://biobenkj.github.io/compartmap/articles
+  reference: https://huishenlab.github.io/compartmap/reference
+  article: https://huishenlab.github.io/compartmap/articles

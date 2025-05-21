@@ -67,22 +67,30 @@
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Fisher Z transformed Pearson correlations</p>
     </div>
-    <div class="section level2">
-    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function returns (squeezed) Fisher's Z transformed Pearson's r</p>
-    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Generate a random binary (-1, 1) matrix</span></span></span>
-<span class="r-in"><span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fl">10000</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">(</span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fl">25</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]   -1   -1    1   -1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -1    1   -1   -1   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]    1    1   -1   -1   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    1   -1   -1   -1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -1   -1    1   -1    1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Correct matrix diag</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Transform</span></span></span>
-<span class="r-in"><span><span class="va">mat.transform</span> <span class="op">&lt;-</span> <span class="fu">fisherZ</span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">fisherZ</span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]      [,3]      [,4]      [,5]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  7.254329 -7.254329  7.254329 -7.254329  7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -7.254329  7.254329 -7.254329 -7.254329 -7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]  7.254329  7.254329  7.254329 -7.254329 -7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  7.254329 -7.254329 -7.254329  7.254329  7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -7.254329 -7.254329  7.254329 -7.254329  7.254329</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

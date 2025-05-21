@@ -62,16 +62,12 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level2">
-<h2 id="section">
-<a href="https://biobenkj.github.io/compartmap/"><img src="reference/figures/compartmap_logo.png" align="right" height="138" style="float:right; height:138px;"></a><a class="anchor" aria-label="anchor" href="#section"></a>
-</h2>
+  <main id="main" class="col-md-9"><p><br><img src="reference/figures/compartmap_logo.png" align="right" height="138" style="float:right; height:138px;"></p>
 <p><em>Chromatin compartment inference from single-cell RNA- and ATAC-seq</em></p>
 <!-- badges: start -->
 
 <p>Compartmap extends methods proposed by <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0741-y" class="external-link">Fortin and Hansen 2015, Genome Biology</a> to perform direct inference of higher-order chromatin in <em>single cells</em> from scRNA-seq and scATAC-seq. Originally, Fortin and Hansen demonstrated that chromatin conformation could be inferred from (sc)ATAC-seq, bisulfite sequencing, DNase-seq and methylation arrays, similar to the results provided by HiC at the group level. Thus, in addition to the base information provided by the aforementioned assays, chromatin state could also be inferred.</p>
 <p>Here, we propose a method to infer both group and single-cell level higher-order chromatin states from scRNA-seq and scATAC-seq. To accomplish this, we employ a James-Stein estimator (JSE) towards a global or targeted mean, using either chromsome or genome-wide information from scRNA-seq and scATAC-seq. Additionally, due to the sparsity of single-cell data, we employ a bootstrap procedure to quantify the uncertainty associated with the state and boundaries of inferred compartments. The output from compartmap can then be visualized directly, compared with orthogonal assay types, and/or embedded with something like UMAP or t-SNE. Further, to explore the higher-order interacting domains inferred from compartmap, we use a Random Matrix Theory (RMT) approach to resolve the “plaid-like” patterning, similar to what is observed in Hi-C and scHi-C.</p>
-</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -92,20 +88,20 @@
 <h3 id="github">GitHub<a class="anchor" aria-label="anchor" href="#github"></a>
 </h3>
 <p>You can install the development version from Github by cloning the repo and running</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/biobenjk/compartmap</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/huishenlab/compartmap</span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL compartmap</span></code></pre></div>
 <p>You can also use <a href="https://bioconductor.github.io/BiocManager/" class="external-link"><code>BiocManager</code></a>, <a href="https://devtools.r-lib.org/" class="external-link"><code>devtools</code></a> or <a href="https://pak.r-lib.org/" class="external-link"><code>pak</code></a>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"biobenjk/compartmap"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"huishenlab/compartmap"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"biobenjk/compartmap"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"huishenlab/compartmap"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"biobenjk/compartmap"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pkg_install</span><span class="op">(</span><span class="st">"huishenlab/compartmap"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h3>
-<p>A user guide is available on the <a href="https://biobenjk.github.io/compartmap" class="external-link">package website</a>. Bug reports may be submitted through GitHub issues.</p>
+<p>A user guide is available on the <a href="https://huishenlab.github.io/compartmap">package website</a>. Bug reports may be submitted through GitHub issues.</p>
 </div>
 </div>
 
