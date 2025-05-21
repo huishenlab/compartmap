@@ -63,16 +63,12 @@
   </div>
 </nav><div class="container template-home">
 <div class="row">
-  <main id="main" class="col-md-9"><div class="section level2">
-<h2 id="section">
-<img src="reference/figures/compartmap_logo.png" align="right" height="138" style="float:right; height:138px;"><a class="anchor" aria-label="anchor" href="#section"></a>
-</h2>
+  <main id="main" class="col-md-9"><p><br><img src="reference/figures/compartmap_logo.png" align="right" height="138" style="float:right; height:138px;"></p>
 <p><em>Chromatin compartment inference from single-cell RNA- and ATAC-seq</em></p>
 <!-- badges: start -->
 
 <p>Compartmap extends methods proposed by <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-015-0741-y" class="external-link">Fortin and Hansen 2015, Genome Biology</a> to perform direct inference of higher-order chromatin in <em>single cells</em> from scRNA-seq and scATAC-seq. Originally, Fortin and Hansen demonstrated that chromatin conformation could be inferred from (sc)ATAC-seq, bisulfite sequencing, DNase-seq and methylation arrays, similar to the results provided by HiC at the group level. Thus, in addition to the base information provided by the aforementioned assays, chromatin state could also be inferred.</p>
 <p>Here, we propose a method to infer both group and single-cell level higher-order chromatin states from scRNA-seq and scATAC-seq. To accomplish this, we employ a James-Stein estimator (JSE) towards a global or targeted mean, using either chromsome or genome-wide information from scRNA-seq and scATAC-seq. Additionally, due to the sparsity of single-cell data, we employ a bootstrap procedure to quantify the uncertainty associated with the state and boundaries of inferred compartments. The output from compartmap can then be visualized directly, compared with orthogonal assay types, and/or embedded with something like UMAP or t-SNE. Further, to explore the higher-order interacting domains inferred from compartmap, we use a Random Matrix Theory (RMT) approach to resolve the “plaid-like” patterning, similar to what is observed in Hi-C and scHi-C.</p>
-</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
