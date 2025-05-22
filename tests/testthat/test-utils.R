@@ -108,7 +108,7 @@ se.bisulfite <- SummarizedExperiment(
 test_that("verifyAssayNames", {
   expect_error(
     compartmap:::verifyAssayNames(se, "s"),
-    "'s' is unsupported"
+    paste(shQuote('s'), "is unsupported")
   )
   expect_error(
     compartmap:::verifyAssayNames(se.rna, "array"),

@@ -5,7 +5,7 @@ err.verifyCoords <- paste(
   "Compartment extraction will fail.\n",
   "Please provide rowRanges with genomic coordinates for the object."
 )
-err.verifyAssayNames.beta <- "The 'assays' slot should contain 'Beta' for array data"
-err.verifyAssayNames.atac_counts <- "The 'assays' slot should contain 'counts' for atac data"
-err.verifyAssayNames.rna_counts <- "The 'assays' slot should contain 'counts' for rna data"
+err.verifyAssayNames.beta <- paste("The 'assays' slot should contain", shQuote('Beta'), "for array data")
+err.verifyAssayNames.atac_counts <- paste("The 'assays' slot should contain", shQuote('counts'), "for atac data")
+err.verifyAssayNames.rna_counts <- paste("The 'assays' slot should contain", shQuote('counts'), "for rna data")
 # }}}
