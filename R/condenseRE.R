@@ -26,7 +26,7 @@ condenseRE <- function(obj) {
   # do NOT use getAssayNames here
   # for some reason it causes memory to skyrocket
   names(se_list) <- assayNames(obj)
-  return(se_list)
+  se_list
 }
 
 #' Condense the output of condenseRE to reconstruct per-sample GRanges objects to plot
@@ -48,13 +48,13 @@ condenseRE <- function(obj) {
 #' x <- RaggedExperiment(grl)
 #' condense.x <- condenseSE(x, sample.name = "A")
 condenseSE <- function(obj, sample.name = NULL) {
-  if (is.null(sample.name)) sample.name <- colnames(obj)
-
-  # condense the input to something that can be plotted with plotAB
-  if (is(obj, "RaggedExperiment")) obj <- condenseRE(obj)
+  sample.name <- sample.name %||% colnames(obj)
 
   # make sure there are some assays to work with
   if (length(obj) < 1) stop("No assays found to condense.")
+
+  # condense the input to something that can be plotted with plotAB
+  if (is(obj, "RaggedExperiment")) obj <- condenseRE(obj)
 
   # check and make sure that the names needed are found in the column names
   colnames.assay <- colnames(assay(obj[[1]]))
