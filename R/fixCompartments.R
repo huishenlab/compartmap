@@ -42,10 +42,8 @@ flipper <- function(input_obj, min.conf) {
   }
 
   message("Assuming we only have a single sample to process.")
-  invert_compartments <- apply(mcols(input_obj), 1, function(c) {
-    return(ifelse(c["conf.est"] < 1 - min.conf, TRUE, FALSE))
-  })
   message("Fixing compartments using a minimum confidence score of ", min.conf * 100, "%")
+  invert_compartments <- apply(mcols(input_obj), 1, .inverter, min.conf)
   mcols(input_obj)$flip.compartment <- invert_compartments
 
   # add a new column for flipped scores
@@ -69,4 +67,8 @@ flipper <- function(input_obj, min.conf) {
   mcols(input_obj)$flip.conf.est.lowerCI[invert_compartments] <- 1 - (conf.est.lowerCI)
 
   return(input_obj)
+}
+
+.inverter <- function(row, min.conf) {
+  row["conf.est"] < 1 - min.conf
 }
