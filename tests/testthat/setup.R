@@ -1,3 +1,4 @@
+set.seed(42)
 ### verify errors {{{
 err.verifySE <- "Input needs to be a SummarizedExperiment"
 err.verifyCoords <- paste(

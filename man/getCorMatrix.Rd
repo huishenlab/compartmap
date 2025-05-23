@@ -45,6 +45,6 @@ bin.counts <- getBinMatrix(
   genome = "hg19"
 )
 
-#Calculate correlations
-bin.cor.counts <- getCorMatrix(bin.counts)
+# Calculate correlations
+getCorMatrix(bin.counts)
 }
