@@ -36,12 +36,8 @@ meanSmoother <- function(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights
   while (pos < iters & eps > delta) {
     mat0 <- mat
     pos <- pos + 1
-    #    if (!na.rm | !anyNA(x)) {
-    #      x <- .meanSmoother.rcpp(x0, w=w, k=k)
-    #    } else {
-    mat <- .meanSmoother.internal(mat0, weights = weights, windows = windows, na.rm = na.rm)
-    #    }
-    eps <- median(abs(mat - mat0)) # R builtin is fastish
+    mat <- .meanSmoother.internal(mat0, weights = weights, k = k, na.rm = na.rm)
+    eps <- median(abs(mat - mat0))
   }
 
   mat
@@ -59,17 +55,16 @@ meanSmoother <- function(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights
   last_pos <- n - k
   excess_bins <- seq((last_pos + 1), n)
 
-  # why, it even looks like C++ now. note that na.rm can create issues
+  # note that na.rm can create issues
   for (pos in first_pos:last_pos) {
     y[pos] <- .window.mean(mat, weights, pos, k = k, na.rm = na.rm)
   }
 
-  # it is possible for windows to be 0 in this loop, it appears
+  # it is possible for windows to be 0 in these loops
   for (pos in 1:k) {
     y[pos] <- .window.mean(mat, weights, pos, k = pos - 1, na.rm = na.rm)
   }
 
-  # it is definitely possible for windows to be 0 in this loop
   for (pos in excess_bins) {
     y[pos] <- .window.mean(mat, weights, pos, k = n - pos, na.rm = na.rm)
   }
