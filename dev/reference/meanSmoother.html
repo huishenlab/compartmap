@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Windowed mean smoother — meanSmoother"><meta name="description" content="TODO: farm out to C++ and test, at least when there are no NAs"><meta property="og:description" content="TODO: farm out to C++ and test, at least when there are no NAs"><meta name="robots" content="noindex"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Windowed mean smoother — meanSmoother"><meta name="description" content="Windowed mean smoother"><meta property="og:description" content="Windowed mean smoother"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -47,39 +47,36 @@
     </div>
 
     <div class="ref-description section level2">
-    <p>TODO: farm out to C++ and test, at least when there are no NAs</p>
+    <p>Windowed mean smoother</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">meanSmoother</span><span class="op">(</span><span class="va">x</span>, k <span class="op">=</span> <span class="fl">1</span>, iter <span class="op">=</span> <span class="fl">2</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span>, delta <span class="op">=</span> <span class="fl">0</span>, w <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">meanSmoother</span><span class="op">(</span><span class="va">mat</span>, k <span class="op">=</span> <span class="fl">1</span>, iters <span class="op">=</span> <span class="fl">2</span>, delta <span class="op">=</span> <span class="fl">0</span>, weights <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
+<dl><dt id="arg-mat">mat<a class="anchor" aria-label="anchor" href="#arg-mat"></a></dt>
 <dd><p>Input data matrix: samples are columns, regions/loci are rows</p></dd>
 
 
 <dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
-<dd><p>Number of windows to use (default k=1, i.e., 3 windows)</p></dd>
+<dd><p>Number of windows to use (default = 1 to smooth with 1
+window on either side of a position)</p></dd>
 
 
-<dt id="arg-iter">iter<a class="anchor" aria-label="anchor" href="#arg-iter"></a></dt>
+<dt id="arg-iters">iters<a class="anchor" aria-label="anchor" href="#arg-iters"></a></dt>
 <dd><p>Number of iterations to smooth (default is 2)</p></dd>
-
-
-<dt id="arg-na-rm">na.rm<a class="anchor" aria-label="anchor" href="#arg-na-rm"></a></dt>
-<dd><p>Whether to remove NAs prior to smoothing (TRUE)</p></dd>
 
 
 <dt id="arg-delta">delta<a class="anchor" aria-label="anchor" href="#arg-delta"></a></dt>
 <dd><p>Convergence threshhold (overrides iter if &gt; 0; default is 0)</p></dd>
 
 
-<dt id="arg-w">w<a class="anchor" aria-label="anchor" href="#arg-w"></a></dt>
+<dt id="arg-weights">weights<a class="anchor" aria-label="anchor" href="#arg-weights"></a></dt>
 <dd><p>Weights, if using any (NULL)</p></dd>
 
 </dl></div>
@@ -90,10 +87,10 @@
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dummy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">25</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">dummy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">10000</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">25</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">smooth.dummy</span> <span class="op">&lt;-</span> <span class="fu">meanSmoother</span><span class="op">(</span><span class="va">dummy</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">smooth.dummy</span> <span class="op">&lt;-</span> <span class="fu">meanSmoother</span><span class="op">(</span><span class="va">dummy</span>, iter<span class="op">=</span><span class="fl">3</span><span class="op">)</span> </span></span>
-<span class="r-in"><span><span class="va">smooth.dummy</span> <span class="op">&lt;-</span> <span class="fu">meanSmoother</span><span class="op">(</span><span class="va">dummy</span>, delta<span class="op">=</span><span class="fl">1e-3</span><span class="op">)</span> </span></span>
+<span class="r-in"><span><span class="va">smooth.dummy</span> <span class="op">&lt;-</span> <span class="fu">meanSmoother</span><span class="op">(</span><span class="va">dummy</span>, iters <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">smooth.dummy</span> <span class="op">&lt;-</span> <span class="fu">meanSmoother</span><span class="op">(</span><span class="va">dummy</span>, delta <span class="op">=</span> <span class="fl">1e-3</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
