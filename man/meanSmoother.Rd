@@ -4,7 +4,7 @@
 \alias{meanSmoother}
 \title{Windowed mean smoother}
 \usage{
-meanSmoother(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights = NULL)
+meanSmoother(mat, k = 1, iters = 2, delta = 0, weights = NULL)
 }
 \arguments{
 \item{mat}{Input data matrix: samples are columns, regions/loci are rows}
@@ -13,8 +13,6 @@ meanSmoother(mat, k = 1, iters = 2, na.rm = TRUE, delta = 0, weights = NULL)
 window on either side of a position)}
 
 \item{iters}{Number of iterations to smooth (default is 2)}
-
-\item{na.rm}{Whether to remove NAs prior to smoothing (TRUE)}
 
 \item{delta}{Convergence threshhold (overrides iter if > 0; default is 0)}
 
