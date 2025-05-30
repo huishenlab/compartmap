@@ -360,3 +360,51 @@ test_that("filterOpenSea", {
   )
 })
 # }}}
+
+# getMatrixBlocks {{{
+test_that("getMatrixBlocks", {
+  m <- 100
+  n <- 1000
+  mat <- round(matrix(runif(m * n), m, n))
+  mat.sparse <- Matrix(mat, sparse = TRUE)
+
+  expect_message(
+    getMatrixBlocks(mat.sparse, chunk.size = 10, by.row = TRUE),
+    "Breaking into row chunks."
+  )
+  expect_message(
+    getMatrixBlocks(mat.sparse, chunk.size = 11, by.row = FALSE),
+    "Breaking into column chunks."
+  )
+
+  lapply(sample(1:99, size = 10), function(i) {
+    chunks.row <- getMatrixBlocks(mat.sparse, chunk.size = i, by.row = TRUE)
+    chunks.column <- getMatrixBlocks(mat.sparse, chunk.size = i, by.row = FALSE)
+
+    # lengths
+    expect_equal(length(chunks.row), ceiling(m / i))
+    expect_equal(length(chunks.column), ceiling(n / i))
+
+    # values
+    expect_equal(
+      unique(lapply(chunks.row[1:length(chunks.row) - 1], length)) |> unlist(),
+      i
+    )
+    expect_equal(
+      unique(lapply(chunks.column[1:length(chunks.column) - 1], length)) |> unlist(),
+      i
+    )
+
+    # values in last bin, fewer than previous bins
+    expect_equal(
+      chunks.row[length(chunks.row)] |> unlist() |> unname(),
+      (i * (length(chunks.row) - 1) + 1):m
+    )
+    expect_equal(
+      chunks.column[length(chunks.column)] |> unlist() |> unname(),
+      (i * (length(chunks.column) - 1) + 1):n
+    )
+  })
+})
+
+# }}}
