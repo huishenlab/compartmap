@@ -80,5 +80,5 @@ meanSmoother <- function(mat, k = 1, iters = 2, delta = 0, weights = NULL) {
   endpos <- pos + k
   startpos <- pos - k - 1
   stride <- seq(startpos, endpos)
-  weighted.mean(mat[stride], weights = weights[stride], na.rm = TRUE)
+  weighted.mean(mat[stride], weights[stride], na.rm = TRUE)
 }
