@@ -28,6 +28,17 @@ test_that(".getCI", {
   expect_equal(gr.expected, compartmap:::.getCI(gr, 0.95))
 })
 
+test_that(".getSummary", {
+  gr1 <- GRanges(c("chr1:1-10", "chr1:11-20", "chr1:21-30", "chr1:31-40", "chr1:41-50", "chr1:51-60"))
+  mcols(gr1) <- data.frame(score = runif(6, -5, 5))
+
+  gr1$compartments <- ifelse(mcols(gr1)$score > 0, "open", "closed")
+  gr1$open <- ifelse(mcols(gr1)$score > 0, 1, 0)
+  gr1$closed <- ifelse(mcols(gr1)$score < 0, 1, 0)
+  expected <- as.matrix(cbind(gr1$open, gr1$closed))
+
+  expect_equal(compartmap:::.getSummary(gr1, gr1), expected)
+})
 
 test_that("summarizeBootstraps", {
 })
