@@ -369,17 +369,17 @@ test_that("getMatrixBlocks", {
   mat.sparse <- Matrix(mat, sparse = TRUE)
 
   expect_message(
-    getMatrixBlocks(mat.sparse, chunk.size = 10, by.row = TRUE),
+    getMatrixBlocks(mat.sparse, chunk.size = 10, chunk.by = "row"),
     "Breaking into row chunks."
   )
   expect_message(
-    getMatrixBlocks(mat.sparse, chunk.size = 11, by.row = FALSE),
+    getMatrixBlocks(mat.sparse, chunk.size = 11, chunk.by = "column"),
     "Breaking into column chunks."
   )
 
   lapply(sample(1:99, size = 10), function(i) {
-    chunks.row <- getMatrixBlocks(mat.sparse, chunk.size = i, by.row = TRUE)
-    chunks.column <- getMatrixBlocks(mat.sparse, chunk.size = i, by.row = FALSE)
+    chunks.row <- getMatrixBlocks(mat.sparse, chunk.size = i, chunk.by = "row")
+    chunks.column <- getMatrixBlocks(mat.sparse, chunk.size = i, chunk.by = "column")
 
     # lengths
     expect_equal(length(chunks.row), ceiling(m / i))
