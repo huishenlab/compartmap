@@ -276,27 +276,29 @@ importBigWig <- function(
   summarize = FALSE,
   genome = c("hg19", "hg38", "mm9", "mm10")
 ) {
-  # read in the bigwig
   bw.raw <- rtracklayer::import(bw)
   # coerce to UCSC style seqlevels
   seqlevelsStyle(bw.raw) <- "UCSC"
   if (!is.null(bins)) {
     seqlevelsStyle(bins) <- "UCSC"
   }
+
   # it is now a GRanges object
   if (any(is.na(seqlengths(bw.raw)))) stop("Imported bigwig does not have seqlengths")
-  ## only supporting human and mouse for now
-  if (genome %in% c("hg19", "hg38")) {
-    species <- "Homo_sapiens"
-  } else {
-    species <- "Mus_musculus"
-  }
+
+  species <- switch(
+    genome,
+    hg19 = "Homo_sapiens",
+    hg38 = "Homo_sapiens",
+    mm9 = "Mus_musculus",
+    mm10 = "Mus_musculus",
+    stop("Only human and mouse genomes are currently supported")
+  )
+
   bw.sub <- keepStandardChromosomes(bw.raw, species = species, pruning.mode = "coarse")
-  if (!is.null(bins)) {
-    bins <- keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
-  }
+  bins <- bins %||% keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
+
   if (summarize) {
-    # make sure it's sorted
     bw.sub <- sort(bw.sub)
     # this assumes seqlengths exist...
     # this also assumes some bins exist
@@ -311,7 +313,7 @@ importBigWig <- function(
     colnames(bw.se) <- as.character(bw)
     return(bw.se)
   }
-  return(bw.sub)
+  bw.sub
 }
 
 #' Generate function to filter rows/columns with NAs exceeding a threshold
