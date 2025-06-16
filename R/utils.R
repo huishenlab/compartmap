@@ -162,8 +162,7 @@ getSeqLengths <- function(genome.gr, chr = "chr14") {
 #'
 #' @param mat Input matrix
 #' @param chunk.size The size of the chunks to use for coercion
-#' @param by.row Whether to chunk in a row-wise fashion
-#' @param by.col Whether to chunk in a column-wise fashion
+#' @param chunk.by Whether to chunk in a `"row"`- or `"column"`-wise fashion
 #'
 #' @return A set of chunked indices
 #'
@@ -179,21 +178,17 @@ getSeqLengths <- function(genome.gr, chr = "chr14") {
 #' chunks <- getMatrixBlocks(mat.sparse, chunk.size = 10)
 #'
 #' @export
-getMatrixBlocks <- function(
-  mat,
-  chunk.size = 1e5,
-  by.row = TRUE,
-  by.col = FALSE
-) {
-  message("Using chunk size: ", chunk.size)
-  if (by.row) {
-    message("Breaking into row chunks.")
-    return(split(1:nrow(mat), ceiling(seq_along(1:nrow(mat)) / chunk.size)))
-  }
+getMatrixBlocks <- function(mat, chunk.size = 1e5, chunk.by = "row") {
+  ndim <- switch(
+    chunk.by,
+    row = nrow,
+    column = ncol,
+    stop(shQuote(by), " is unsupported - only 'row' and 'column' are supported chunking options")
+  )
 
-  # assumes column-wise chunking
-  message("Breaking into column chunks.")
-  return(split(1:ncol(mat), ceiling(seq_along(1:ncol(mat)) / chunk.size)))
+  message(paste("Breaking into", chunk.by, "chunks."))
+  dimLength <- ndim(mat)
+  split(1:dimLength, ceiling(seq_along(1:dimLength) / chunk.size))
 }
 
 #' Convert a sparse matrix to a dense matrix in a block-wise fashion
