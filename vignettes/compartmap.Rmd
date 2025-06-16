@@ -109,7 +109,6 @@ intervals and median confidence estimate:
 plotAB(
   k562_compartments.boot.fix[[1]],
   chr = "chr14",
-  what = "flip.score",
   with.ci = TRUE,
   median.conf = TRUE
 )
@@ -123,7 +122,6 @@ domains by setting `reverse = TRUE` in the `plotAB()` call
 plotAB(
   k562_compartments.boot.fix[[1]],
   chr = "chr14",
-  what = "flip.score",
   with.ci = TRUE,
   median.conf = TRUE,
   reverse = TRUE
@@ -309,7 +307,6 @@ k562_scrna_chr14_raw_domains.fix <- fixCompartments(k562_scrna_chr14_raw_domains
 # Plot results
 plotAB(k562_scrna_chr14_raw_domains.fix,
   chr = "chr14",
-  what = "flip.score",
   with.ci = TRUE,
   median.conf = TRUE
 )
