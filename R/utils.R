@@ -231,8 +231,7 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5, chunk.by = "row") {
 sparseToDenseMatrix <- function(
   mat,
   blockwise = TRUE,
-  by.row = TRUE,
-  by.col = FALSE,
+  chunk.by = "row",
   chunk.size = 1e5,
   parallel = FALSE,
   cores = 2
@@ -240,35 +239,18 @@ sparseToDenseMatrix <- function(
   if (isFALSE(blockwise)) {
     return(as(mat, "matrix"))
   }
+  chunks <- getMatrixBlocks(mat, chunk.size = chunk.size, chunk.by = chunk.by)
+  binder <- switch(chunk.by, row = "rbind", column = "cbind")
 
-  # do block-wise reconstruction of matrix
-  chunks <- getMatrixBlocks(mat,
-    chunk.size = chunk.size,
-    by.row = by.row, by.col = by.col
-  )
-
-  if (by.row & parallel) {
-    return(do.call("rbind", mclapply(chunks, function(r) {
-      return(as(mat[r, ], "matrix"))
-    }, mc.cores = cores)))
-  }
-
-  if (by.row & !parallel) {
-    return(do.call("rbind", lapply(chunks, function(r) {
-      return(as(mat[r, ], "matrix"))
-    })))
-  }
-
-  # assumes column-wise conversion
-  if (by.col & parallel) {
-    return(do.call("cbind", mclapply(chunks, function(r) {
-      return(as(mat[, r], "matrix"))
-    }, mc.cores = cores)))
-  }
-
-  return(do.call("cbind", lapply(chunks, function(r) {
-    return(as(mat[, r], "matrix"))
-  })))
+  mclapply(chunks, function(chunk) {
+    switch(
+      chunk.by,
+      row = as(mat[chunk, ], "matrix"),
+      column = as(mat[, chunk], "matrix")
+    )},
+    mc.cores = ifelse(parallel, cores, 1)
+  ) |>
+    do.call(binder, args = _)
 }
 
 #' Import and optionally summarize a bigwig at a given resolution
