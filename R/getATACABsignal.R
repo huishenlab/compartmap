@@ -53,12 +53,11 @@ getATACABsignal <- function(
   boot.parallel = FALSE,
   boot.cores = 2
 ) {
-  # gather the chromosomes we are working on
-  if (is.null(chr)) {
-    message("Assuming we want to process all chromosomes.")
-    # get what chromosomes we want
-    chr <- getChrs(obj)
-  }
+  chr <- chr %||%
+    {
+      message("Assuming we want to process all chromosomes")
+      getChrs(obj)
+    }
 
   if (is.null(colnames(obj))) stop("colnames needs to be sample names.")
   columns <- colnames(obj)
