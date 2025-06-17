@@ -65,7 +65,8 @@ getArrayABsignal <- function(
   if (preprocess) {
     obj <- preprocessArrays(
       obj = obj,
-      genome = genome, other = other,
+      genome = genome,
+      other = other,
       array.type = array.type
     )
   }
@@ -96,8 +97,12 @@ getArrayABsignal <- function(
   if (bootstrap) {
     message("Pre-computing the bootstrap global means.")
     bmeans <- precomputeBootstrapMeans(
-      obj = obj, targets = targets, num.bootstraps = num.bootstraps,
-      assay = "array", parallel = parallel, num.cores = cores
+      obj = obj,
+      targets = targets,
+      num.bootstraps = num.bootstraps,
+      assay = "array",
+      parallel = parallel,
+      num.cores = cores
     )
   }
 
@@ -144,7 +149,6 @@ getArrayABsignal <- function(
     sort(unlist(as(array.compartments.list, "GRangesList")))
   }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
 
-
   array.compartments <- as(array.compartments, "CompressedGRangesList")
   RaggedExperiment(array.compartments, colData = colData(obj))
 }
@@ -170,10 +174,12 @@ getArrayABsignal <- function(
 #' }
 #'
 #' @export
-preprocessArrays <- function(obj,
-                             genome = c("hg19", "hg38", "mm9", "mm10"),
-                             other = NULL, array.type = c("hm450", "EPIC")) {
-
+preprocessArrays <- function(
+  obj,
+  genome = c("hg19", "hg38", "mm9", "mm10"),
+  other = NULL,
+  array.type = c("hm450", "EPIC")
+) {
   if (!requireNamespace("minfi", quietly = TRUE)) {
     stop("The minfi package must be installed for this functionality")
   }
@@ -273,7 +279,8 @@ preprocessArrays <- function(obj,
   bmeans <- as(bmeans, "matrix")
   colnames(bmeans) <- rep("globalMean", ncol(bmeans))
 
-  bootstrapCompartments(obj,
+  bootstrapCompartments(
+    obj,
     original.obj,
     bootstrap.samples = num.bootstraps,
     chr = chr,
