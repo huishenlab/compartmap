@@ -128,7 +128,7 @@ getATACABsignal <- function(
     return(atac.compartments)
   }
   atac.compartments <- as(atac.compartments, "CompressedGRangesList")
-  return(RaggedExperiment(atac.compartments, colData = colData(obj)))
+  RaggedExperiment(atac.compartments, colData = colData(obj))
 }
 
 # worker function
