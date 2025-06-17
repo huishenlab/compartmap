@@ -119,33 +119,32 @@ getArrayABsignal <- function(
       )
     }, mc.cores = cores)
     array.compartments <- sort(unlist(as(array.compartments.list, "GRangesList")))
-  } else {
-    array.compartments <- mclapply(columns, function(s) {
-      obj.sub <- obj[, s]
-      message("Working on ", s)
-      array.compartments.list <- lapply(chr, function(c) {
-        .arrayCompartments(
-          obj.sub, obj,
-          res = res,
-          chr = c,
-          targets = targets,
-          genome = genome,
-          bootstrap = bootstrap,
-          prior.means = prior.means,
-          num.bootstraps = num.bootstraps,
-          parallel = boot.parallel,
-          cores = boot.cores,
-          group = group,
-          bootstrap.means = bmeans
-        )
-      })
-      sort(unlist(as(array.compartments.list, "GRangesList")))
-    }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
-  }
-
-  if (group) {
     return(array.compartments)
   }
+
+  array.compartments <- mclapply(columns, function(s) {
+    obj.sub <- obj[, s]
+    message("Working on ", s)
+    array.compartments.list <- lapply(chr, function(c) {
+      .arrayCompartments(
+        obj.sub, obj,
+        res = res,
+        chr = c,
+        targets = targets,
+        genome = genome,
+        bootstrap = bootstrap,
+        prior.means = prior.means,
+        num.bootstraps = num.bootstraps,
+        parallel = boot.parallel,
+        cores = boot.cores,
+        group = group,
+        bootstrap.means = bmeans
+      )
+    })
+    sort(unlist(as(array.compartments.list, "GRangesList")))
+  }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
+
+
   array.compartments <- as(array.compartments, "CompressedGRangesList")
   RaggedExperiment(array.compartments, colData = colData(obj))
 }
@@ -267,14 +266,12 @@ preprocessArrays <- function(obj,
   # bootstrap the estimates
   # always compute confidence intervals too
   # take care of the global means
-  if (bootstrap) {
-    # this assumes that we've alread computed the global means
-    bmeans <- as(bootstrap.means, "GRanges")
-    bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
-    # go back to a matrix
-    bmeans <- as(bmeans, "matrix")
-    colnames(bmeans) <- rep("globalMean", ncol(bmeans))
-  }
+  # this assumes that we've alread computed the global means
+  bmeans <- as(bootstrap.means, "GRanges")
+  bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
+  # go back to a matrix
+  bmeans <- as(bmeans, "matrix")
+  colnames(bmeans) <- rep("globalMean", ncol(bmeans))
 
   bootstrapCompartments(obj,
     original.obj,
