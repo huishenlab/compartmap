@@ -147,7 +147,7 @@ getArrayABsignal <- function(
     return(array.compartments)
   }
   array.compartments <- as(array.compartments, "CompressedGRangesList")
-  return(RaggedExperiment(array.compartments, colData = colData(obj)))
+  RaggedExperiment(array.compartments, colData = colData(obj))
 }
 
 #' Preprocess arrays for compartment inference
@@ -200,7 +200,7 @@ preprocessArrays <- function(obj,
     obj.opensea <- imputeKNN(obj.opensea, assay = "array")
   }
 
-  return(obj.opensea)
+  obj.opensea
 }
 
 
@@ -276,7 +276,7 @@ preprocessArrays <- function(obj,
     colnames(bmeans) <- rep("globalMean", ncol(bmeans))
   }
 
-  obj.bootstrap <- bootstrapCompartments(obj,
+  bootstrapCompartments(obj,
     original.obj,
     bootstrap.samples = num.bootstraps,
     chr = chr,
@@ -291,6 +291,4 @@ preprocessArrays <- function(obj,
     group = group,
     bootstrap.means = bmeans
   )
-
-  return(obj.bootstrap)
 }
