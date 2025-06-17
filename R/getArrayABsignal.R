@@ -143,13 +143,10 @@ getArrayABsignal <- function(
     }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
   }
 
-  # if group-level treat a little differently
   if (group) {
     return(array.compartments)
   }
-  # convert to GRangesList
   array.compartments <- as(array.compartments, "CompressedGRangesList")
-  # return as a RaggedExperiment
   return(RaggedExperiment(array.compartments, colData = colData(obj)))
 }
 
@@ -207,7 +204,7 @@ preprocessArrays <- function(obj,
 }
 
 
-# worker function
+# this is the main analysis function for computing compartments from arrays
 .arrayCompartments <- function(
   obj,
   original.obj,
@@ -223,12 +220,7 @@ preprocessArrays <- function(obj,
   group = FALSE,
   bootstrap.means = NULL
 ) {
-  # this is the main analysis function for computing compartments from arrays
-
-  # what genome do we have
   genome <- match.arg(genome)
-
-  # set the parallel back-end core number
   if (parallel) options(mc.cores = cores)
 
   # update
@@ -246,7 +238,6 @@ preprocessArrays <- function(obj,
     colnames(prior.means) <- "globalMean"
   }
 
-  # get the shrunken bins
   obj.bins <- shrinkBins(
     obj,
     original.obj,
@@ -259,7 +250,6 @@ preprocessArrays <- function(obj,
     jse = TRUE
   )
 
-  # compute correlations
   obj.cor <- getCorMatrix(obj.bins, squeeze = !group)
 
   if (any(is.na(obj.cor$binmat.cor))) {
@@ -302,6 +292,5 @@ preprocessArrays <- function(obj,
     bootstrap.means = bmeans
   )
 
-  # combine and return
   return(obj.bootstrap)
 }
