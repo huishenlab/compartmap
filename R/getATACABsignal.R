@@ -196,16 +196,14 @@ atacCompartments <- function(
   # bootstrap the estimates
   # always compute confidence intervals too
   # take care of the global means
-  if (bootstrap) {
-    # this assumes that we've alread computed the global means
-    bmeans <- as(bootstrap.means, "GRanges")
-    bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
-    # go back to a matrix
-    bmeans <- as(bmeans, "matrix")
-    colnames(bmeans) <- rep("globalMean", ncol(bmeans))
-  }
+  # this assumes that we've alread computed the global means
+  bmeans <- as(bootstrap.means, "GRanges")
+  bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
+  # go back to a matrix
+  bmeans <- as(bmeans, "matrix")
+  colnames(bmeans) <- rep("globalMean", ncol(bmeans))
 
-  obj.bootstrap <- bootstrapCompartments(
+  bootstrapCompartments(
     obj,
     original.obj,
     bootstrap.samples = num.bootstraps,
@@ -221,8 +219,6 @@ atacCompartments <- function(
     group = group,
     bootstrap.means = bmeans
   )
-
-  return(obj.bootstrap)
 }
 
 #' @describeIn getATACABsignal Alias for getATACABsignal
