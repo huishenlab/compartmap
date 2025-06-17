@@ -143,7 +143,7 @@ atacCompartments <- function(
   num.bootstraps = 1000,
   parallel = FALSE,
   cores = 2,
-  group = group,
+  group = FALSE,
   bootstrap.means = NULL
 ) {
   genome <- match.arg(genome)
