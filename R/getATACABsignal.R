@@ -187,7 +187,7 @@ atacCompartments <- function(
     obj.svd <- getABSignal(obj.cor, assay = "atac")
   }
 
-  if (isFALSE(bootstrap)) {
+  if (!bootstrap) {
     return(obj.svd)
   }
 
