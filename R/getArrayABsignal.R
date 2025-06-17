@@ -265,7 +265,7 @@ preprocessArrays <- function(
     obj.svd <- getABSignal(obj.cor, assay = "array")
   }
 
-  if (isFALSE(bootstrap)) {
+  if (!bootstrap) {
     return(obj.svd)
   }
 
