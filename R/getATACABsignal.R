@@ -53,7 +53,6 @@ getATACABsignal <- function(
   boot.parallel = FALSE,
   boot.cores = 2
 ) {
-
   # gather the chromosomes we are working on
   if (is.null(chr)) {
     message("Assuming we want to process all chromosomes.")
@@ -61,12 +60,10 @@ getATACABsignal <- function(
     chr <- getChrs(obj)
   }
 
-  # get the column names
   if (is.null(colnames(obj))) stop("colnames needs to be sample names.")
   columns <- colnames(obj)
   names(columns) <- columns
 
-  # precompute global means
   prior.means <- getGlobalMeans(obj = obj, targets = targets, assay = "atac")
 
   if (bootstrap) {
@@ -80,9 +77,6 @@ getATACABsignal <- function(
       num.cores = cores
     )
   }
-
-  # initialize global means
-  # gmeans <- getGlobalMeans(obj, targets = targets, assay = "atac")
 
   if (group) {
     atac.compartments.list <- mclapply(chr, function(c) {
@@ -131,13 +125,10 @@ getATACABsignal <- function(
     }, mc.cores = ifelse(parallel, cores, 1))
   }
 
-  # if group-level treat a little differently
   if (group) {
     return(atac.compartments)
   }
-  # convert to GRangesList
   atac.compartments <- as(atac.compartments, "CompressedGRangesList")
-  # return as a RaggedExperiment
   return(RaggedExperiment(atac.compartments, colData = colData(obj)))
 }
 
@@ -158,11 +149,8 @@ atacCompartments <- function(
   group = group,
   bootstrap.means = NULL
 ) {
-
-  # what genome do we have
   genome <- match.arg(genome)
 
-  # set the parallel back-end core number
   if (parallel) options(mc.cores = cores)
 
   # update
@@ -180,7 +168,6 @@ atacCompartments <- function(
     colnames(prior.means) <- "globalMean"
   }
 
-  # get the shrunken bins
   obj.bins <- shrinkBins(
     obj,
     original.obj,
@@ -193,7 +180,6 @@ atacCompartments <- function(
     jse = TRUE
   )
 
-  # compute correlations
   obj.cor <- getCorMatrix(obj.bins, squeeze = !group)
 
   if (any(is.na(obj.cor$binmat.cor))) {
@@ -237,7 +223,6 @@ atacCompartments <- function(
     bootstrap.means = bmeans
   )
 
-  # combine and return
   return(obj.bootstrap)
 }
 
