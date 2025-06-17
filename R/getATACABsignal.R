@@ -97,36 +97,34 @@ getATACABsignal <- function(
     }, mc.cores = ifelse(parallel, cores, 1))
 
     atac.compartments <- sort(unlist(as(atac.compartments.list, "GRangesList")))
-  } else {
-    atac.compartments <- mclapply(columns, function(s) {
-      obj.sub <- obj[, s]
-
-      message("Working on ", s)
-      atac.compartments.list <- lapply(chr, function(c) {
-        atacCompartments(
-          obj.sub,
-          obj,
-          res = res,
-          chr = c,
-          targets = targets,
-          genome = genome,
-          bootstrap = bootstrap,
-          prior.means = prior.means,
-          num.bootstraps = num.bootstraps,
-          parallel = boot.parallel,
-          cores = boot.cores,
-          group = group,
-          bootstrap.means = bmeans
-        )
-      })
-
-      sort(unlist(as(atac.compartments.list, "GRangesList")))
-    }, mc.cores = ifelse(parallel, cores, 1))
-  }
-
-  if (group) {
     return(atac.compartments)
   }
+
+  atac.compartments <- mclapply(columns, function(s) {
+    obj.sub <- obj[, s]
+
+    message("Working on ", s)
+    atac.compartments.list <- lapply(chr, function(c) {
+      atacCompartments(
+        obj.sub,
+        obj,
+        res = res,
+        chr = c,
+        targets = targets,
+        genome = genome,
+        bootstrap = bootstrap,
+        prior.means = prior.means,
+        num.bootstraps = num.bootstraps,
+        parallel = boot.parallel,
+        cores = boot.cores,
+        group = group,
+        bootstrap.means = bmeans
+      )
+    })
+
+    sort(unlist(as(atac.compartments.list, "GRangesList")))
+  }, mc.cores = ifelse(parallel, cores, 1))
+
   atac.compartments <- as(atac.compartments, "CompressedGRangesList")
   RaggedExperiment(atac.compartments, colData = colData(obj))
 }
