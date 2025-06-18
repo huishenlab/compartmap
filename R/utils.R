@@ -429,15 +429,14 @@ filterOpenSea <- function(
 
 #' Gather open sea CpG from a GRanges of CpG islands
 #'
-#' @description This function accepts a GRanges input of CpG islands that can
-#' be derived from UCSC table browser and rtracklayer::import(yourbed.bed)
-#'
-#' @name filterOpenSea
+#' This function accepts a GRanges input of CpG islands that can
+#' be derived from UCSC table browser and rtracklayer::import(yourbed.bed). It
+#' resizes the inteval to create 4kb flanking open sea regions around the CpG
+#' islands as defined by [Fortin and Hansen (Genome Biology, 2015)](https://doi.org/10.1186/s13059-015-0741-y).
 #'
 #' @param gr Input GRanges of CpG islands
 #'
 #' @return GRanges object that can be used with filterOpenSea()
-#' @import rtracklayer
 #' @import GenomicRanges
 #' @export
 #'
@@ -446,6 +445,5 @@ filterOpenSea <- function(
 #' #opensea_cpg <- getOpenSeas(cpgi)
 getOpenSeas <- function(gr) {
   resorts <- trim(resize(gr, width(gr) + 8000, fix = "center"))
-  openSeas <- subset(gaps(resorts), strand == "*")
-  return(openSeas)
+  subset(gaps(resorts), strand == "*")
 }
