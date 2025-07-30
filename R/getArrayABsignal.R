@@ -65,7 +65,8 @@ getArrayABsignal <- function(
   if (preprocess) {
     obj <- preprocessArrays(
       obj = obj,
-      genome = genome, other = other,
+      genome = genome,
+      other = other,
       array.type = array.type
     )
   }
@@ -96,15 +97,21 @@ getArrayABsignal <- function(
   if (bootstrap) {
     message("Pre-computing the bootstrap global means.")
     bmeans <- precomputeBootstrapMeans(
-      obj = obj, targets = targets, num.bootstraps = num.bootstraps,
-      assay = "array", parallel = parallel, num.cores = cores
+      obj = obj,
+      targets = targets,
+      num.bootstraps = num.bootstraps,
+      assay = "array",
+      parallel = parallel,
+      num.cores = cores
     )
   }
 
   if (group) {
     array.compartments.list <- mclapply(chr, function(c) {
-      .arrayCompartments(
-        obj, obj,
+      getCompartments(
+        obj,
+        obj,
+        assay = "array",
         res = res,
         chr = c,
         targets = targets,
@@ -119,38 +126,35 @@ getArrayABsignal <- function(
       )
     }, mc.cores = cores)
     array.compartments <- sort(unlist(as(array.compartments.list, "GRangesList")))
-  } else {
-    array.compartments <- mclapply(columns, function(s) {
-      obj.sub <- obj[, s]
-      message("Working on ", s)
-      array.compartments.list <- lapply(chr, function(c) {
-        .arrayCompartments(
-          obj.sub, obj,
-          res = res,
-          chr = c,
-          targets = targets,
-          genome = genome,
-          bootstrap = bootstrap,
-          prior.means = prior.means,
-          num.bootstraps = num.bootstraps,
-          parallel = boot.parallel,
-          cores = boot.cores,
-          group = group,
-          bootstrap.means = bmeans
-        )
-      })
-      sort(unlist(as(array.compartments.list, "GRangesList")))
-    }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
-  }
-
-  # if group-level treat a little differently
-  if (group) {
     return(array.compartments)
   }
-  # convert to GRangesList
+
+  array.compartments <- mclapply(columns, function(s) {
+    obj.sub <- obj[, s]
+    message("Working on ", s)
+    array.compartments.list <- lapply(chr, function(c) {
+      getCompartments(
+        obj.sub,
+        obj,
+        assay = "array",
+        res = res,
+        chr = c,
+        targets = targets,
+        genome = genome,
+        bootstrap = bootstrap,
+        prior.means = prior.means,
+        num.bootstraps = num.bootstraps,
+        parallel = boot.parallel,
+        cores = boot.cores,
+        group = group,
+        bootstrap.means = bmeans
+      )
+    })
+    sort(unlist(as(array.compartments.list, "GRangesList")))
+  }, mc.cores = ifelse(parallel, cores, 1), mc.preschedule = F)
+
   array.compartments <- as(array.compartments, "CompressedGRangesList")
-  # return as a RaggedExperiment
-  return(RaggedExperiment(array.compartments, colData = colData(obj)))
+  RaggedExperiment(array.compartments, colData = colData(obj))
 }
 
 #' Preprocess arrays for compartment inference
@@ -174,10 +178,12 @@ getArrayABsignal <- function(
 #' }
 #'
 #' @export
-preprocessArrays <- function(obj,
-                             genome = c("hg19", "hg38", "mm9", "mm10"),
-                             other = NULL, array.type = c("hm450", "EPIC")) {
-
+preprocessArrays <- function(
+  obj,
+  genome = c("hg19", "hg38", "mm9", "mm10"),
+  other = NULL,
+  array.type = c("hm450", "EPIC")
+) {
   if (!requireNamespace("minfi", quietly = TRUE)) {
     stop("The minfi package must be installed for this functionality")
   }
@@ -203,105 +209,5 @@ preprocessArrays <- function(obj,
     obj.opensea <- imputeKNN(obj.opensea, assay = "array")
   }
 
-  return(obj.opensea)
-}
-
-
-# worker function
-.arrayCompartments <- function(
-  obj,
-  original.obj,
-  res = 1e6,
-  chr = NULL,
-  targets = NULL,
-  genome = c("hg19", "hg38", "mm9", "mm10"),
-  prior.means = NULL,
-  bootstrap = TRUE,
-  num.bootstraps = 1000,
-  parallel = FALSE,
-  cores = 2,
-  group = FALSE,
-  bootstrap.means = NULL
-) {
-  # this is the main analysis function for computing compartments from arrays
-
-  # what genome do we have
-  genome <- match.arg(genome)
-
-  # set the parallel back-end core number
-  if (parallel) options(mc.cores = cores)
-
-  # update
-  message("Computing compartments for ", chr)
-  obj <- keepSeqlevels(obj, chr, pruning.mode = "coarse")
-  original.obj <- keepSeqlevels(original.obj, chr, pruning.mode = "coarse")
-
-  # take care of the global means
-  if (!is.null(prior.means)) {
-    # this assumes that we've alread computed the global means
-    pmeans <- as(prior.means, "GRanges")
-    pmeans <- keepSeqlevels(pmeans, chr, pruning.mode = "coarse")
-    # go back to a matrix
-    prior.means <- as(pmeans, "matrix")
-    colnames(prior.means) <- "globalMean"
-  }
-
-  # get the shrunken bins
-  obj.bins <- shrinkBins(
-    obj,
-    original.obj,
-    prior.means = prior.means,
-    chr = chr,
-    res = res,
-    targets = targets,
-    assay = "array",
-    genome = genome,
-    jse = TRUE
-  )
-
-  # compute correlations
-  obj.cor <- getCorMatrix(obj.bins, squeeze = !group)
-
-  if (any(is.na(obj.cor$binmat.cor))) {
-    obj.cor$gr$pc <- matrix(rep(NA, nrow(obj.cor$binmat.cor)))
-    obj.svd <- obj.cor$gr
-  } else {
-    # compute SVD of correlation matrix
-    obj.svd <- getABSignal(obj.cor, assay = "array")
-  }
-
-  if (isFALSE(bootstrap)) {
-    return(obj.svd)
-  }
-
-  # bootstrap the estimates
-  # always compute confidence intervals too
-  # take care of the global means
-  if (bootstrap) {
-    # this assumes that we've alread computed the global means
-    bmeans <- as(bootstrap.means, "GRanges")
-    bmeans <- keepSeqlevels(bmeans, chr, pruning.mode = "coarse")
-    # go back to a matrix
-    bmeans <- as(bmeans, "matrix")
-    colnames(bmeans) <- rep("globalMean", ncol(bmeans))
-  }
-
-  obj.bootstrap <- bootstrapCompartments(obj,
-    original.obj,
-    bootstrap.samples = num.bootstraps,
-    chr = chr,
-    assay = "array",
-    parallel = parallel,
-    cores = cores,
-    targets = targets,
-    res = res,
-    genome = genome,
-    q = 0.95,
-    svd = obj.svd,
-    group = group,
-    bootstrap.means = bmeans
-  )
-
-  # combine and return
-  return(obj.bootstrap)
+  obj.opensea
 }
