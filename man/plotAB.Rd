@@ -7,7 +7,6 @@
 plotAB(
   grAB,
   chr = NULL,
-  what = "score",
   main = "",
   ylim = c(-1, 1),
   unitarize = FALSE,
@@ -24,8 +23,6 @@ plotAB(
 \item{grAB}{The GRanges object returned from scCompartments and getArrayABsignal}
 
 \item{chr}{Chromosome to subset to for plotting}
-
-\item{what}{Which metadata column to plot}
 
 \item{main}{Title for the plot}
 
@@ -90,5 +87,5 @@ bin.cor.counts <- getCorMatrix(bin.counts)
 absignal <- getABSignal(bin.cor.counts)
 
 # Plot the A/B signal
-plotAB(absignal, what = "pc")
+plotAB(absignal)
 }

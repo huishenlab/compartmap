@@ -4,7 +4,6 @@
 #'
 #' @param grAB              The GRanges object returned from scCompartments and getArrayABsignal
 #' @param chr               Chromosome to subset to for plotting
-#' @param what              Which metadata column to plot
 #' @param main              Title for the plot
 #' @param ylim              Y-axis limits (default is -1 to 1)
 #' @param unitarize         Should the data be unitarized?
@@ -62,11 +61,10 @@
 #' absignal <- getABSignal(bin.cor.counts)
 #'
 #' # Plot the A/B signal
-#' plotAB(absignal, what = "pc")
+#' plotAB(absignal)
 plotAB <- function(
   grAB,
   chr = NULL,
-  what = "score",
   main = "",
   ylim = c(-1, 1),
   unitarize = FALSE,
@@ -80,14 +78,13 @@ plotAB <- function(
 ) {
   stopifnot("'grAB' is not a GRanges object" = is(grAB, "GenomicRanges"))
   mcolnames <- names(mcols(grAB))
-  if (with.ci & !"conf.est" %in% mcolnames)
-    stop("conf.est isn't found in the mcols() of the input - run the compartmentCI() first.")
 
-  # TODO: remove 'what' arg since only one column (score/pc which are the same) is plotted.
-  if (!what %in% mcolnames) stop(what, " is not among names(mcols(x))")
+  if (with.ci && !("conf.est" %in% mcolnames)) {
+    stop("conf.est isn't found in the mcols() of the input - run the compartmentCI() first.")
+  }
 
   if (!is.null(chr)) grAB <- keepSeqlevels(grAB, chr, pruning.mode = "coarse")
-  mat.AB <- as(mcols(grAB)[, what], "matrix")
+  mat.AB <- as(mcols(grAB)[, "pc"], "matrix")
   if (unitarize) mat.AB <- .unitarize(mat.AB)
   if (filter) mat.AB <- mat.AB[abs(mat.AB) > filter.min.eigen]
   if (reverse) mat.AB <- -mat.AB
