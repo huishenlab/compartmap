@@ -7,8 +7,7 @@
 sparseToDenseMatrix(
   mat,
   blockwise = TRUE,
-  by.row = TRUE,
-  by.col = FALSE,
+  chunk.by = "row",
   chunk.size = 100000,
   parallel = FALSE,
   cores = 2
@@ -19,9 +18,7 @@ sparseToDenseMatrix(
 
 \item{blockwise}{Whether to do the coercion in a block-wise manner}
 
-\item{by.row}{Whether to chunk in a row-wise fashion}
-
-\item{by.col}{Whether to chunk in a column-wise fashion}
+\item{chunk.by}{Whether to chunk in a \code{"row"}- or \code{"column"}-wise fashion}
 
 \item{chunk.size}{The size of the chunks to use for coercion}
 

@@ -162,8 +162,7 @@ getSeqLengths <- function(genome.gr, chr = "chr14") {
 #'
 #' @param mat Input matrix
 #' @param chunk.size The size of the chunks to use for coercion
-#' @param by.row Whether to chunk in a row-wise fashion
-#' @param by.col Whether to chunk in a column-wise fashion
+#' @param chunk.by Whether to chunk in a `"row"`- or `"column"`-wise fashion
 #'
 #' @return A set of chunked indices
 #'
@@ -179,21 +178,17 @@ getSeqLengths <- function(genome.gr, chr = "chr14") {
 #' chunks <- getMatrixBlocks(mat.sparse, chunk.size = 10)
 #'
 #' @export
-getMatrixBlocks <- function(
-  mat,
-  chunk.size = 1e5,
-  by.row = TRUE,
-  by.col = FALSE
-) {
-  message("Using chunk size: ", chunk.size)
-  if (by.row) {
-    message("Breaking into row chunks.")
-    return(split(1:nrow(mat), ceiling(seq_along(1:nrow(mat)) / chunk.size)))
-  }
+getMatrixBlocks <- function(mat, chunk.size = 1e5, chunk.by = "row") {
+  ndim <- switch(
+    chunk.by,
+    row = nrow,
+    column = ncol,
+    stop(shQuote(by), " is unsupported - only 'row' and 'column' are supported chunking options")
+  )
 
-  # assumes column-wise chunking
-  message("Breaking into column chunks.")
-  return(split(1:ncol(mat), ceiling(seq_along(1:ncol(mat)) / chunk.size)))
+  message(paste("Breaking into", chunk.by, "chunks."))
+  dimLength <- ndim(mat)
+  split(1:dimLength, ceiling(seq_along(1:dimLength) / chunk.size))
 }
 
 #' Convert a sparse matrix to a dense matrix in a block-wise fashion
@@ -236,8 +231,7 @@ getMatrixBlocks <- function(
 sparseToDenseMatrix <- function(
   mat,
   blockwise = TRUE,
-  by.row = TRUE,
-  by.col = FALSE,
+  chunk.by = "row",
   chunk.size = 1e5,
   parallel = FALSE,
   cores = 2
@@ -245,35 +239,18 @@ sparseToDenseMatrix <- function(
   if (isFALSE(blockwise)) {
     return(as(mat, "matrix"))
   }
+  chunks <- getMatrixBlocks(mat, chunk.size = chunk.size, chunk.by = chunk.by)
+  binder <- switch(chunk.by, row = "rbind", column = "cbind")
 
-  # do block-wise reconstruction of matrix
-  chunks <- getMatrixBlocks(mat,
-    chunk.size = chunk.size,
-    by.row = by.row, by.col = by.col
-  )
-
-  if (by.row & parallel) {
-    return(do.call("rbind", mclapply(chunks, function(r) {
-      return(as(mat[r, ], "matrix"))
-    }, mc.cores = cores)))
-  }
-
-  if (by.row & !parallel) {
-    return(do.call("rbind", lapply(chunks, function(r) {
-      return(as(mat[r, ], "matrix"))
-    })))
-  }
-
-  # assumes column-wise conversion
-  if (by.col & parallel) {
-    return(do.call("cbind", mclapply(chunks, function(r) {
-      return(as(mat[, r], "matrix"))
-    }, mc.cores = cores)))
-  }
-
-  return(do.call("cbind", lapply(chunks, function(r) {
-    return(as(mat[, r], "matrix"))
-  })))
+  mclapply(chunks, function(chunk) {
+    switch(
+      chunk.by,
+      row = as(mat[chunk, ], "matrix"),
+      column = as(mat[, chunk], "matrix")
+    )},
+    mc.cores = ifelse(parallel, cores, 1)
+  ) |>
+    do.call(binder, args = _)
 }
 
 #' Import and optionally summarize a bigwig at a given resolution
@@ -299,27 +276,29 @@ importBigWig <- function(
   summarize = FALSE,
   genome = c("hg19", "hg38", "mm9", "mm10")
 ) {
-  # read in the bigwig
   bw.raw <- rtracklayer::import(bw)
   # coerce to UCSC style seqlevels
   seqlevelsStyle(bw.raw) <- "UCSC"
   if (!is.null(bins)) {
     seqlevelsStyle(bins) <- "UCSC"
   }
+
   # it is now a GRanges object
   if (any(is.na(seqlengths(bw.raw)))) stop("Imported bigwig does not have seqlengths")
-  ## only supporting human and mouse for now
-  if (genome %in% c("hg19", "hg38")) {
-    species <- "Homo_sapiens"
-  } else {
-    species <- "Mus_musculus"
-  }
+
+  species <- switch(
+    genome,
+    hg19 = "Homo_sapiens",
+    hg38 = "Homo_sapiens",
+    mm9 = "Mus_musculus",
+    mm10 = "Mus_musculus",
+    stop("Only human and mouse genomes are currently supported")
+  )
+
   bw.sub <- keepStandardChromosomes(bw.raw, species = species, pruning.mode = "coarse")
-  if (!is.null(bins)) {
-    bins <- keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
-  }
+  bins <- bins %||% keepSeqlevels(bins, value = seqlevels(bw.sub), pruning.mode = "coarse")
+
   if (summarize) {
-    # make sure it's sorted
     bw.sub <- sort(bw.sub)
     # this assumes seqlengths exist...
     # this also assumes some bins exist
@@ -334,7 +313,7 @@ importBigWig <- function(
     colnames(bw.se) <- as.character(bw)
     return(bw.se)
   }
-  return(bw.sub)
+  bw.sub
 }
 
 #' Generate function to filter rows/columns with NAs exceeding a threshold
@@ -450,15 +429,14 @@ filterOpenSea <- function(
 
 #' Gather open sea CpG from a GRanges of CpG islands
 #'
-#' @description This function accepts a GRanges input of CpG islands that can
-#' be derived from UCSC table browser and rtracklayer::import(yourbed.bed)
-#'
-#' @name filterOpenSea
+#' This function accepts a GRanges input of CpG islands that can
+#' be derived from UCSC table browser and rtracklayer::import(yourbed.bed). It
+#' resizes the inteval to create 4kb flanking open sea regions around the CpG
+#' islands as defined by [Fortin and Hansen (Genome Biology, 2015)](https://doi.org/10.1186/s13059-015-0741-y).
 #'
 #' @param gr Input GRanges of CpG islands
 #'
 #' @return GRanges object that can be used with filterOpenSea()
-#' @import rtracklayer
 #' @import GenomicRanges
 #' @export
 #'
@@ -467,6 +445,5 @@ filterOpenSea <- function(
 #' #opensea_cpg <- getOpenSeas(cpgi)
 getOpenSeas <- function(gr) {
   resorts <- trim(resize(gr, width(gr) + 8000, fix = "center"))
-  openSeas <- subset(gaps(resorts), strand == "*")
-  return(openSeas)
+  subset(gaps(resorts), strand == "*")
 }

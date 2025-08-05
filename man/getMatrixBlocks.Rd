@@ -4,16 +4,14 @@
 \alias{getMatrixBlocks}
 \title{Get chunked sets of row-wise or column-wise indices of a matrix}
 \usage{
-getMatrixBlocks(mat, chunk.size = 100000, by.row = TRUE, by.col = FALSE)
+getMatrixBlocks(mat, chunk.size = 100000, chunk.by = "row")
 }
 \arguments{
 \item{mat}{Input matrix}
 
 \item{chunk.size}{The size of the chunks to use for coercion}
 
-\item{by.row}{Whether to chunk in a row-wise fashion}
-
-\item{by.col}{Whether to chunk in a column-wise fashion}
+\item{chunk.by}{Whether to chunk in a \code{"row"}- or \code{"column"}-wise fashion}
 }
 \value{
 A set of chunked indices
