@@ -1,11 +1,11 @@
-#' Transform/normalize compartment calls using TF-IDF
+#' Transform/normalize counts using TF-IDF
 #'
 #' @details
 #' This function and its helpers were modeled after or taken from:
 #' - http://andrewjohnhill.com/images/posts/2019-5-6-dimensionality-reduction-for-scatac-data/analysis.html
 #' - https://divingintogeneticsandgenomics.rbind.io/post/clustering-scatacseq-data-the-tf-idf-way/
 #'
-#' @param mat n x p input matrix (n = samples/cells; p = compartments)
+#' @param mat n x p input matrix (n = samples/cells; p = rna counts)
 #' @param scale.factor Scaling factor for the term-frequency (TF)
 #'
 #' @return A TF-IDF transformed matrix of the same dimensions as the input

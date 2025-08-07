@@ -2,12 +2,12 @@
 % Please edit documentation in R/transformTFIDF.R
 \name{transformTFIDF}
 \alias{transformTFIDF}
-\title{Transform/normalize compartment calls using TF-IDF}
+\title{Transform/normalize counts using TF-IDF}
 \usage{
 transformTFIDF(mat, scale.factor = 100000)
 }
 \arguments{
-\item{mat}{n x p input matrix (n = samples/cells; p = compartments)}
+\item{mat}{n x p input matrix (n = samples/cells; p = rna counts)}
 
 \item{scale.factor}{Scaling factor for the term-frequency (TF)}
 }
@@ -15,7 +15,7 @@ transformTFIDF(mat, scale.factor = 100000)
 A TF-IDF transformed matrix of the same dimensions as the input
 }
 \description{
-Transform/normalize compartment calls using TF-IDF
+Transform/normalize counts using TF-IDF
 }
 \details{
 This function and its helpers were modeled after or taken from:
