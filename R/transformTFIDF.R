@@ -1,11 +1,11 @@
-#' Transform/normalize compartment calls using TF-IDF
+#' Transform/normalize counts using TF-IDF
 #'
 #' @details
 #' This function and its helpers were modeled after or taken from:
 #' - http://andrewjohnhill.com/images/posts/2019-5-6-dimensionality-reduction-for-scatac-data/analysis.html
 #' - https://divingintogeneticsandgenomics.rbind.io/post/clustering-scatacseq-data-the-tf-idf-way/
 #'
-#' @param mat n x p input matrix (n = samples/cells; p = compartments)
+#' @param mat n x p input matrix (n = samples/cells; p = rna counts)
 #' @param scale.factor Scaling factor for the term-frequency (TF)
 #'
 #' @return A TF-IDF transformed matrix of the same dimensions as the input
@@ -25,35 +25,23 @@ transformTFIDF <- function(mat, scale.factor = 1e5) {
     stop("Input needs to be a matrix.")
   }
 
-  # binarize the matrix
   # this assumes n x p matrix (e.g. a wide matrix)
   # check and transpose as needed
   # input matrix is tall
-  if (dim(mat)[1] > dim(mat)[2]) mat <- t(mat)
+  mat.binary <- Matrix(mat, sparse = TRUE)
+  if (dim(mat)[1] < dim(mat)[2]) {
+    mat.binary <- t(Matrix(mat, sparse = TRUE))
+  }
 
-  # make sparse
-  mat.binary <- Matrix(.binarizeMatrix(t(mat)), sparse = TRUE)
-
+  # binarize the matrix
+  mat.binary@x[mat.binary@x > 0] <- 1
   tf <- t(t(mat.binary) / Matrix::colSums(mat.binary))           # compute term-frequency
   tf@x <- log1p(tf@x * scale.factor)                             # scale
   idf <- log(1 + ncol(mat.binary) / Matrix::rowSums(mat.binary)) # inverse-document frequency smooth
   tfidf <- .tfidf(tf, idf)                                       # transform
 
   # cast back to a matrix since things like UMAP don't like sparse matrices
-  tfidf <- as.matrix(tfidf)
-  return(t(tfidf))
-}
-
-
-# helper function
-# set positive values to 1 and negative to 0
-# open chromatin in atac or RNA is 1
-# closed chromatin in bisulfite or arrays is 1
-# just associate 1 with signal
-.binarizeMatrix <- function(mat) {
-  mat[mat > 0] <- 1
-  mat[mat < 0] <- 0
-  return(mat)
+  as.matrix(t(tfidf))
 }
 
 # helper function for TF-IDF transform
