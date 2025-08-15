@@ -50,12 +50,14 @@ shrinkBins <- function(
   genome <- match.arg(genome)
   verifySE(x)
 
-  target.count <- length(targets)
-  if (target.count == 1) {
-    stop("Cannot perform targeted bin-level shrinkage with one target sample.")
-  } else if (target.count < 4) {
-    message("Number of means fewer than 4. Using Bayes instead of JSE.")
-    jse <- FALSE
+  if (!is.null(targets)) {
+    target.count <- length(targets)
+    if (target.count == 1) {
+      stop("Cannot perform targeted bin-level shrinkage with one target sample.")
+    } else if (target.count < 4) {
+      message("Number of means fewer than 4. Using Bayes instead of JSE.")
+      jse <- FALSE
+    }
   }
 
   # get the prior means
