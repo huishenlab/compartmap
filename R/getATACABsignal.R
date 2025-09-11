@@ -55,7 +55,7 @@ getATACABsignal <- function(
 ) {
   chr <- chr %||%
     {
-      message("Assuming we want to process all chromosomes")
+      message("Processing all chromosomes")
       getChrs(obj)
     }
 
