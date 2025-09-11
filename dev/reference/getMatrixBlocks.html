@@ -52,7 +52,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getMatrixBlocks</span><span class="op">(</span><span class="va">mat</span>, chunk.size <span class="op">=</span> <span class="fl">100000</span>, by.row <span class="op">=</span> <span class="cn">TRUE</span>, by.col <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getMatrixBlocks</span><span class="op">(</span><span class="va">mat</span>, chunk.size <span class="op">=</span> <span class="fl">100000</span>, chunk.by <span class="op">=</span> <span class="st">"row"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -67,12 +67,8 @@
 <dd><p>The size of the chunks to use for coercion</p></dd>
 
 
-<dt id="arg-by-row">by.row<a class="anchor" aria-label="anchor" href="#arg-by-row"></a></dt>
-<dd><p>Whether to chunk in a row-wise fashion</p></dd>
-
-
-<dt id="arg-by-col">by.col<a class="anchor" aria-label="anchor" href="#arg-by-col"></a></dt>
-<dd><p>Whether to chunk in a column-wise fashion</p></dd>
+<dt id="arg-chunk-by">chunk.by<a class="anchor" aria-label="anchor" href="#arg-chunk-by"></a></dt>
+<dd><p>Whether to chunk in a <code>"row"</code>- or <code>"column"</code>-wise fashion</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -91,7 +87,6 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get row-wise chunks of 10</span></span></span>
 <span class="r-in"><span><span class="va">chunks</span> <span class="op">&lt;-</span> <span class="fu">getMatrixBlocks</span><span class="op">(</span><span class="va">mat.sparse</span>, chunk.size <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Using chunk size: 10</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Breaking into row chunks.</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
