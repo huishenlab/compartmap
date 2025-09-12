@@ -197,8 +197,7 @@ getMatrixBlocks <- function(mat, chunk.size = 1e5, chunk.by = "row") {
 #'
 #' @param mat Input sparse matrix
 #' @param blockwise Whether to do the coercion in a block-wise manner
-#' @param by.row Whether to chunk in a row-wise fashion
-#' @param by.col Whether to chunk in a column-wise fashion
+#' @param chunk.by Whether to chunk by `"row"` or `"column"`
 #' @param chunk.size The size of the chunks to use for coercion
 #' @param parallel Whether to perform the coercion in parallel
 #' @param cores The number of cores to use in the parallel coercion
