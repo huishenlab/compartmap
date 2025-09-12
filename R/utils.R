@@ -136,7 +136,7 @@ getGenome <- function(
 #'
 #' @return The seqlengths of a specific chromosome
 #'
-#' @importFrom GenomeInfoDb seqlengths seqlevels
+#' @importFrom GenomeInfoDb seqlengths seqlevels genome
 #' @import GenomicRanges
 #'
 #' @examples
