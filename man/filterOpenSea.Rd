@@ -2,12 +2,9 @@
 % Please edit documentation in R/utils.R
 \name{filterOpenSea}
 \alias{filterOpenSea}
-\alias{getOpenSeas}
 \title{Filter to open sea CpG loci}
 \usage{
 filterOpenSea(obj, genome = c("hg19", "hg38", "mm10", "mm9"), other = NULL)
-
-getOpenSeas(gr)
 }
 \arguments{
 \item{obj}{Input SummarizedExperiment or GRanges object}
@@ -15,17 +12,12 @@ getOpenSeas(gr)
 \item{genome}{Which genome to filter}
 
 \item{other}{GRanges of open sea regions (TODO)}
-
-\item{gr}{Input GRanges of CpG islands}
 }
 \value{
 Filtered to open sea CpG loci
-
-GRanges object that can be used with filterOpenSea()
 }
 \description{
-This function accepts a GRanges input of CpG islands that can
-be derived from UCSC table browser and rtracklayer::import(yourbed.bed)
+Filter to open sea CpG loci
 }
 \examples{
 if (requireNamespace("minfi", quietly = TRUE)) {
@@ -33,6 +25,4 @@ if (requireNamespace("minfi", quietly = TRUE)) {
   opensea <- filterOpenSea(array.data.chr14, genome = "hg19")
 }
 
-#cpgi <- rtracklayer::import(system.file("inst/extdata/mm10_cpgi.bed", package = "compartmap"))
-#opensea_cpg <- getOpenSeas(cpgi)
 }

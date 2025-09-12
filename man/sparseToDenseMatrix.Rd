@@ -18,13 +18,15 @@ sparseToDenseMatrix(
 
 \item{blockwise}{Whether to do the coercion in a block-wise manner}
 
-\item{chunk.by}{Whether to chunk in a \code{"row"}- or \code{"column"}-wise fashion}
-
 \item{chunk.size}{The size of the chunks to use for coercion}
 
 \item{parallel}{Whether to perform the coercion in parallel}
 
 \item{cores}{The number of cores to use in the parallel coercion}
+
+\item{by.row}{Whether to chunk in a row-wise fashion}
+
+\item{by.col}{Whether to chunk in a column-wise fashion}
 }
 \value{
 A dense matrix of the same dimensions as the input
