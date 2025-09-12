@@ -79,6 +79,10 @@ plotAB <- function(
   stopifnot("'grAB' is not a GRanges object" = is(grAB, "GenomicRanges"))
   mcolnames <- names(mcols(grAB))
 
+  if (!("pc" %in% mcolnames)) {
+    stop("'pc' column containing compartment call singular values isn't among the mcols() of the input")
+  }
+
   if (with.ci && !("conf.est" %in% mcolnames)) {
     stop("conf.est isn't found in the mcols() of the input - run the compartmentCI() first.")
   }

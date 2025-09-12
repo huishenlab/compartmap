@@ -5,16 +5,12 @@ test_that("plotAB checks", {
     'a' = c(1, 2),
     'b' = c(1, 2)
   )
+  err <- "'pc' column containing compartment call singular values isn't among the mcols() of the input"
   mcols(gr) <- cols
   expect_error(plotAB(matrix()), "'grAB' is not a GRanges object", fixed = TRUE)
-
-  expect_error(
-    plotAB(GRanges()),
-    "score is not among names(mcols(x))",
-    fixed = TRUE
-  )
+  expect_error(plotAB(GRanges()), err, fixed = TRUE)
+  expect_error(plotAB(gr), err, fixed = TRUE)
 })
-
 
 test_that(".unitarize", {
   vec <- c(1, 2, 3, 4, 5)
