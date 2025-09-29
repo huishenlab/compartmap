@@ -7,6 +7,9 @@
 #'
 #' @param mat n x p input matrix (n = samples/cells; p = rna counts)
 #' @param scale.factor Scaling factor for the term-frequency (TF)
+#' @param cap The maximum expression count used for TF-IDF. Default of 1
+#' binarizes the matrix. A `cap` value greater than 1 will cap counts at that
+#' value.
 #'
 #' @return A TF-IDF transformed matrix of the same dimensions as the input
 #'
@@ -20,7 +23,7 @@
 #' tfidf <- transformTFIDF(mat)
 #'
 #' @export
-transformTFIDF <- function(mat, scale.factor = 1e5) {
+transformTFIDF <- function(mat, scale.factor = 1e5, cap = 1) {
   if (!is(mat, "matrix") & !is(mat, "Matrix")) {
     stop("Input needs to be a matrix.")
   }
@@ -28,16 +31,17 @@ transformTFIDF <- function(mat, scale.factor = 1e5) {
   # this assumes n x p matrix (e.g. a wide matrix)
   # check and transpose as needed
   # input matrix is tall
-  mat.binary <- Matrix(mat, sparse = TRUE)
+  mat.capped <- Matrix(mat, sparse = TRUE)
   if (dim(mat)[1] < dim(mat)[2]) {
-    mat.binary <- t(Matrix(mat, sparse = TRUE))
+    mat.capped <- t(Matrix(mat, sparse = TRUE))
   }
 
   # binarize the matrix
-  mat.binary@x[mat.binary@x > 0] <- 1
-  tf <- t(t(mat.binary) / Matrix::colSums(mat.binary))           # compute term-frequency
+  expr.limit <- ifelse(cap == 1, 0, cap)
+  mat.capped@x[mat.capped@x > expr.limit] <- cap
+  tf <- t(t(mat.capped) / Matrix::colSums(mat.capped))           # compute term-frequency
   tf@x <- log1p(tf@x * scale.factor)                             # scale
-  idf <- log(1 + ncol(mat.binary) / Matrix::rowSums(mat.binary)) # inverse-document frequency smooth
+  idf <- log(1 + ncol(mat.capped) / Matrix::rowSums(mat.capped)) # inverse-document frequency smooth
   tfidf <- .tfidf(tf, idf)                                       # transform
 
   # cast back to a matrix since things like UMAP don't like sparse matrices
