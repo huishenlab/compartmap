@@ -7,7 +7,10 @@
 #'
 #' @param mat n x p input matrix (n = samples/cells; p = rna counts)
 #' @param scale.factor Scaling factor for the term-frequency (TF)
-#' @param cap The maximum expression count used for TF-IDF. Default of 1
+#' @param count.min The minimum expression count used for TF-IDF. Binarizes
+#' when `count.min` = 0 and `count.max` = 1.
+#' @param count.max The maximum expression count used for TF-IDF. Binarizes
+#' when `count.min` = 0 and `count.max` = 1.
 #' binarizes the matrix. A `cap` value greater than 1 will cap counts at that
 #' value.
 #'
@@ -23,7 +26,9 @@
 #' tfidf <- transformTFIDF(mat)
 #'
 #' @export
-transformTFIDF <- function(mat, scale.factor = 1e5, cap = 1) {
+transformTFIDF <- function(mat, scale.factor = 1e5, count.min = 0, count.max = 1) {
+  stopifnot("'count.min' must be less than 'count.max'" = count.min < count.max)
+
   if (!is(mat, "matrix") & !is(mat, "Matrix")) {
     stop("Input needs to be a matrix.")
   }
@@ -36,16 +41,26 @@ transformTFIDF <- function(mat, scale.factor = 1e5, cap = 1) {
     mat.capped <- t(Matrix(mat, sparse = TRUE))
   }
 
-  # binarize the matrix
-  expr.limit <- ifelse(cap == 1, 0, cap)
-  mat.capped@x[mat.capped@x > expr.limit] <- cap
-  tf <- t(t(mat.capped) / Matrix::colSums(mat.capped))           # compute term-frequency
-  tf@x <- log1p(tf@x * scale.factor)                             # scale
+  # constrain the matrix
+  mat.capped@x <- .constrain(mat.capped@x, count.min, count.max)
+  tf <- t(t(mat.capped) / Matrix::colSums(mat.capped)) # compute term-frequency
+  tf@x <- log1p(tf@x * scale.factor) # scale
   idf <- log(1 + ncol(mat.capped) / Matrix::rowSums(mat.capped)) # inverse-document frequency smooth
-  tfidf <- .tfidf(tf, idf)                                       # transform
+  tfidf <- .tfidf(tf, idf) # transform
 
   # cast back to a matrix since things like UMAP don't like sparse matrices
   as.matrix(t(tfidf))
+}
+
+# binarize when lower is 0 and upper is 1, constrain otherwise
+.constrain <- function(v, lower, upper) {
+  if (lower == 0 & upper == 1) {
+    v[v > 0] <- 1
+  } else {
+    v[v < lower] <- 0
+    v[v > upper] <- upper
+  }
+  v
 }
 
 # helper function for TF-IDF transform

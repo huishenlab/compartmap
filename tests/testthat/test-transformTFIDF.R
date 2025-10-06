@@ -5,6 +5,23 @@ test_that("transformTFIDF", {
     "Input needs to be a matrix",
     fixed = TRUE
   )
+  expect_error(
+    transformTFIDF(0:10, count.min = 1, count.max = 0),
+    "'count.min' must be less than 'count.max'"
+  )
+})
+# }}}
+
+# .constrain {{{
+test_that(".constrain", {
+  expect_equal(
+    compartmap:::.constrain(0:10, lower = 0, upper = 1),
+    c(0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+  )
+  expect_equal(
+    compartmap:::.constrain(0:10, lower = 2, upper = 5),
+    c(0, 0, 2, 3, 4, 5, 5, 5, 5, 5, 5)
+  )
 })
 # }}}
 

@@ -4,12 +4,20 @@
 \alias{transformTFIDF}
 \title{Transform/normalize counts using TF-IDF}
 \usage{
-transformTFIDF(mat, scale.factor = 100000)
+transformTFIDF(mat, scale.factor = 100000, count.min = 0, count.max = 1)
 }
 \arguments{
 \item{mat}{n x p input matrix (n = samples/cells; p = rna counts)}
 
 \item{scale.factor}{Scaling factor for the term-frequency (TF)}
+
+\item{count.min}{The minimum expression count used for TF-IDF. Binarizes
+when \code{count.min} = 0 and \code{count.max} = 1.}
+
+\item{count.max}{The maximum expression count used for TF-IDF. Binarizes
+when \code{count.min} = 0 and \code{count.max} = 1.
+binarizes the matrix. A \code{cap} value greater than 1 will cap counts at that
+value.}
 }
 \value{
 A TF-IDF transformed matrix of the same dimensions as the input
