@@ -108,9 +108,22 @@ method(flip, CompartmentCall) <- function(ccall) {
 
 #' Plot singular values of a CompartmentCall object
 #'
-#' @importFrom ggplot2 ggplot geom_line scale_y_continuous
+#' @param x CompartmentCall or CompartmapCall object
+#' @param label_coords Label the x-axis with genomic coordinates. Uses a
+#' numeric index if set to `FALSE`.
+#' @param res The resolution to round the genomic coordinates to (kilobase:
+#' "kb" or megabase: "mb")
+#'
+#' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::CompartmentCall` <- function(x) {
+`plot.compartmap::CompartmentCall` <- function(x, label_coords = TRUE, res = "kb") {
+  if (label_coords) {
+    p <- ggplot(x@dt[, .(n, pc, coord = grscale(x@gr, res))], aes(x = coord, y = pc, group = 1)) +
+      geom_line(linewidth = 1) +
+      scale_y_continuous(limits = c(-1, 1)) +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    return(p)
+  }
   ggplot(x@dt, aes(x = n, y = pc)) +
     geom_line(linewidth = 1) +
     scale_y_continuous(limits = c(-1, 1))
@@ -280,10 +293,33 @@ method(corr, MultiCompartmentCall) <- function(x) {
 
 #' Plot singular values from a MultiCompartmentCall object
 #'
-#' @importFrom ggplot2 ggplot geom_line scale_y_continuous
+#' @param x MultiCompartmentCall
+#' @param label_coords Label the x-axis with genomic coordinates. Uses a
+#' numeric index if set to `FALSE`.
+#' @param res The resolution to round the genomic coordinates to (kilobase:
+#' "kb" or megabase: "mb")
+#'
+#' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::MultiCompartmentCall` <- function(x) {
+`plot.compartmap::MultiCompartmentCall` <- function(x, label_coords = TRUE, res = "mb") {
+  if (label_coords) {
+    p <- ggplot(
+      x@dt[, .(n, pc, name, coord = grscale(x@gr, res))],
+      aes(x = coord, y = pc, color = name, group = name)
+    ) +
+      geom_line(linewidth = 1) +
+      scale_y_continuous(limits = c(-1, 1)) +
+      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+    return(p)
+  }
   ggplot(x@dt, aes(x = n, y = pc, color = name)) +
     geom_line(linewidth = 1) +
     scale_y_continuous(limits = c(-1, 1))
+}
+
+grscale <- function(gr, res) {
+  scale_factor <- switch(tolower(res), kb = list(1e5, "Kb"), mb = list(1e6, "Mb"))
+  start_scaled <- start(gr) / as.numeric(scale_factor[1])
+  end_scaled <- round(end(gr) / as.numeric(scale_factor[1], 4))
+  paste0(seqlevels(gr), ":", start_scaled, "-", end_scaled, " ", scale_factor[2])
 }
