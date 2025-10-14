@@ -24,7 +24,7 @@ CompartmentCall <- new_class(
     unitarized = class_logical
   ),
   constructor = function(pc, res, gr, name = NULL, unitarized = FALSE) {
-    dt <- data.table(pc = as.vector(pc))[, .(n = .I, pc, name)]
+    dt <- data.table(pc = as.vector(pc))[, .(n = .I, pc, name = name)]
     new_object(
       S7_object(),
       name = name %||% shQuote(substitute(gr), "cmd2"),
@@ -128,7 +128,7 @@ CompartmapCall <- new_class(
   "CompartmapCall",
   parent = CompartmentCall,
   constructor = function(gr, res, name = NULL, unitarized = FALSE) {
-    dt <- data.table(pc = gr$pc)[, `:=`(n = .I)][]
+    dt <- data.table(pc = gr$pc)[, `:=`(n = .I, name = name)][, .(n, pc, name)]
     new_object(
       S7_object(),
       name = name %||% shQuote(substitute(gr), "cmd2"),
