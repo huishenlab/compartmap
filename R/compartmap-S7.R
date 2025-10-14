@@ -109,3 +109,35 @@ method(flip, CompartmentCall) <- function(ccall) {
     scale_y_continuous(limits = c(-1, 1))
 }
 
+#' CompartmapCall class (experimental)
+#'
+#' An S7 class to hold a single-sample or grouped compartment call with its
+#' metadata and analysis methods. This can take the GRanges output of
+#' `scCompartments(group = TRUE)`. For multiple single-cell level compartment
+#' inferences use MultiCompartmentCall.
+#'
+#' @param gr The GRanges output of scCompartments or getArrayCompartments
+#' containing the 'pc' column
+#' @param res The binning resolution used
+#' @param name An identifier for this compartment call. Important to set if you
+#' are making a MultiCompartmentCall.
+#' @param unitarized Whether the singular values have been unitarized
+#'
+#' @export
+CompartmapCall <- new_class(
+  "CompartmapCall",
+  parent = CompartmentCall,
+  constructor = function(gr, res, name = NULL, unitarized = FALSE) {
+    dt <- data.table(pc = gr$pc)[, `:=`(n = .I)][]
+    new_object(
+      S7_object(),
+      name = name %||% shQuote(substitute(gr), "cmd2"),
+      gr = granges(gr),
+      dt = dt,
+      res = res,
+      unitarized = unitarized
+    )
+  }
+)
+S4_register(CompartmapCall)
+
