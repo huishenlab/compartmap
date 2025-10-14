@@ -42,7 +42,8 @@ Imports:
    DelayedMatrixStats,
    Matrix,
    RMTstat,
-   impute
+   impute,
+   S7
 Suggests:
    csaw,
    minfi,
