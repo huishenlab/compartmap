@@ -141,3 +141,106 @@ CompartmapCall <- new_class(
 )
 S4_register(CompartmapCall)
 
+#' MultiCompartmentCall class
+#'
+#' An S7 class to hold multiple compartment calls at the same resolution with
+#' their metadata and analysis methods. This can take a set of single
+#' `CompartmentCall` or `CompartmapCall` objects.
+#'
+#' @param ccalls A list of CompartmapCalls to combine
+#' @param name An identifier for this set of compartment calls
+#' @param unitarized Whether the singular values have been unitarized
+#' @param unitarize Whether to unitarize the singular values for each of the inputs calls
+#'
+#' @export
+#' @importFrom data.table rbindlist dcast
+#' @export
+MultiCompartmentCall <- new_class(
+  "MultiCompartmentCall",
+  parent = CompartmentCall,
+  properties = list(
+    colnames = class_character,
+    mat = new_S3_class(c("matrix", "array"))
+  ),
+  constructor = function(ccalls, name, unitarized = FALSE, unitarize = FALSE) {
+    all_same <- function(prop_get, err) {
+      unique_property <- unique(unlist(lapply(ccalls, prop_get)))
+      if (length(unique_property) != 1) stop(err)
+      unique_property
+    }
+
+    unique_res <- all_same(resolution, "All resolutions must be the same")
+    unique_gr <- all_same(granges, "All calls must be either unitarized or non-unitarized")
+
+    if (unitarize) {
+      if (unitarized) {
+        message("All singular values already unitarized")
+      } else {
+        ccalls <- lapply(seq_along(ccalls), function(i) {
+          if (!is_unitarized(ccalls[[i]])) {
+            return(unitarize(ccalls[[i]]))
+          }
+          ccalls[[i]]
+        })
+      }
+      unitarized <- TRUE
+    }
+
+    all_unitarized <- all_same(is_unitarized, "All calls must be either unitarized or non-unitarized")
+
+    dt <- rbindlist(lapply(ccalls, function(i) {
+      DF(i)[, name := get_name(i)][]
+    }))
+    mat <- as.matrix(dcast(dt, n ~ name, value.var = "pc")[, -1])
+
+    new_object(
+      S7_object(),
+      name = name,
+      gr = unique_gr[[1]],
+      dt = dt,
+      res = unique_res,
+      unitarized = unitarized,
+      colnames = unlist(lapply(ccalls, get_name)),
+      mat = mat
+    )
+  },
+  validator = function(self) {
+    if (length(self@colnames) != length(unique(self@colnames))) {
+      "All names must be unique"
+    }
+  }
+)
+S4_register(MultiCompartmentCall)
+
+#' Compute agreement between compartment calls
+#'
+#' Calculates the proportion of calls with the same sign for every pair of
+#' calls in a MultiCompartmentCall object.
+#'
+#' @export
+agr <- new_generic("agr", "mcall")
+method(agr, MultiCompartmentCall) <- function(mcall) {
+  agreement(mcall@mat)
+}
+
+#' Compute correlation between compartment calls
+#'
+#' Calculates Pearson correlation for every pair of calls in a
+#' MultiCompartmentCall object.
+#'
+#' @importFrom stats cor
+#' @export
+corr <- new_generic("corr", "x")
+method(corr, MultiCompartmentCall) <- function(x) {
+  cor(x@mat)
+}
+
+#' Plot singular values from a MultiCompartmentCall object
+#'
+#' @importFrom ggplot2 ggplot geom_line scale_y_continuous
+#' @export
+`plot.compartmap::MultiCompartmentCall` <- function(x) {
+  ggplot(x@dt, aes(x = n, y = pc, color = name)) +
+    geom_line(linewidth = 1) +
+    scale_y_continuous(limits = c(-1, 1))
+}
