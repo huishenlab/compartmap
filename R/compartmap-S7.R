@@ -44,6 +44,13 @@ method(DF, CompartmentCall) <- function(ccall) {
   ccall@dt[]
 }
 
+#' @export
+method(`[`, CompartmentCall) <- function(x, i = NULL) {
+  x@dt <- x@dt[i]
+  x@gr <- x@gr[i]
+  x
+}
+
 #' @name GRanges
 #'
 #' Get GRanges of the CompartmentCall
@@ -211,6 +218,42 @@ MultiCompartmentCall <- new_class(
   }
 )
 S4_register(MultiCompartmentCall)
+
+method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
+  i <- i %||% seq_len(nrow(x@mat))
+  x@gr <- x@gr[i]
+  x@mat <- x@mat[i, ]
+  x@dt <- x@dt[n %in% i]
+  x
+}
+
+#' @export
+method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
+  i <- i %||% seq_len(nrow(x@mat))
+  j <- j %||% seq_len(ncol(x@mat))
+
+  if (length(i) == 1 & length(j) == 1) {
+    stop("Subsetting to a single value is not allowed")
+  }
+  stopifnot("i exceeds the row count of x" = i <= nrow(x@mat))
+
+  if (is.numeric(j)) {
+    if (length(j) > ncol(x@mat)) {
+      stop("j exceeds the column count of x")
+    }
+    subset_names <- x@dt[, unique(name)][j]
+  } else if (is.character(j)) {
+    stopifnot("One or more columns not found in the data" = all(j %in% colnames(x@mat)))
+    subset_names <- j
+  } else {
+    stop("Unsupported type for subsetting columns")
+  }
+
+  x@gr <- x@gr[i]
+  x@mat <- x@mat[i, j, drop = FALSE]
+  x@dt <- x@dt[n %in% i & name %in% subset_names]
+  x
+}
 
 #' Compute agreement between compartment calls
 #'
