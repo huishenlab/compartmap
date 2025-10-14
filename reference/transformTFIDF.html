@@ -52,7 +52,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">transformTFIDF</span><span class="op">(</span><span class="va">mat</span>, scale.factor <span class="op">=</span> <span class="fl">100000</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">transformTFIDF</span><span class="op">(</span><span class="va">mat</span>, scale.factor <span class="op">=</span> <span class="fl">100000</span>, count.min <span class="op">=</span> <span class="fl">0</span>, count.max <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -65,6 +65,18 @@
 
 <dt id="arg-scale-factor">scale.factor<a class="anchor" aria-label="anchor" href="#arg-scale-factor"></a></dt>
 <dd><p>Scaling factor for the term-frequency (TF)</p></dd>
+
+
+<dt id="arg-count-min">count.min<a class="anchor" aria-label="anchor" href="#arg-count-min"></a></dt>
+<dd><p>The minimum expression count used for TF-IDF. Binarizes
+when <code>count.min</code> = 0 and <code>count.max</code> = 1.</p></dd>
+
+
+<dt id="arg-count-max">count.max<a class="anchor" aria-label="anchor" href="#arg-count-max"></a></dt>
+<dd><p>The maximum expression count used for TF-IDF. Binarizes
+when <code>count.min</code> = 0 and <code>count.max</code> = 1.
+binarizes the matrix. A <code>cap</code> value greater than 1 will cap counts at that
+value.</p></dd>
 
 </dl></div>
     <div class="section level2">
