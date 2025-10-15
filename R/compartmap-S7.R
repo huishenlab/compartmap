@@ -46,7 +46,9 @@ method(DF, CompartmentCall) <- function(ccall) {
 
 #' @export
 method(`[`, CompartmentCall) <- function(x, i = NULL) {
+  i <- i %||% seq_len(nrow(x@mat))
   x@dt <- x@dt[i]
+  x@dt[, n := .I][]
   x@gr <- x@gr[i]
   x
 }
@@ -279,6 +281,7 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
   x@gr <- x@gr[i]
   x@mat <- x@mat[i, ]
   x@dt <- x@dt[n %in% i]
+  x@dt[, n := seq_len(.N), by = name]
   x
 }
 
