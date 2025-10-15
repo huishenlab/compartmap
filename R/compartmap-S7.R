@@ -129,6 +129,30 @@ method(flip, CompartmentCall) <- function(ccall) {
     scale_y_continuous(limits = c(-1, 1))
 }
 
+#' Print CompartmentCall
+method(print, CompartmentCall) <- function(x) {
+  message(.print_CompartmentCall(x))
+}
+
+.print_CompartmentCall <- function(x) {
+  properties <- props(x)
+  class_type <- gsub("compartmap::", "", class(x)[1])
+
+  sprintf(
+    "<%s object>
+  @name        : %s
+  @res         : %s
+  @gr          : GRanges with %d bins
+  @dt          : data.table of compartment calls (n = index, pc = singular values)
+  @unitarized  : %s",
+    class_type,
+    x@name,
+    .resolution(x@res),
+    length(x@gr),
+    x@unitarized
+  )
+}
+
 #' CompartmapCall class (experimental)
 #'
 #' An S7 class to hold a single-sample or grouped compartment call with its
@@ -231,6 +255,23 @@ MultiCompartmentCall <- new_class(
   }
 )
 S4_register(MultiCompartmentCall)
+
+.resolution <- function(res) {
+  if (res == 1e5) {
+    paste(res / 1e5, "Kb")
+  } else if (res == 1e6) {
+    paste(res / 1e6, "Mb")
+  } else {
+    stop("Unsupported resolution")
+  }
+}
+
+method(print, MultiCompartmentCall) <- function(x) {
+  msg <- message(
+    .print_CompartmentCall(x),
+    sprintf("\n  @mat         : %d bins x %d samples", nrow(x@mat), ncol(x@mat))
+  )
+}
 
 method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
