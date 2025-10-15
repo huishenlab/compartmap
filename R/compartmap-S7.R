@@ -146,7 +146,7 @@ method(print, CompartmentCall) <- function(x) {
   @name        : %s
   @res         : %s
   @gr          : GRanges with %d bins
-  @dt          : data.table of compartment calls (n = index, pc = singular values)
+  @dt          : data.table of compartment calls (n = bin index, pc = singular values)
   @unitarized  : %s",
     class_type,
     x@name,
