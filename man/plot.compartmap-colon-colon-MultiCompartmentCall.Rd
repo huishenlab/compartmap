@@ -4,7 +4,7 @@
 \alias{plot.compartmap::MultiCompartmentCall}
 \title{Plot singular values from a MultiCompartmentCall object}
 \usage{
-\method{plot}{`compartmap::MultiCompartmentCall`}(x, label_coords = FALSE, res = "mb")
+\method{plot}{`compartmap::MultiCompartmentCall`}(x, label_coords = FALSE, res = "mb", linewidth = 0.5)
 }
 \arguments{
 \item{x}{MultiCompartmentCall}

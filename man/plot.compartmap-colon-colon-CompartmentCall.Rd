@@ -4,7 +4,7 @@
 \alias{plot.compartmap::CompartmentCall}
 \title{Plot singular values of a CompartmentCall object}
 \usage{
-\method{plot}{`compartmap::CompartmentCall`}(x, label_coords = FALSE, res = "kb")
+\method{plot}{`compartmap::CompartmentCall`}(x, label_coords = FALSE, res = "kb", linewidth = 0.5)
 }
 \arguments{
 \item{x}{CompartmentCall or CompartmapCall object}

@@ -119,16 +119,16 @@ method(flip, CompartmentCall) <- function(ccall) {
 #'
 #' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::CompartmentCall` <- function(x, label_coords = TRUE, res = "kb") {
+`plot.compartmap::CompartmentCall` <- function(x, label_coords = FALSE, res = "kb", linewidth = 0.5) {
   if (label_coords) {
     p <- ggplot(x@dt[, .(n, pc, coord = grscale(x@gr, res))], aes(x = coord, y = pc, group = 1)) +
-      geom_line(linewidth = 1) +
+      geom_line(linewidth = linewidth) +
       scale_y_continuous(limits = c(-1, 1)) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
     return(p)
   }
   ggplot(x@dt, aes(x = n, y = pc)) +
-    geom_line(linewidth = 1) +
+    geom_line(linewidth = linewidth) +
     scale_y_continuous(limits = c(-1, 1))
 }
 
@@ -347,19 +347,19 @@ method(corr, MultiCompartmentCall) <- function(x) {
 #'
 #' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::MultiCompartmentCall` <- function(x, label_coords = FALSE, res = "mb") {
+`plot.compartmap::MultiCompartmentCall` <- function(x, label_coords = FALSE, res = "mb", linewidth = 0.5) {
   if (label_coords) {
     p <- ggplot(
       x@dt[, .(n, pc, name, coord = grscale(x@gr, res))],
       aes(x = coord, y = pc, color = name, group = name)
     ) +
-      geom_line(linewidth = 1) +
+      geom_line(linewidth = linewidth) +
       scale_y_continuous(limits = c(-1, 1)) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
     return(p)
   }
   ggplot(x@dt, aes(x = n, y = pc, color = name)) +
-    geom_line(linewidth = 1) +
+    geom_line(linewidth = linewidth) +
     scale_y_continuous(limits = c(-1, 1))
 }
 
