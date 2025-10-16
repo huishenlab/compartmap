@@ -37,13 +37,21 @@ CompartmentCall <- new_class(
 )
 S4_register(CompartmentCall)
 
-#' Get singular values as a data.table
+#' Get the @dt slot from a CompartmentCall object
+#'
+#' @param x A CompartmentCall object
+#'
 #' @export
 DF <- new_generic("DF", "x")
 method(DF, CompartmentCall) <- function(x) {
   x@dt[]
 }
 
+#' Subset rows of a CompartmentCall object
+#'
+#' @param x A CompartmentCall object
+#' @param i Row indices to subset
+#'
 #' @export
 method(`[`, CompartmentCall) <- function(x, i = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
@@ -53,14 +61,19 @@ method(`[`, CompartmentCall) <- function(x, i = NULL) {
   x
 }
 
-#' @name GRanges
-#'
 #' Get GRanges of the CompartmentCall
+#'
+#' @param x A CompartmentCall object
+#'
+#' @export
 method(granges, CompartmentCall) <- function(x) {
   x@gr
 }
 
 #' Get the resolution of the CompartmentCall
+#'
+#' @param x A CompartmentCall object
+#'
 #' @export
 resolution <- new_generic("resolution", "x")
 method(resolution, CompartmentCall) <- function(x) {
@@ -68,6 +81,9 @@ method(resolution, CompartmentCall) <- function(x) {
 }
 
 #' Check if the CompartmentCall was unitarized
+#'
+#' @param x A CompartmentCall object
+#'
 #' @export
 is_unitarized <- new_generic("is_unitarized", "x")
 method(is_unitarized, CompartmentCall) <- function(x) {
@@ -75,6 +91,9 @@ method(is_unitarized, CompartmentCall) <- function(x) {
 }
 
 #' Get the name of the CompartmentCall object
+#'
+#' @param x A CompartmentCall object
+#'
 #' @export
 get_name <- new_generic("get_name", "x")
 method(get_name, CompartmentCall) <- function(x) {
@@ -82,6 +101,8 @@ method(get_name, CompartmentCall) <- function(x) {
 }
 
 #' Unitarize the singular values in a CompartmentCall or MultiCompartmentCall
+#'
+#' @param x A CompartmentCall object
 #'
 #' @export
 unitarize <- new_generic("unitarize", "x")
@@ -100,6 +121,8 @@ method(unitarize, CompartmentCall) <- function(x, medianCenter = TRUE) {
 }
 
 #' Flip the singular values signs in a CompartmentCall
+#'
+#' @param x A CompartmentCall object
 #'
 #' @export
 flip <- new_generic("flip", "x")
@@ -274,6 +297,11 @@ S4_register(MultiCompartmentCall)
   }
 }
 
+#' Print a CompartmentCall object
+#'
+#' @param x A CompartmentCall object
+#'
+#' @export
 method(print, MultiCompartmentCall) <- function(x) {
   msg <- message(
     .print_CompartmentCall(x),
@@ -281,6 +309,12 @@ method(print, MultiCompartmentCall) <- function(x) {
   )
 }
 
+#' Subset MultiCompartmentCall rows (not columns)
+#'
+#' @param x A CompartmentCall object
+#' @param i Rows indices to subset
+#'
+#' @export
 method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
   x@gr <- x@gr[i]
@@ -290,6 +324,12 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
   x
 }
 
+#' Subset MultiCompartmentCall rows and columns
+#'
+#' @param x A CompartmentCall object
+#' @param i Rows indices to subset
+#' @param i Column indices or names to subset
+#'
 #' @export
 method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
@@ -323,16 +363,20 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
 #' Calculates the proportion of calls with the same sign for every pair of
 #' calls in a MultiCompartmentCall object.
 #'
+#' @param x A MultiCompartmentCall object
+#'
 #' @export
-agr <- new_generic("agr", "mcall")
-method(agr, MultiCompartmentCall) <- function(mcall) {
-  agreement(mcall@mat)
+agr <- new_generic("agr", "x")
+method(agr, MultiCompartmentCall) <- function(x) {
+  agreement(x@mat)
 }
 
 #' Compute correlation between compartment calls
 #'
 #' Calculates Pearson correlation for every pair of calls in a
 #' MultiCompartmentCall object.
+#'
+#' @param x A MultiCompartmentCall object
 #'
 #' @importFrom stats cor
 #' @export

@@ -4,7 +4,10 @@
 \alias{unitarize}
 \title{Unitarize the singular values in a CompartmentCall or MultiCompartmentCall}
 \usage{
-unitarize(ccall, ...)
+unitarize(x, ...)
+}
+\arguments{
+\item{x}{A CompartmentCall object}
 }
 \description{
 Unitarize the singular values in a CompartmentCall or MultiCompartmentCall

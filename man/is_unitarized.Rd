@@ -4,7 +4,10 @@
 \alias{is_unitarized}
 \title{Check if the CompartmentCall was unitarized}
 \usage{
-is_unitarized(ccall, ...)
+is_unitarized(x, ...)
+}
+\arguments{
+\item{x}{A CompartmentCall object}
 }
 \description{
 Check if the CompartmentCall was unitarized

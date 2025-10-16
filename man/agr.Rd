@@ -4,7 +4,10 @@
 \alias{agr}
 \title{Compute agreement between compartment calls}
 \usage{
-agr(mcall, ...)
+agr(x, ...)
+}
+\arguments{
+\item{x}{A MultiCompartmentCall object}
 }
 \description{
 Calculates the proportion of calls with the same sign for every pair of

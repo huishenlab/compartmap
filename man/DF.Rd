@@ -2,10 +2,13 @@
 % Please edit documentation in R/compartmap-S7.R
 \name{DF}
 \alias{DF}
-\title{Get singular values as a data.table}
+\title{Get the @dt slot from a CompartmentCall object}
 \usage{
-DF(ccall, ...)
+DF(x, ...)
+}
+\arguments{
+\item{x}{A CompartmentCall object}
 }
 \description{
-Get singular values as a data.table
+Get the @dt slot from a CompartmentCall object
 }

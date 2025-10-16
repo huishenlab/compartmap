@@ -6,6 +6,9 @@
 \usage{
 corr(x, ...)
 }
+\arguments{
+\item{x}{A MultiCompartmentCall object}
+}
 \description{
 Calculates Pearson correlation for every pair of calls in a
 MultiCompartmentCall object.
