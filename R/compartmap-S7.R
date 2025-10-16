@@ -39,9 +39,9 @@ S4_register(CompartmentCall)
 
 #' Get singular values as a data.table
 #' @export
-DF <- new_generic("DF", "ccall")
-method(DF, CompartmentCall) <- function(ccall) {
-  ccall@dt[]
+DF <- new_generic("DF", "x")
+method(DF, CompartmentCall) <- function(x) {
+  x@dt[]
 }
 
 #' @export
@@ -62,50 +62,50 @@ method(granges, CompartmentCall) <- function(x) {
 
 #' Get the resolution of the CompartmentCall
 #' @export
-resolution <- new_generic("resolution", "ccall")
-method(resolution, CompartmentCall) <- function(ccall) {
-  ccall@res
+resolution <- new_generic("resolution", "x")
+method(resolution, CompartmentCall) <- function(x) {
+  x@res
 }
 
 #' Check if the CompartmentCall was unitarized
 #' @export
-is_unitarized <- new_generic("is_unitarized", "ccall")
-method(is_unitarized, CompartmentCall) <- function(ccall) {
-  ccall@unitarized
+is_unitarized <- new_generic("is_unitarized", "x")
+method(is_unitarized, CompartmentCall) <- function(x) {
+  x@unitarized
 }
 
 #' Get the name of the CompartmentCall object
 #' @export
-get_name <- new_generic("get_name", "ccall")
-method(get_name, CompartmentCall) <- function(ccall) {
-  ccall@name
+get_name <- new_generic("get_name", "x")
+method(get_name, CompartmentCall) <- function(x) {
+  x@name
 }
 
 #' Unitarize the singular values in a CompartmentCall or MultiCompartmentCall
 #'
 #' @export
-unitarize <- new_generic("unitarize", "ccall")
-method(unitarize, CompartmentCall) <- function(ccall, medianCenter = TRUE) {
-  stopifnot("object is already unitarized" = isFALSE(ccall@unitarized))
+unitarize <- new_generic("unitarize", "x")
+method(unitarize, CompartmentCall) <- function(x, medianCenter = TRUE) {
+  stopifnot("object is already unitarized" = isFALSE(x@unitarized))
 
-  dt <- ccall@dt
+  dt <- x@dt
   if ("name" %in% colnames(dt)) {
-    ccall@dt <- ccall@dt[, .(n, pc = .unitarize(pc)), by = name][, .(n, pc, name)]
+    x@dt <- x@dt[, .(n, pc = .unitarize(pc)), by = name][, .(n, pc, name)]
   } else {
-    ccall@dt <- ccall@dt[, .(n, pc = .unitarize(pc))]
+    x@dt <- x@dt[, .(n, pc = .unitarize(pc))]
   }
 
-  ccall@unitarized <- TRUE
-  ccall
+  x@unitarized <- TRUE
+  x
 }
 
 #' Flip the singular values signs in a CompartmentCall
 #'
 #' @export
-flip <- new_generic("flip", "ccall")
-method(flip, CompartmentCall) <- function(ccall) {
-  ccall@dt <- ccall@dt[, .(n, pc = -pc, name)]
-  ccall
+flip <- new_generic("flip", "x")
+method(flip, CompartmentCall) <- function(x) {
+  x@dt <- x@dt[, .(n, pc = -pc, name)]
+  x
 }
 
 #' Plot singular values of a CompartmentCall object
