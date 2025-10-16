@@ -43,6 +43,7 @@ Imports:
    Matrix,
    RMTstat,
    impute,
+   data.table,
    S7
 Suggests:
    csaw,

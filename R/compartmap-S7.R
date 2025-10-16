@@ -12,7 +12,7 @@
 #' @param unitarized Whether the singular values have been unitarized
 #'
 #' @import S7
-#' @importFrom data.table data.table
+#' @importFrom data.table data.table .I .N :=
 #' @export
 CompartmentCall <- new_class(
   "CompartmentCall",
