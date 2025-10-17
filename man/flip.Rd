@@ -4,7 +4,7 @@
 \alias{flip}
 \title{Flip the singular values signs in a CompartmentCall}
 \usage{
-flip(x, ...)
+flip(x)
 }
 \arguments{
 \item{x}{A CompartmentCall object}

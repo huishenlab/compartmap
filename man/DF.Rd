@@ -4,7 +4,7 @@
 \alias{DF}
 \title{Get the @dt slot from a CompartmentCall object}
 \usage{
-DF(x, ...)
+DF(x)
 }
 \arguments{
 \item{x}{A CompartmentCall object}

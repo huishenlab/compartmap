@@ -42,7 +42,9 @@ S4_register(CompartmentCall)
 #' @param x A CompartmentCall object
 #'
 #' @export
-DF <- new_generic("DF", "x")
+DF <- new_generic("DF", "x", function(x) {
+  S7_dispatch()
+})
 method(DF, CompartmentCall) <- function(x) {
   x@dt[]
 }
@@ -75,7 +77,9 @@ method(granges, CompartmentCall) <- function(x) {
 #' @param x A CompartmentCall object
 #'
 #' @export
-resolution <- new_generic("resolution", "x")
+resolution <- new_generic("resolution", "x", function(x) {
+  S7_dispatch()
+})
 method(resolution, CompartmentCall) <- function(x) {
   x@res
 }
@@ -85,7 +89,9 @@ method(resolution, CompartmentCall) <- function(x) {
 #' @param x A CompartmentCall object
 #'
 #' @export
-is_unitarized <- new_generic("is_unitarized", "x")
+is_unitarized <- new_generic("is_unitarized", "x", function(x) {
+  S7_dispatch()
+})
 method(is_unitarized, CompartmentCall) <- function(x) {
   x@unitarized
 }
@@ -95,7 +101,9 @@ method(is_unitarized, CompartmentCall) <- function(x) {
 #' @param x A CompartmentCall object
 #'
 #' @export
-get_name <- new_generic("get_name", "x")
+get_name <- new_generic("get_name", "x", function(x) {
+  S7_dispatch()
+})
 method(get_name, CompartmentCall) <- function(x) {
   x@name
 }
@@ -103,9 +111,12 @@ method(get_name, CompartmentCall) <- function(x) {
 #' Unitarize the singular values in a CompartmentCall or MultiCompartmentCall
 #'
 #' @param x A CompartmentCall object
+#' @param medianCenter Whether to center the singular values on their median
 #'
 #' @export
-unitarize <- new_generic("unitarize", "x")
+unitarize <- new_generic("unitarize", "x", function(x, medianCenter = TRUE) {
+  S7_dispatch()
+})
 method(unitarize, CompartmentCall) <- function(x, medianCenter = TRUE) {
   stopifnot("object is already unitarized" = isFALSE(x@unitarized))
 
@@ -125,7 +136,9 @@ method(unitarize, CompartmentCall) <- function(x, medianCenter = TRUE) {
 #' @param x A CompartmentCall object
 #'
 #' @export
-flip <- new_generic("flip", "x")
+flip <- new_generic("flip", "x", function(x) {
+  S7_dispatch()
+})
 method(flip, CompartmentCall) <- function(x) {
   x@dt <- x@dt[, .(n, pc = -pc, name)]
   x
@@ -366,7 +379,9 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
 #' @param x A MultiCompartmentCall object
 #'
 #' @export
-agr <- new_generic("agr", "x")
+agr <- new_generic("agr", "x", function(x) {
+  S7_dispatch()
+})
 method(agr, MultiCompartmentCall) <- function(x) {
   agreement(x@mat)
 }
@@ -380,7 +395,9 @@ method(agr, MultiCompartmentCall) <- function(x) {
 #'
 #' @importFrom stats cor
 #' @export
-corr <- new_generic("corr", "x")
+corr <- new_generic("corr", "x", function(x) {
+  S7_dispatch()
+})
 method(corr, MultiCompartmentCall) <- function(x) {
   cor(x@mat)
 }

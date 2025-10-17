@@ -4,10 +4,12 @@
 \alias{unitarize}
 \title{Unitarize the singular values in a CompartmentCall or MultiCompartmentCall}
 \usage{
-unitarize(x, ...)
+unitarize(x, medianCenter = TRUE)
 }
 \arguments{
 \item{x}{A CompartmentCall object}
+
+\item{medianCenter}{Whether to center the singular values on their median}
 }
 \description{
 Unitarize the singular values in a CompartmentCall or MultiCompartmentCall

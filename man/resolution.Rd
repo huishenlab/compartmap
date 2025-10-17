@@ -4,7 +4,7 @@
 \alias{resolution}
 \title{Get the resolution of the CompartmentCall}
 \usage{
-resolution(x, ...)
+resolution(x)
 }
 \arguments{
 \item{x}{A CompartmentCall object}

@@ -4,7 +4,7 @@
 \alias{agr}
 \title{Compute agreement between compartment calls}
 \usage{
-agr(x, ...)
+agr(x)
 }
 \arguments{
 \item{x}{A MultiCompartmentCall object}

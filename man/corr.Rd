@@ -4,7 +4,7 @@
 \alias{corr}
 \title{Compute correlation between compartment calls}
 \usage{
-corr(x, ...)
+corr(x)
 }
 \arguments{
 \item{x}{A MultiCompartmentCall object}

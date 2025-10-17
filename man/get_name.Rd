@@ -4,7 +4,7 @@
 \alias{get_name}
 \title{Get the name of the CompartmentCall object}
 \usage{
-get_name(x, ...)
+get_name(x)
 }
 \arguments{
 \item{x}{A CompartmentCall object}
