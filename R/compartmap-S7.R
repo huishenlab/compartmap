@@ -343,9 +343,6 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
   j <- j %||% seq_len(ncol(x@mat))
 
-  if (length(i) == 1 & length(j) == 1) {
-    stop("Subsetting to a single value is not allowed")
-  }
   stopifnot("i exceeds the row count of x" = i <= nrow(x@mat))
 
   if (is.numeric(j)) {
