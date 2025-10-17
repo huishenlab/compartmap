@@ -332,15 +332,6 @@ method(print, MultiCompartmentCall) <- function(x, ...) {
 #' @param i Rows indices to subset
 #'
 #' @export
-method(`[`, MultiCompartmentCall) <- function(x, i = NULL) {
-  i <- i %||% seq_len(nrow(x@mat))
-  x@gr <- x@gr[i]
-  x@mat <- x@mat[i, ]
-  x@dt <- x@dt[n %in% i]
-  x@dt[, n := seq_len(.N), by = name]
-  x
-}
-
 #' Subset MultiCompartmentCall rows and columns
 #'
 #' @param x A CompartmentCall object
