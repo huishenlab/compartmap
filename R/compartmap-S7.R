@@ -55,7 +55,7 @@ method(DF, CompartmentCall) <- function(x) {
 #' @param i Row indices to subset
 #'
 #' @export
-method(`[`, CompartmentCall) <- function(x, i = NULL) {
+`[.compartmap::CompartmentCall` <- function(x, i = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
   x@dt <- x@dt[i]
   x@dt[, n := .I][]
@@ -326,20 +326,14 @@ method(print, MultiCompartmentCall) <- function(x, ...) {
   )
 }
 
-#' Subset MultiCompartmentCall rows (not columns)
+#' Subset MultiCompartmentCall object
 #'
 #' @param x A CompartmentCall object
 #' @param i Rows indices to subset
+#' @param j Column indices or names to subset
 #'
 #' @export
-#' Subset MultiCompartmentCall rows and columns
-#'
-#' @param x A CompartmentCall object
-#' @param i Rows indices to subset
-#' @param i Column indices or names to subset
-#'
-#' @export
-method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
+`[.compartmap::MultiCompartmentCall` <- function(x, i = NULL, j = NULL) {
   i <- i %||% seq_len(nrow(x@mat))
   j <- j %||% seq_len(ncol(x@mat))
 
