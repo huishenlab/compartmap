@@ -360,6 +360,7 @@ method(`[`, MultiCompartmentCall) <- function(x, i = NULL, j = NULL) {
   x@gr <- x@gr[i]
   x@mat <- x@mat[i, j, drop = FALSE]
   x@dt <- x@dt[n %in% i & name %in% subset_names]
+  x@dt[, n := seq_len(.N), by = name][]
   x
 }
 
