@@ -305,13 +305,9 @@ MultiCompartmentCall <- new_class(
 S4_register(MultiCompartmentCall)
 
 .resolution <- function(res) {
-  if (res == 1e5) {
-    paste(res / 1e5, "Kb")
-  } else if (res == 1e6) {
-    paste(res / 1e6, "Mb")
-  } else {
-    stop("Unsupported resolution")
-  }
+  fct <- res / 1e5
+  if (any(fct < 1) | any(fct >= 100)) stop("Unsupported resolution")
+  ifelse(fct < 10, paste(fct, "Kb"), paste(fct / 10, "Mb"))
 }
 
 #' Print a CompartmentCall object
