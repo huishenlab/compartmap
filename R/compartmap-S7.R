@@ -147,15 +147,19 @@ method(flip, CompartmentCall) <- function(x) {
 #' Plot singular values of a CompartmentCall object
 #'
 #' @param x CompartmentCall or CompartmapCall object
+#' @param ... Placeholder for the `plot` generic - arguments have not effect
 #' @param label_coords Label the x-axis with genomic coordinates. Uses a
 #' numeric index when set to `FALSE`. Using coordinate labels can severely
 #' crowd the x-axis, especially with Kb-resolution calls.
 #' @param res The resolution to round the genomic coordinates to (kilobase:
 #' "kb" or megabase: "mb")
+#' @param linewidth The width of the `geom_line` in the plot
 #'
 #' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::CompartmentCall` <- function(x, label_coords = FALSE, res = "kb", linewidth = 0.5) {
+`plot.compartmap::CompartmentCall` <- function(x, ..., label_coords = FALSE, res = "kb", linewidth = 0.5) {
+  . <- NULL
+  pc <- NULL
   if (label_coords) {
     p <- ggplot(x@dt[, .(n, pc, coord = grscale(x@gr, res))], aes(x = coord, y = pc, group = 1)) +
       geom_line(linewidth = linewidth) +
@@ -169,7 +173,7 @@ method(flip, CompartmentCall) <- function(x) {
 }
 
 #' Print CompartmentCall
-method(print, CompartmentCall) <- function(x) {
+method(print, CompartmentCall) <- function(x, ...) {
   message(.print_CompartmentCall(x))
 }
 
@@ -315,7 +319,7 @@ S4_register(MultiCompartmentCall)
 #' @param x A CompartmentCall object
 #'
 #' @export
-method(print, MultiCompartmentCall) <- function(x) {
+method(print, MultiCompartmentCall) <- function(x, ...) {
   msg <- message(
     .print_CompartmentCall(x),
     sprintf("\n  @mat         : %d bins x %d samples", nrow(x@mat), ncol(x@mat))
@@ -405,15 +409,17 @@ method(corr, MultiCompartmentCall) <- function(x) {
 #' Plot singular values from a MultiCompartmentCall object
 #'
 #' @param x MultiCompartmentCall
+#' @param ... Placeholder for the `plot` generic - arguments have not effect
 #' @param label_coords Label the x-axis with genomic coordinates. Uses a
 #' numeric index when set to `FALSE`. Using coordinate labels can severely
 #' crowd the x-axis, especially with Kb-resolution calls.
 #' @param res The resolution to round the genomic coordinates to (kilobase:
 #' "kb" or megabase: "mb")
+#' @param linewidth The width of the `geom_line` in the plot
 #'
 #' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::MultiCompartmentCall` <- function(x, label_coords = FALSE, res = "mb", linewidth = 0.5) {
+`plot.compartmap::MultiCompartmentCall` <- function(x, ..., label_coords = FALSE, res = "mb", linewidth = 0.5) {
   if (label_coords) {
     p <- ggplot(
       x@dt[, .(n, pc, name, coord = grscale(x@gr, res))],

@@ -4,10 +4,12 @@
 \alias{plot.compartmap::MultiCompartmentCall}
 \title{Plot singular values from a MultiCompartmentCall object}
 \usage{
-\method{plot}{`compartmap::MultiCompartmentCall`}(x, label_coords = FALSE, res = "mb", linewidth = 0.5)
+\method{plot}{`compartmap::MultiCompartmentCall`}(x, ..., label_coords = FALSE, res = "mb", linewidth = 0.5)
 }
 \arguments{
 \item{x}{MultiCompartmentCall}
+
+\item{...}{Placeholder for the \code{plot} generic - arguments have not effect}
 
 \item{label_coords}{Label the x-axis with genomic coordinates. Uses a
 numeric index when set to \code{FALSE}. Using coordinate labels can severely
@@ -15,6 +17,8 @@ crowd the x-axis, especially with Kb-resolution calls.}
 
 \item{res}{The resolution to round the genomic coordinates to (kilobase:
 "kb" or megabase: "mb")}
+
+\item{linewidth}{The width of the \code{geom_line} in the plot}
 }
 \description{
 Plot singular values from a MultiCompartmentCall object
