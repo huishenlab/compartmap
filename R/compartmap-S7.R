@@ -122,7 +122,7 @@ method(unitarize, CompartmentCall) <- function(x, medianCenter = TRUE) {
 
   dt <- x@dt
   if (inherits(x, "compartmap::MultiCompartmentCall")) {
-    x@mat <- apply(mat, 2, .unitarize)
+    x@mat <- apply(x@mat, 2, .unitarize)
     x@dt <- x@dt[, .(n, pc = .unitarize(pc)), by = name][, .(n, pc, name)]
   } else {
     x@dt <- x@dt[, .(n, pc = .unitarize(pc), name)]
