@@ -316,9 +316,10 @@ S4_register(MultiCompartmentCall)
 #'
 #' @export
 method(print, MultiCompartmentCall) <- function(x, ...) {
+  column_label <- ifelse(inherits(x, "compartmap::SingleCellCompartmentCall"), "cells", "samples")
   msg <- message(
     .print_CompartmentCall(x),
-    sprintf("\n  @mat         : %d bins x %d samples", nrow(x@mat), ncol(x@mat))
+    sprintf("\n  @mat         : %d bins x %d %s", nrow(x@mat), ncol(x@mat), column_label)
   )
 }
 
@@ -420,3 +421,58 @@ grscale <- function(gr, res) {
   end_scaled <- round(end(gr) / as.numeric(scale_factor[1], 4))
   paste0(seqlevels(gr), ":", start_scaled, "-", end_scaled, " ", scale_factor[2])
 }
+
+#' SingleCellCompartmentCall class
+#'
+#' An S7 class to hold multiple single-cell level compartment calls at the same
+#' resolution with their metadata and analysis methods. This takes a
+#' RaggedExperiment from `scCompartments()` as its input.
+#'
+#' @param ccalls A RageedExperiment of single-cell compartment calls
+#' @param name An identifier for this set of compartment calls
+#' @param unitarized Whether the singular values have been unitarized
+#' @param unitarize Whether to unitarize the singular values for each of the inputs calls
+#'
+#' @export
+#' @importFrom data.table melt as.data.table
+#' @export
+SingleCellCompartmentCall <- new_class(
+  "SingleCellCompartmentCall",
+  parent = MultiCompartmentCall,
+  properties = list(
+    colnames = class_character,
+    mat = new_S3_class(c("matrix", "array"))
+  ),
+  constructor = function(ccalls, res, name, unitarized = FALSE, unitarize = FALSE) {
+    grlist <- condenseSE(ccalls)
+    pcs <- lapply(grlist, function(i) {
+      mcols(i)[, 'pc']
+    })
+    mat <- do.call(cbind, pcs)
+
+    if (unitarize & !unitarized) {
+      mat <- apply(mat, 2, .unitarize)
+    } else if (unitarize & unitarized) {
+      message("Already unitarized")
+    }
+
+    dt <- melt(
+      as.data.table(mat)[, n := .I],
+      id.vars = "n",
+      variable.name = "name",
+      value.name = "pc"
+    )
+
+    new_object(
+      S7_object(),
+      name = name,
+      gr = GRanges(rownames(mat)),
+      dt = dt,
+      res = res,
+      unitarized = unitarized,
+      colnames = colnames(mat),
+      mat = mat
+    )
+  }
+)
+S4_register(SingleCellCompartmentCall)

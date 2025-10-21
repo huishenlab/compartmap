@@ -3,6 +3,7 @@
   S4_register(CompartmentCall, ns)
   S4_register(CompartmapCall, ns)
   S4_register(MultiCompartmentCall, ns)
+  S4_register(SingleCellCompartmentCall, ns)
   S7::methods_register()
 }
 
