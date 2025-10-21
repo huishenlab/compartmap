@@ -307,7 +307,7 @@ S4_register(MultiCompartmentCall)
 
 .resolution <- function(res) {
   fct <- res / 1e5
-  if (any(fct < 1) | any(fct >= 100)) stop("Unsupported resolution")
+  if ((any(fct < 1) | any(fct >= 100))) stop("Unsupported resolution")
   ifelse(fct < 10, paste(fct, "Kb"), paste(fct / 10, "Mb"))
 }
 
