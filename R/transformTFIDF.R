@@ -49,7 +49,7 @@ transformTFIDF <- function(mat, scale.factor = 1e5, count.min = 0, count.max = 1
   tfidf <- .tfidf(tf, idf) # transform
 
   # cast back to a matrix since things like UMAP don't like sparse matrices
-  as.matrix(t(tfidf))
+  as.matrix(tfidf)
 }
 
 # binarize when lower is 0 and upper is 1, constrain otherwise

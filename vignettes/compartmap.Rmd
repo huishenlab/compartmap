@@ -270,7 +270,7 @@ data("k562_scrna_raw", package = "compartmap")
 k562_scrna_chr14_tfidf <- transformTFIDF(assay(k562_scrna_se_chr14))
 
 # Add back the TF-IDF counts to the object in the counts slot
-assay(k562_scrna_se_chr14, "counts") <- t(k562_scrna_chr14_tfidf)
+assay(k562_scrna_se_chr14, "counts") <- k562_scrna_chr14_tfidf
 
 # Compute chromatin domains at the group level
 k562_scrna_chr14_raw_domains <- scCompartments(k562_scrna_se_chr14,
