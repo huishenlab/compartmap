@@ -5,13 +5,15 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Gather open sea CpG from a GRanges of CpG islands — getOpenSeas"><meta name="description" content="This function accepts a GRanges input of CpG islands that can
-be derived from UCSC table browser and rtracklayer::import(yourbed.bed). It
-resizes the inteval to create 4kb flanking open sea regions around the CpG
-islands as defined by Fortin and Hansen (Genome Biology, 2015)."><meta property="og:description" content="This function accepts a GRanges input of CpG islands that can
-be derived from UCSC table browser and rtracklayer::import(yourbed.bed). It
-resizes the inteval to create 4kb flanking open sea regions around the CpG
-islands as defined by Fortin and Hansen (Genome Biology, 2015)."></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Gather open sea CpG from a GRanges of CpG islands — getOpenSeas"><meta name="description" content="This function accepts a GRanges input of CpG islands that can be derived
+from UCSC table browser and rtracklayer::import(yourbed.bed). It resizes the
+intevals to create 4kb flanking regions around CpG islands. Open sea
+regions, as defined by Fortin by and Hansen (Genome Biology, 2015), are outside this flanking
+regions and obtained as their complement."><meta property="og:description" content="This function accepts a GRanges input of CpG islands that can be derived
+from UCSC table browser and rtracklayer::import(yourbed.bed). It resizes the
+intevals to create 4kb flanking regions around CpG islands. Open sea
+regions, as defined by Fortin by and Hansen (Genome Biology, 2015), are outside this flanking
+regions and obtained as their complement."></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -53,10 +55,11 @@ islands as defined by Fortin and Hansen (Genome Biology, 2015)."></head><body>
     </div>
 
     <div class="ref-description section level2">
-    <p>This function accepts a GRanges input of CpG islands that can
-be derived from UCSC table browser and rtracklayer::import(yourbed.bed). It
-resizes the inteval to create 4kb flanking open sea regions around the CpG
-islands as defined by <a href="https://doi.org/10.1186/s13059-015-0741-y" class="external-link">Fortin and Hansen (Genome Biology, 2015)</a>.</p>
+    <p>This function accepts a GRanges input of CpG islands that can be derived
+from UCSC table browser and rtracklayer::import(yourbed.bed). It resizes the
+intevals to create 4kb flanking regions around CpG islands. Open sea
+regions, as defined by <a href="https://doi.org/10.1186/s13059-015-0741-y" class="external-link">Fortin by and Hansen (Genome Biology, 2015)</a>, are outside this flanking
+regions and obtained as their complement.</p>
     </div>
 
     <div class="section level2">
