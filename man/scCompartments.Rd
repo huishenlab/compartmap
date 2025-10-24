@@ -2,17 +2,19 @@
 % Please edit documentation in R/scCompartments.R
 \name{scCompartments}
 \alias{scCompartments}
-\title{Estimate A/B compartments from single-cell sequencing data}
+\title{Estimate A/B compartments from single-cell RNA or ATAC sequencing data}
 \usage{
 scCompartments(
   obj,
   res = 1000000,
-  parallel = FALSE,
   chr = NULL,
   targets = NULL,
+  parallel = FALSE,
   cores = 2,
   bootstrap = TRUE,
   num.bootstraps = 100,
+  boot.parallel = FALSE,
+  boot.cores = 2,
   genome = c("hg19", "hg38", "mm9", "mm10"),
   group = FALSE,
   assay = c("atac", "rna")
@@ -23,17 +25,21 @@ scCompartments(
 
 \item{res}{Compartment resolution in bp}
 
-\item{parallel}{Whether to run samples in parallel}
-
 \item{chr}{What chromosome to work on (leave as NULL to run on all chromosomes)}
 
 \item{targets}{Samples/cells to shrink towards}
+
+\item{parallel}{Whether to run samples in parallel}
 
 \item{cores}{How many cores to use when running samples in parallel}
 
 \item{bootstrap}{Whether we should perform bootstrapping of inferred compartments}
 
 \item{num.bootstraps}{How many bootstraps to run}
+
+\item{boot.parallel}{Whether to run the bootstrapping in parallel}
+
+\item{boot.cores}{How many cores to use for the bootstrapping}
 
 \item{genome}{What genome to work on ("hg19", "hg38", "mm9", "mm10")}
 
@@ -51,8 +57,8 @@ A RaggedExperiment of inferred compartments
 data("k562_scrna_chr14", package = "compartmap")
 sc_compartments <- scCompartments(
   k562_scrna_chr14,
-  parallel = FALSE,
   chr = "chr14",
+  parallel = FALSE,
   bootstrap = FALSE,
   genome = "hg19"
 )

@@ -20,7 +20,7 @@ plotAB(
 )
 }
 \arguments{
-\item{grAB}{The GRanges object returned from scCompartments and getArrayABsignal}
+\item{grAB}{The GRanges object returned from scCompartments and arrayCompartments}
 
 \item{chr}{Chromosome to subset to for plotting}
 
