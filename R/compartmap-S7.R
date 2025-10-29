@@ -280,9 +280,9 @@ MultiCompartmentCall <- new_class(
     }
 
     all_unitarized <- all_same(is_unitarized, "All calls must be either unitarized or non-unitarized")
-
+    colorder <- sapply(ccalls, get_name)
     dt <- rbindlist(lapply(ccalls, function(i) {
-      DF(i)[, name := get_name(i)][]
+      DF(i)[, name := get_name(i)][, name := factor(name, levels = colorder)][]
     }))
     mat <- as.matrix(dcast(dt, n ~ name, value.var = "pc")[, -1])
 
