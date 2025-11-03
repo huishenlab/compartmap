@@ -84,7 +84,7 @@ shrinkBins <- function(
 
   # bin the input
   bin.mat <- getBinMatrix(
-    mat = as.matrix(cbind(input.assay, prior.means)),
+    mat = cbind(input.assay, prior.means),
     genloc = rowRanges(x),
     chr = chr,
     res = res,
