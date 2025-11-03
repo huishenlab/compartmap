@@ -61,11 +61,12 @@ shrinkBins <- function(
   }
 
   # get the prior means
-  prior.means <- prior.means %||% getGlobalMeans(
-    obj = original.x,
-    targets = targets,
-    assay = assay
-  )
+  prior.means <- prior.means %||%
+    getGlobalMeans(
+      obj = original.x,
+      targets = targets,
+      assay = assay
+    )
 
   is.atac_or_rna <- assay %in% c("atac", "rna")
   input.fun <- if (jse) {
