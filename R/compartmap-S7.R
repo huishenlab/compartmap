@@ -260,7 +260,7 @@ MultiCompartmentCall <- new_class(
     unique_res <- all_same(resolution, "All resolutions must be the same")
     unique_gr <- all_same(granges, "All GRanges must contain the same ranges")
 
-    all_unitarized <- unique(unlist(lapply(ccalls, is_unitarized)))
+    all_unitarized <- all(unique(unlist(lapply(ccalls, is_unitarized))))
     if (unitarized & !all_unitarized) {
       stop("Not all calls are unitarized - unitarize all inputs or run with `unitarize = TRUE`")
     }
