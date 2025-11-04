@@ -4,12 +4,22 @@
 \alias{plot.compartmap::MultiCompartmentCall}
 \title{Plot singular values from a MultiCompartmentCall object}
 \usage{
-\method{plot}{`compartmap::MultiCompartmentCall`}(x, ..., label_coords = FALSE, res = "mb", linewidth = 0.5)
+\method{plot}{`compartmap::MultiCompartmentCall`}(
+  x,
+  ...,
+  type = "line",
+  label_coords = FALSE,
+  res = "mb",
+  width = 0.5,
+  ylim = c(-1, 1)
+)
 }
 \arguments{
 \item{x}{MultiCompartmentCall}
 
 \item{...}{Placeholder for the \code{plot} generic - arguments have not effect}
+
+\item{type}{Whether to plot the singular values as \code{"line"} or \code{"bar"} plots.}
 
 \item{label_coords}{Label the x-axis with genomic coordinates. Uses a
 numeric index when set to \code{FALSE}. Using coordinate labels can severely
@@ -18,7 +28,10 @@ crowd the x-axis, especially with Kb-resolution calls.}
 \item{res}{The resolution to round the genomic coordinates to (kilobase:
 "kb" or megabase: "mb")}
 
-\item{linewidth}{The width of the \code{geom_line} in the plot}
+\item{width}{The width of the \code{geom_line} if \code{type = "line"} or the width
+of the bar if \code{type = "bar"} in the plot}
+
+\item{ylim}{Upper and lower bound for the y-axis}
 }
 \description{
 Plot singular values from a MultiCompartmentCall object

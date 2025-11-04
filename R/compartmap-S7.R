@@ -149,28 +149,43 @@ method(flip, CompartmentCall) <- function(x) {
 #'
 #' @param x CompartmentCall or CompartmapCall object
 #' @param ... Placeholder for the `plot` generic - arguments have not effect
+#' @param type Whether to plot the singular values as `"line"` or `"bar"` plots.
 #' @param label_coords Label the x-axis with genomic coordinates. Uses a
 #' numeric index when set to `FALSE`. Using coordinate labels can severely
 #' crowd the x-axis, especially with Kb-resolution calls.
 #' @param res The resolution to round the genomic coordinates to (kilobase:
 #' "kb" or megabase: "mb")
-#' @param linewidth The width of the `geom_line` in the plot
+#' @param width The width of the `geom_line` if `type = "line"` or the width
+#' of the bar if `type = "bar"` in the plot
+#' @param ylim Upper and lower bound for the y-axis
 #'
-#' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
+#' @importFrom ggplot2 ggplot geom_line geom_bar scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::CompartmentCall` <- function(x, ..., label_coords = FALSE, res = "kb", linewidth = 0.5) {
+`plot.compartmap::CompartmentCall` <- function(
+  x,
+  ...,
+  type = "line",
+  label_coords = FALSE,
+  res = "kb",
+  width = 0.5,
+  ylim = c(-1, 1)
+) {
   . <- NULL
   pc <- NULL
   if (label_coords) {
-    p <- ggplot(x@dt[, .(n, pc, coord = grscale(x@gr, res))], aes(x = coord, y = pc, group = 1)) +
-      geom_line(linewidth = linewidth) +
-      scale_y_continuous(limits = c(-1, 1)) +
+    coord_pd <- x@dt[, .(n, pc, coord = grscale(x@gr, res))]
+    p <- ggplot(coord_pd, aes(x = coord, y = pc, group = 1)) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-    return(p)
+  } else {
+    p <- ggplot(x@dt, aes(x = n, y = pc))
   }
-  ggplot(x@dt, aes(x = n, y = pc)) +
-    geom_line(linewidth = linewidth) +
-    scale_y_continuous(limits = c(-1, 1))
+  p <- p + scale_y_continuous(limits = ylim)
+
+  switch(
+    type,
+    line = p + geom_line(linewidth = width),
+    bar = p + geom_bar(stat = "identity", width = width)
+  )
 }
 
 #' Print CompartmentCall
@@ -391,29 +406,41 @@ method(corr, MultiCompartmentCall) <- function(x) {
 #'
 #' @param x MultiCompartmentCall
 #' @param ... Placeholder for the `plot` generic - arguments have not effect
+#' @param type Whether to plot the singular values as `"line"` or `"bar"` plots.
 #' @param label_coords Label the x-axis with genomic coordinates. Uses a
 #' numeric index when set to `FALSE`. Using coordinate labels can severely
 #' crowd the x-axis, especially with Kb-resolution calls.
 #' @param res The resolution to round the genomic coordinates to (kilobase:
 #' "kb" or megabase: "mb")
-#' @param linewidth The width of the `geom_line` in the plot
+#' @param width The width of the `geom_line` if `type = "line"` or the width
+#' of the bar if `type = "bar"` in the plot
+#' @param ylim Upper and lower bound for the y-axis
 #'
 #' @importFrom ggplot2 ggplot geom_line scale_y_continuous theme element_text
 #' @export
-`plot.compartmap::MultiCompartmentCall` <- function(x, ..., label_coords = FALSE, res = "mb", linewidth = 0.5) {
+`plot.compartmap::MultiCompartmentCall` <- function(
+  x,
+  ...,
+  type = "line",
+  label_coords = FALSE,
+  res = "mb",
+  width = 0.5,
+  ylim = c(-1, 1)
+) {
   if (label_coords) {
-    p <- ggplot(
-      x@dt[, .(n, pc, name, coord = grscale(x@gr, res))],
-      aes(x = coord, y = pc, color = name, group = name)
-    ) +
-      geom_line(linewidth = linewidth) +
-      scale_y_continuous(limits = c(-1, 1)) +
+    coord_pd <- x@dt[, .(n, pc, name, coord = grscale(x@gr, res))]
+    p <- ggplot(coord_pd, aes(x = coord, y = pc, color = name, group = name)) +
       theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-    return(p)
+  } else {
+    p <- ggplot(x@dt, aes(x = n, y = pc, color = name))
   }
-  ggplot(x@dt, aes(x = n, y = pc, color = name)) +
-    geom_line(linewidth = linewidth) +
-    scale_y_continuous(limits = c(-1, 1))
+  p <- p + scale_y_continuous(limits = ylim)
+
+  switch(
+    type,
+    line = p + geom_line(linewidth = width),
+    bar = p + geom_bar(stat = "identity", width = width)
+  )
 }
 
 grscale <- function(gr, res) {
