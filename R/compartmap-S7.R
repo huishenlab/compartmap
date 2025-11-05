@@ -407,7 +407,9 @@ method(corr, MultiCompartmentCall) <- function(x, ...) {
 #'
 #' @param x MultiCompartmentCall
 #' @param ... Placeholder for the `plot` generic - arguments have not effect
-#' @param type Whether to plot the singular values as `"line"` or `"bar"` plots.
+#' @param type Whether to plot the singular values as `"line"` or `"bar"`
+#' plots. Bar plots will be facted by the CompartmapCall object name while the
+#' line plots are overlayed.
 #' @param label_coords Label the x-axis with genomic coordinates. Uses a
 #' numeric index when set to `FALSE`. Using coordinate labels can severely
 #' crowd the x-axis, especially with Kb-resolution calls.
@@ -428,20 +430,30 @@ method(corr, MultiCompartmentCall) <- function(x, ...) {
   width = 0.5,
   ylim = c(-1, 1)
 ) {
+  pd <- x@dt
+  x_axis <- "n"
   if (label_coords) {
-    coord_pd <- x@dt[, .(n, pc, name, coord = grscale(x@gr, res))]
-    p <- ggplot(coord_pd, aes(x = coord, y = pc, color = name, group = name)) +
-      theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
-  } else {
-    p <- ggplot(x@dt, aes(x = n, y = pc, color = name))
+    pd <- x@dt[, .(n, pc, name, coord = grscale(x@gr, res))]
+    x_axis <- "coord"
   }
-  p <- p + scale_y_continuous(limits = ylim)
 
-  switch(
+  p <- switch(
     type,
-    line = p + geom_line(linewidth = width),
-    bar = p + geom_bar(stat = "identity", width = width)
+    line = {
+      ggplot(pd, aes(x = .data[[x_axis]], y = pc, color = name, group = name)) +
+        geom_line(linewidth = width)
+    },
+    bar = {
+      ggplot(pd, aes(x = .data[[x_axis]], y = pc, group = name)) +
+        geom_col(width = width) +
+        facet_grid(rows = vars(name))
+    }
   )
+
+  if (label_coords) {
+    p <- theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  }
+  p + scale_y_continuous(limits = ylim)
 }
 
 grscale <- function(gr, res) {

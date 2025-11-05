@@ -19,7 +19,9 @@
 
 \item{...}{Placeholder for the \code{plot} generic - arguments have not effect}
 
-\item{type}{Whether to plot the singular values as \code{"line"} or \code{"bar"} plots.}
+\item{type}{Whether to plot the singular values as \code{"line"} or \code{"bar"}
+plots. Bar plots will be facted by the CompartmapCall object name while the
+line plots are overlayed.}
 
 \item{label_coords}{Label the x-axis with genomic coordinates. Uses a
 numeric index when set to \code{FALSE}. Using coordinate labels can severely
