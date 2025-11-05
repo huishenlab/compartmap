@@ -392,14 +392,15 @@ method(agr, MultiCompartmentCall) <- function(x) {
 #' MultiCompartmentCall object.
 #'
 #' @param x A MultiCompartmentCall object
+#' @param ... Additional arguments to pass to `stats::cor()`
 #'
 #' @importFrom stats cor
 #' @export
-corr <- new_generic("corr", "x", function(x) {
+corr <- new_generic("corr", "x", function(x, ...) {
   S7_dispatch()
 })
-method(corr, MultiCompartmentCall) <- function(x) {
-  cor(x@mat)
+method(corr, MultiCompartmentCall) <- function(x, ...) {
+  cor(x@mat, ...)
 }
 
 #' Plot singular values from a MultiCompartmentCall object

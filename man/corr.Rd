@@ -4,10 +4,12 @@
 \alias{corr}
 \title{Compute correlation between compartment calls}
 \usage{
-corr(x)
+corr(x, ...)
 }
 \arguments{
 \item{x}{A MultiCompartmentCall object}
+
+\item{...}{Additional arguments to pass to \code{stats::cor()}}
 }
 \description{
 Calculates Pearson correlation for every pair of calls in a
