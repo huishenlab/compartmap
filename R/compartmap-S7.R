@@ -145,6 +145,40 @@ method(flip, CompartmentCall) <- function(x) {
   x
 }
 
+#' Fill missing genomic bins in CompartmentCalls using a reference GRanges
+#'
+#' Compartmap may drop genomic bins with insufficient data and the resulting
+#' GRanges object may not have all the bins of the region it was run which
+#' means using the same region and resolution on different inputs does not
+#' guarantee the same output bins. Having different set of bins between
+#' calls despite the same input regions and resolution prevents the creation of
+#' MultiCompartmentCall objcets that expect the same GRanges across all input
+#' CompartmentCall objects. `fill_missing()` adds the missing bins according to
+#' a larger reference set of bins, filling missing data with NA. All
+#' CompartmentCall objects bins must be present in the reference bins.
+#'
+#' @param x A CompartmentCall object
+#'
+#' @export
+fill_missing <- new_generic("flip", "x", function(x, ref.gr) {
+  S7_dispatch()
+})
+method(fill_missing, CompartmentCall) <- function(x, ref.gr) {
+  ref_length <- length(ref.gr)
+  stopifnot("Reference GRanges is not bigger than CompartmentCall object" = ref_length > length(x@gr))
+
+  `%in%` <- function(a, b) BiocGenerics::match(a, b, nomatch = 0L) > 0L
+  stopifnot("All CompartmentCall bins must be present in the reference GRanges" = all(x@gr %in% ref.gr))
+
+  ref_idx <- seq_len(ref_length)
+  dt <- data.table(n = ifelse(ref.gr %in% x@gr, ref_idx, NA))
+  dt[!is.na(n), `:=`(pc = x@dt$pc, name = x@name)]
+  dt[, n := .I][]
+  x@gr <- ref.gr
+  x@dt <- dt
+  x
+}
+
 #' Plot singular values of a CompartmentCall object
 #'
 #' @param x CompartmentCall or CompartmapCall object
