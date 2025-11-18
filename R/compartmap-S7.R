@@ -21,7 +21,8 @@ CompartmentCall <- new_class(
     gr = methods::getClass("GRanges"),
     dt = methods::getClass("data.table"),
     res = class_numeric,
-    unitarized = class_logical
+    unitarized = class_logical,
+    seqinfo = methods::getClass("Seqinfo")
   ),
   constructor = function(pc, res, gr, name = NULL, unitarized = FALSE) {
     dt <- data.table(pc = as.vector(pc))[, .(n = .I, pc, name = name)]
@@ -31,7 +32,8 @@ CompartmentCall <- new_class(
       gr = granges(gr),
       dt = dt,
       res = res,
-      unitarized = unitarized
+      unitarized = unitarized,
+      seqinfo = selectMethod('seqinfo', "GRanges")(gr)
     )
   }
 )
@@ -70,6 +72,25 @@ method(DF, CompartmentCall) <- function(x) {
 #' @export
 method(granges, CompartmentCall) <- function(x) {
   x@gr
+}
+
+#' Get Seqinfo of the CompartmentCall
+#'
+#' @param x A CompartmentCall object
+#'
+#' @export
+method(seqinfo, CompartmentCall) <- function(x) {
+  x@seqinfo
+}
+
+
+#' Get 'seqlevels' of the CompartmentCall
+#'
+#' @param x A CompartmentCall object
+#'
+#' @export
+method(seqlevels, CompartmentCall) <- function(x) {
+  selectMethod('seqlevels', 'GRanges')(x)
 }
 
 #' Get the resolution of the CompartmentCall
@@ -272,7 +293,8 @@ CompartmapCall <- new_class(
       gr = granges(gr),
       dt = dt,
       res = res,
-      unitarized = unitarized
+      unitarized = unitarized,
+      seqinfo = selectMethod("seqinfo", "GRanges")(gr)
     )
   }
 )
@@ -342,6 +364,7 @@ MultiCompartmentCall <- new_class(
       dt = dt,
       res = unique_res,
       unitarized = unitarized,
+      seqinfo = selectMethod('seqinfo', "GRanges")(unique_gr[[1]]),
       colnames = unlist(lapply(ccalls, get_name)),
       mat = mat
     )
@@ -538,13 +561,16 @@ SingleCellCompartmentCall <- new_class(
       value.name = "pc"
     )
 
+    gr <- GRanges(rownames(mat))
+
     new_object(
       S7_object(),
       name = name,
-      gr = GRanges(rownames(mat)),
+      gr = gr,
       dt = dt,
       res = res,
       unitarized = unitarized,
+      seqinfo = selectMethod('seqinfo', "GRanges")(gr),
       colnames = colnames(mat),
       mat = mat
     )
