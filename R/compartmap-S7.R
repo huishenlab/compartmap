@@ -93,6 +93,20 @@ method(seqlevels, CompartmentCall) <- function(x) {
   selectMethod('seqlevels', 'GRanges')(x)
 }
 
+#' Subset the CompartmentCall object by chromosome
+#'
+#' @param x A CompartmentCall object
+#' @param chr A string vector of chromosomes to subset to
+#'
+#' @export
+subset_chr <- new_generic("subset_chr", "x", function(x, chr) {
+  S7_dispatch()
+})
+method(subset_chr, CompartmentCall) <- function(x, chr) {
+  ind <- as.vector(seqnames(x@gr) %gin% chr)
+  x[which(ind)]
+}
+
 #' Get the resolution of the CompartmentCall
 #'
 #' @param x A CompartmentCall object
@@ -187,12 +201,10 @@ fill_missing <- new_generic("flip", "x", function(x, ref.gr) {
 method(fill_missing, CompartmentCall) <- function(x, ref.gr) {
   ref_length <- length(ref.gr)
   stopifnot("Reference GRanges is not bigger than CompartmentCall object" = ref_length > length(x@gr))
-
-  `%in%` <- function(a, b) BiocGenerics::match(a, b, nomatch = 0L) > 0L
-  stopifnot("All CompartmentCall bins must be present in the reference GRanges" = all(x@gr %in% ref.gr))
+  stopifnot("All CompartmentCall bins must be present in the reference GRanges" = all(x@gr %gin% ref.gr))
 
   ref_idx <- seq_len(ref_length)
-  dt <- data.table(n = ifelse(ref.gr %in% x@gr, ref_idx, NA))
+  dt <- data.table(n = ifelse(ref.gr %gin% x@gr, ref_idx, NA))
   dt[!is.na(n), `:=`(pc = x@dt$pc, name = x@name)]
   dt[, n := .I][]
   x@gr <- ref.gr
@@ -428,6 +440,7 @@ method(print, MultiCompartmentCall) <- function(x, ...) {
   x
 }
 
+
 #' Compute agreement between compartment calls
 #'
 #' Calculates the proportion of calls with the same sign for every pair of
@@ -577,3 +590,8 @@ SingleCellCompartmentCall <- new_class(
   }
 )
 S4_register(SingleCellCompartmentCall)
+
+# Store the BiocGenerics %in% to differentiate from base::`%in%`
+`%gin%` <- function(a, b) {
+  BiocGenerics::match(a, b, nomatch = 0L) > 0L
+}
