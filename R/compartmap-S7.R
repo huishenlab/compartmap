@@ -65,6 +65,14 @@ method(DF, CompartmentCall) <- function(x) {
   x
 }
 
+`nrow.compartmap::CompartmentCall` <- function(x) {
+  length(x@gr)
+}
+
+`ncol.compartmap::CompartmentCall` <- function(x) {
+  1
+}
+
 #' Get GRanges of the CompartmentCall
 #'
 #' @param x A CompartmentCall object
@@ -408,6 +416,22 @@ MultiCompartmentCall <- new_class(
   }
 )
 S4_register(MultiCompartmentCall)
+
+`nrow.compartmap::CompartmentCall` <- function(x) {
+  nrow(x@mat)
+}
+
+`ncol.compartmap::CompartmentCall` <- function(x) {
+  ncol(x@mat)
+}
+
+method(dim, MultiCompartmentCall) <- function(x) {
+  dim(x@mat)
+}
+
+method(names, MultiCompartmentCall) <- function(x) {
+  colnames(x@mat)
+}
 
 .resolution <- function(res) {
   fct <- res / 1e5
