@@ -107,6 +107,26 @@ method(subset_chr, CompartmentCall) <- function(x, chr) {
   x[which(ind)]
 }
 
+#' Find overlaps between CompartmentCall objects
+#'
+#' @param subject A CompartmentCall object
+#' @param query A string vector of chromosomes to subset to
+#'
+#' @export
+method(findOverlaps, list(CompartmentCall, CompartmentCall)) <- function(
+  query,
+  subject,
+  maxgap = -1L,
+  minoverlap = 0L,
+  type = c("any", "start", "end", "within", "equal"),
+  select = c("all", "first", "last", "arbitrary"),
+  ignore.strand = FALSE
+) {
+  query <- query@gr
+  subject <- subject@gr
+  callGeneric()
+}
+
 #' Get the resolution of the CompartmentCall
 #'
 #' @param x A CompartmentCall object
