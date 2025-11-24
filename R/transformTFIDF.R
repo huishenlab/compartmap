@@ -41,10 +41,7 @@ transformTFIDF <- function(mat, scale.factor = 1e5, binarize = FALSE) {
   tf <- t(t(mat.capped) / Matrix::colSums(mat.capped)) # compute term-frequency
   tf@x <- log1p(tf@x * scale.factor) # scale
   idf <- log(1 + ncol(mat.capped) / Matrix::rowSums(mat.capped)) # inverse-document frequency smooth
-  tfidf <- .tfidf(tf, idf) # transform
-
-  # cast back to a matrix since things like UMAP don't like sparse matrices
-  as.matrix(tfidf)
+  .tfidf(tf, idf) # transform
 }
 
 .binarize <- function(v) {
