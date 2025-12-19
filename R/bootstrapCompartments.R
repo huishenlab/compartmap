@@ -1,14 +1,14 @@
-#' Non-parametric bootstrapping of compartments and summarization of bootstraps/compute confidence intervals
+#' Non-parametric bootstrapping of compartments and summarization of
+#' bootstraps/compute confidence intervals
 #'
 #' @name bootstrapCompartments
 #'
 #' @param obj List object of computed compartments for a sample with 'pc' and 'gr' as elements
 #' @param original.obj The original, full input SummarizedExperiment of all samples/cells
+#' @param BPPARAM BiocParallelParam for parallelizing bootstrapping
 #' @param bootstrap.samples How many bootstraps to run
 #' @param chr Which chromosome to operate on
 #' @param assay What sort of assay are we working on
-#' @param parallel Whether to run the bootstrapping in parallel
-#' @param cores How many cores to use for parallel processing
 #' @param targets Targets to shrink towards
 #' @param res The compartment resolution
 #' @param genome What genome are we working on
@@ -18,7 +18,6 @@
 #' @param bootstrap.means Pre-computed bootstrap means matrix
 #'
 #' @return Compartment estimates with summarized bootstraps and confidence intervals
-#' @importFrom parallel mclapply
 #' @import SummarizedExperiment
 #'
 #' @examples
@@ -29,17 +28,16 @@
 bootstrapCompartments <- function(
   obj,
   original.obj,
+  BPPARAM,
   bootstrap.samples = 1000,
   chr = "chr14",
+  group = FALSE,
   assay = c("rna", "atac", "array"),
-  parallel = TRUE,
-  cores = 2,
   targets = NULL,
   res = 1e6,
   genome = c("hg19", "hg38", "mm9", "mm10"),
   q = 0.95,
   svd = NULL,
-  group = FALSE,
   bootstrap.means = NULL
 ) {
   # function for nonparametric bootstrap of compartments and compute 95% CIs
@@ -61,36 +59,36 @@ bootstrapCompartments <- function(
   }
 
   # if (ncol(original.obj) < 6) stop("We need more than 5 samples to bootstrap with for the results to be meaningful.")
-  if (parallel) {
-    message("Bootstrapping in parallel with ", cores, " cores.")
-  } else {
-    message("Not bootstrapping in parallel will take a long time...")
-  }
 
   # bootstrap and recompute compartments
-  resamp.compartments <- mclapply(1:ncol(bmeans), function(b) {
-    # get the shrunken bins with new global mean
-    boot.mean <- as.matrix(bmeans[, b])
-    colnames(boot.mean) <- "globalMean"
-    s.bins <- shrinkBins(
-      obj,
-      original.obj,
-      prior.means = boot.mean,
-      chr = chr,
-      res = res,
-      assay = assay,
-      genome = genome
-    )
-    cor.bins <- getCorMatrix(s.bins, squeeze = !group)
+  BiocParallel::bpprogressbar(BPPARAM) <- FALSE
+  resamp.compartments <- bplapply(
+    1:ncol(bmeans),
+    function(b) {
+      # get the shrunken bins with new global mean
+      boot.mean <- as.matrix(bmeans[, b])
+      colnames(boot.mean) <- "globalMean"
+      s.bins <- shrinkBins(
+        obj,
+        original.obj,
+        prior.means = boot.mean,
+        chr = chr,
+        res = res,
+        assay = assay,
+        genome = genome
+      )
+      cor.bins <- getCorMatrix(s.bins, squeeze = !group)
 
-    # Stupid check for perfect correlation with global mean
-    if (any(is.na(cor.bins$binmat.cor))) {
-      absig <- matrix(rep(NA, nrow(cor.bins$binmat.cor)))
-    } else {
-      absig <- getABSignal(cor.bins, assay = assay)
-    }
-    return(absig)
-  }, mc.cores = ifelse(parallel, cores, 1))
+      # Stupid check for perfect correlation with global mean
+      if (any(is.na(cor.bins$binmat.cor))) {
+        absig <- matrix(rep(NA, nrow(cor.bins$binmat.cor)))
+      } else {
+        absig <- getABSignal(cor.bins, assay = assay)
+      }
+      return(absig)
+    },
+    BPPARAM = BPPARAM
+  )
 
   # summarize the bootstraps and compute confidence intervals
   resamp.compartments <- summarizeBootstraps(resamp.compartments, svd, q = q, assay = assay)

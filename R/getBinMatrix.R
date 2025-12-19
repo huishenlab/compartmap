@@ -68,7 +68,7 @@ getBinMatrix <- function(
   ids <- findOverlaps(genloc, gr.bin, select = "first")
 
   binCount <- length(gr.bin)
-  message(binCount, " bins created...")
+  flog.debug("%d bins created...", binCount)
 
   mat.bin <- apply(mat, 2, function(x) {
     .summarizeBins(x, binCount, ids, FUN)

@@ -23,14 +23,13 @@ reference:
 - title: Compartment mapping
   contents:
     - scCompartments
-    - getArrayABsignal
+    - arrayCompartments
 - title: Compartment helper
   contents:
     - filterCompartments
     - fixCompartments
     - extractOpenClosed
     - getABSignal
-    - getATACABsignal
     - getRNAABsignal
 - title: Correlation matrix
   contents:

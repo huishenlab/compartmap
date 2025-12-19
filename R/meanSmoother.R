@@ -22,7 +22,7 @@
 #' @export
 meanSmoother <- function(mat, k = 1, iters = 2, delta = 0, weights = NULL) {
   if (k == 0) {
-    message("Returning unsmoothed mat as 'k' = 0")
+    flog.debug("Returning unsmoothed mat as 'k' = 0")
     return(mat)
   }
 

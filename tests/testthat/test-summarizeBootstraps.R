@@ -57,8 +57,6 @@ test_that("summarizeBootstraps", {
 
   removeEmptyBoots(list(gr1, gr2))
 
-  expect_message(summarizeBootstraps(list(gr1, gr1), gr1), "Summarizing bootstraps")
-
   tester <- function(one, two, expected) {
     mcols(gr1) <- data.frame(pc = one)
     gr1$compartments <- ifelse(mcols(gr1)$pc > 0, "open", "closed")

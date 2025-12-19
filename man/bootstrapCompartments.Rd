@@ -2,22 +2,22 @@
 % Please edit documentation in R/bootstrapCompartments.R
 \name{bootstrapCompartments}
 \alias{bootstrapCompartments}
-\title{Non-parametric bootstrapping of compartments and summarization of bootstraps/compute confidence intervals}
+\title{Non-parametric bootstrapping of compartments and summarization of
+bootstraps/compute confidence intervals}
 \usage{
 bootstrapCompartments(
   obj,
   original.obj,
+  BPPARAM,
   bootstrap.samples = 1000,
   chr = "chr14",
+  group = FALSE,
   assay = c("rna", "atac", "array"),
-  parallel = TRUE,
-  cores = 2,
   targets = NULL,
   res = 1000000,
   genome = c("hg19", "hg38", "mm9", "mm10"),
   q = 0.95,
   svd = NULL,
-  group = FALSE,
   bootstrap.means = NULL
 )
 }
@@ -26,15 +26,15 @@ bootstrapCompartments(
 
 \item{original.obj}{The original, full input SummarizedExperiment of all samples/cells}
 
+\item{BPPARAM}{BiocParallelParam for parallelizing bootstrapping}
+
 \item{bootstrap.samples}{How many bootstraps to run}
 
 \item{chr}{Which chromosome to operate on}
 
+\item{group}{Whether this is for group-level inference}
+
 \item{assay}{What sort of assay are we working on}
-
-\item{parallel}{Whether to run the bootstrapping in parallel}
-
-\item{cores}{How many cores to use for parallel processing}
 
 \item{targets}{Targets to shrink towards}
 
@@ -46,15 +46,14 @@ bootstrapCompartments(
 
 \item{svd}{The original compartment calls as a GRanges object}
 
-\item{group}{Whether this is for group-level inference}
-
 \item{bootstrap.means}{Pre-computed bootstrap means matrix}
 }
 \value{
 Compartment estimates with summarized bootstraps and confidence intervals
 }
 \description{
-Non-parametric bootstrapping of compartments and summarization of bootstraps/compute confidence intervals
+Non-parametric bootstrapping of compartments and summarization of
+bootstraps/compute confidence intervals
 }
 \examples{
 

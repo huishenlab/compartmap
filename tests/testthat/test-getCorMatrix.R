@@ -10,10 +10,6 @@ test_that("getCorMatrix", {
   expected.result <- list(gr.cor = gr, binmat.cor = expected.cormat)
   expected.result.squeezed <- list(gr.cor = gr, binmat.cor = expected.cormat.squeezed)
 
-  expect_message(getCorMatrix(binmat), "Calculating correlations")
-  expect_message(getCorMatrix(binmat), "Done")
-  expect_no_warning(expect_message(getCorMatrix(binmat)))
-
   expect_equal(getCorMatrix(binmat), expected.result)
   expect_equal(getCorMatrix(binmat, squeeze = TRUE), expected.result.squeezed)
 })

@@ -6,25 +6,22 @@
 \usage{
 precomputeBootstrapMeans(
   obj,
+  BPPARAM,
   targets = NULL,
   num.bootstraps = 100,
-  assay = c("atac", "rna", "array"),
-  parallel = FALSE,
-  num.cores = 1
+  assay = c("atac", "rna", "array")
 )
 }
 \arguments{
 \item{obj}{Input SummarizedExperiment object}
+
+\item{BPPARAM}{BiocParallelParam for parallelizing computation}
 
 \item{targets}{Optional targets to shrink towards}
 
 \item{num.bootstraps}{The number of bootstraps to compute}
 
 \item{assay}{What type of assay the data are from}
-
-\item{parallel}{Whether to run in parallel}
-
-\item{num.cores}{How many cores to use for parallel processing}
 }
 \value{
 A matrix of bootstrapped global means

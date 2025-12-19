@@ -55,7 +55,7 @@ shrinkBins <- function(
     if (target.count == 1) {
       stop("Cannot perform targeted bin-level shrinkage with one target sample.")
     } else if (target.count < 4) {
-      message("Number of means fewer than 4. Using Bayes instead of JSE.")
+      flog.debug("Number of means fewer than 4. Using Bayes instead of JSE.")
       jse <- FALSE
     }
   }

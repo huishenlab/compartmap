@@ -17,12 +17,14 @@
       ];
 
       Imports = with pkgs.rPackages; [
+        BiocParallel
         DelayedArray
         DelayedMatrixStats
         GenomicRanges
         ggplot2
         impute
         Matrix
+        parallelly
         reshape2
         RMTstat
         rtracklayer

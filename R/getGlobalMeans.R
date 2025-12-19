@@ -30,7 +30,7 @@ getGlobalMeans <- function(obj, targets = NULL, assay = c("atac", "rna", "array"
   # check if shrinkage targets are being used
   if (!is.null(targets)) {
     stargets <- getShrinkageTargets(obj, targets)
-    message("Using ", paste(shQuote(targets), collapse = ", "), " as shrinkage targets...")
+    flog.debug("Using %s as shrinkage targets", paste(shQuote(targets), collapse = ", "))
     globalMean.input <- stargets
   } else {
     globalMean.input <- obj
@@ -49,11 +49,10 @@ getGlobalMeans <- function(obj, targets = NULL, assay = c("atac", "rna", "array"
 #' @name precomputeBootstrapMeans
 #'
 #' @param obj Input SummarizedExperiment object
+#' @param BPPARAM BiocParallelParam for parallelizing computation
 #' @param targets Optional targets to shrink towards
 #' @param num.bootstraps The number of bootstraps to compute
 #' @param assay What type of assay the data are from
-#' @param parallel Whether to run in parallel
-#' @param num.cores How many cores to use for parallel processing
 #'
 #' @return A matrix of bootstrapped global means
 #'
@@ -69,11 +68,10 @@ getGlobalMeans <- function(obj, targets = NULL, assay = c("atac", "rna", "array"
 #' )
 precomputeBootstrapMeans <- function(
   obj,
+  BPPARAM,
   targets = NULL,
   num.bootstraps = 100,
-  assay = c("atac", "rna", "array"),
-  parallel = FALSE,
-  num.cores = 1
+  assay = c("atac", "rna", "array")
 ) {
   # this function precomputes the bootstrapped global means
   # as a default we will make 100 bootstraps
@@ -85,11 +83,15 @@ precomputeBootstrapMeans <- function(
     obj <- getShrinkageTargets(obj, targets)
   }
   assay.data <- .getAssay(obj, is.array)
-  bootMean <- mclapply(1:num.bootstraps, function(b) {
-    message("Working on bootstrap ", b)
-    resamp.mat <- .resampleMatrix(assay.data)
-    computeGlobalMean(resamp.mat)
-  }, mc.cores = ifelse(parallel, num.cores, 1))
+  bootMean <- bplapply(
+    1:num.bootstraps,
+    function(b) {
+      flog.debug("Working on bootstrap ", b)
+      resamp.mat <- .resampleMatrix(assay.data)
+      computeGlobalMean(resamp.mat)
+    },
+    BPPARAM = BPPARAM
+  )
 
   bootResult <- do.call("cbind", bootMean)
   rownames(bootResult) <- as.character(granges(obj))

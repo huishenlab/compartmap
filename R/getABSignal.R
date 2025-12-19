@@ -52,13 +52,13 @@ getABSignal <- function(x, squeeze = FALSE, assay = c("rna", "atac", "array")) {
   assay <- match.arg(assay)
   gr <- x$gr
 
-  message("Calculating eigenvectors.")
+  flog.debug("Calculating eigenvectors.")
   pc <- getSVD(x$binmat.cor, sing.vec = "right")
   if (squeeze) pc <- ifisherZ(pc)
 
-  message("Smoothing eigenvector.")
+  flog.debug("Smoothing eigenvector.")
   gr$pc <- meanSmoother(pc)
-  message("Done smoothing.")
+  flog.debug("Done smoothing.")
 
   gr$compartments <- extractOpenClosed(gr, assay = assay)
   return(gr)

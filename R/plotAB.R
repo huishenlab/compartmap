@@ -2,7 +2,7 @@
 #'
 #' Plot A/B compartments bins
 #'
-#' @param grAB              The GRanges object returned from scCompartments and getArrayABsignal
+#' @param grAB              The GRanges object returned from scCompartments and arrayCompartments
 #' @param chr               Chromosome to subset to for plotting
 #' @param main              Title for the plot
 #' @param ylim              Y-axis limits (default is -1 to 1)
@@ -113,7 +113,7 @@ plotAB <- function(
   NAs <- is.na(x)
   x[!NAs] <- x[!NAs] / sqrt(sum(x[!NAs]^2))
   na.count <- sum(NAs)
-  if (na.count > 0) message(sprintf("[.unitarize] %i missing values were ignored.\n", na.count))
+  if (na.count > 0) flog.debug("[.unitarize] %i missing values were ignored.\n", na.count)
   x
 }
 

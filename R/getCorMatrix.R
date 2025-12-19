@@ -43,7 +43,7 @@
 #' # Calculate correlations
 #' getCorMatrix(bin.counts)
 getCorMatrix <- function(binmat, squeeze = FALSE) {
-  message("Calculating correlations...")
+  flog.debug("Calculating correlations...")
   # bind back up the global means and shrunken bins
   binmat$x <- cbind(binmat$x, binmat$gmeans)
   binmat.cor <- suppressWarnings(cor(t(binmat$x)))
@@ -51,6 +51,6 @@ getCorMatrix <- function(binmat, squeeze = FALSE) {
   if (squeeze) {
     binmat.cor <- fisherZ(binmat.cor)
   }
-  message("Done...")
+  flog.debug("Done...")
   list(gr.cor = binmat$gr, binmat.cor = binmat.cor)
 }

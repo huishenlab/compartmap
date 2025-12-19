@@ -54,7 +54,8 @@ k562_compartments <- scCompartments(
   group = TRUE,
   bootstrap = FALSE,
   genome = "hg19",
-  assay = "rna"
+  assay = "rna",
+  BPPARAM = BiocParallel::MulticoreParam(2)
 )
 ```
 
@@ -77,7 +78,8 @@ k562_compartments.boot <- scCompartments(
   bootstrap = TRUE,
   num.bootstraps = 10,
   genome = "hg19",
-  assay = "rna"
+  assay = "rna",
+  BPPARAM = BiocParallel::MulticoreParam(2)
 )
 
 # Flip the domain sign if the sign coherence is discordant in 80% of the bootstraps
@@ -280,7 +282,8 @@ k562_scrna_chr14_raw_domains <- scCompartments(k562_scrna_se_chr14,
   bootstrap = TRUE,
   num.bootstraps = 10,
   genome = "hg19",
-  assay = "rna"
+  assay = "rna",
+  BPPARAM = BiocParallel::MulticoreParam(2)
 )
 ```
 

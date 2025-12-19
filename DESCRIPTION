@@ -26,12 +26,15 @@ Depends:
    HDF5Array
 Imports:
    BiocSingular,
+   BiocParallel,
+   futile.logger,
    rlang,
    S4Vectors,
    IRanges,
    GenomicRanges,
    GenomeInfoDb,
    parallel,
+   parallelly,
    methods,
    grid,
    ggplot2,

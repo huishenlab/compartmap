@@ -34,11 +34,7 @@ test_that(".unitarize", {
     scaling <- sqrt(sum(centered[-4]^2))
     centered / scaling
   }
-  expect_message(
-    compartmap:::.unitarize(vec.withNA, medianCenter = FALSE),
-    "[.unitarize] 1 missing values were ignored.",
-    fixed = TRUE
-  )
+
   expect_equal(compartmap:::.unitarize(vec.withNA), expected.withNA)
 
   expected.withNA.nomedian <- {

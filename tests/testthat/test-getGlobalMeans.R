@@ -65,18 +65,18 @@ test_that("getGlobalMeans", {
 
 test_that("precomputeBootstrapMeans", {
   expected.rownames <- as.character(gr)
-  boot.mean <- precomputeBootstrapMeans(se.rna, num.bootstraps = 2)
+  boot.mean <- precomputeBootstrapMeans(se.rna, BiocParallel::SerialParam(), num.bootstraps = 2)
   expect_equal(rownames(boot.mean), expected.rownames)
 
   lapply(1:50, function(boot_count) {
-    boot.mean <- precomputeBootstrapMeans(se.rna, num.bootstraps = boot_count)
+    boot.mean <- precomputeBootstrapMeans(se.rna, BiocParallel::SerialParam(), num.bootstraps = boot_count)
     expect_equal(ncol(boot.mean), boot_count)
   })
   expect_error(
-    precomputeBootstrapMeans(se.rna, num.bootstraps = 2, targets = c(1:4)),
+    precomputeBootstrapMeans(se.rna, BiocParallel::SerialParam(), num.bootstraps = 2, targets = c(1:4)),
     "Need 5 or more samples for targeted bootstrapping to work."
   )
   expect_no_error(
-    precomputeBootstrapMeans(se.rna, num.bootstraps = 2, targets = c(1:5))
+    precomputeBootstrapMeans(se.rna, BiocParallel::SerialParam(), num.bootstraps = 2, targets = c(1:5))
   )
 })

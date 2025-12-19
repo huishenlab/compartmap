@@ -21,7 +21,7 @@ summarizeBootstraps <- function(boot.list, est.ab, q = 0.95, assay = c("rna", "a
 
   is.atac_or_rna <- assay %in% c("atac", "rna")
 
-  message("Summarizing bootstraps.")
+  flog.debug("Summarizing bootstraps")
 
   # filter out failed compartment estimates
   boot.list <- removeEmptyBoots(boot.list)
@@ -37,7 +37,7 @@ summarizeBootstraps <- function(boot.list, est.ab, q = 0.95, assay = c("rna", "a
   est.ab$boot.open <- .getBootRowSums(1)
   est.ab$boot.closed <- .getBootRowSums(2)
 
-  message("Computing Agresti-Coull 95% confidence intervals.")
+  flog.debug("Computing Agresti-Coull 95% confidence intervals")
   .getCI(est.ab, q)
 }
 

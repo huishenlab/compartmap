@@ -80,6 +80,7 @@ test_that("flipper", {
 })
 
 test_that("fixCompartments", {
+  futile.logger::flog.threshold(1)
   lapply(1:length(gr.expected), function(i) {
     expect_equal(
       fixCompartments(gr.input[[i]], min.conf),
