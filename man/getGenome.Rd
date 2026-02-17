@@ -9,7 +9,8 @@ getGenome(genome = c("hg19", "hg38", "mm9", "mm10"), type = "genome")
 \arguments{
 \item{genome}{The desired genome to use ("hg19", "hg38", "mm9", "mm10")}
 
-\item{type}{The type of data - full genome or open sea regions}
+\item{type}{The type of data - full genome (\code{"genome"}), transcripts
+(\code{"tx"}), or open sea regions (\code{"openseas"})}
 }
 \value{
 Granges of the genome

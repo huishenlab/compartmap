@@ -153,3 +153,51 @@ NULL
 #' @keywords data
 #' @usage data(openSeas.mm9, package = "compartmap")
 NULL
+
+#' hg38 genes as a GRanges object
+#'
+#' This object was generated using the TxDb.Hsapiens.UCSC.hg19.knownGene package.
+#' The script used for this object is found in the inst/scripts directory
+#'
+#' @name hg38.tx.gr
+#' @docType data
+#' @author James Eapen \email{james.eapen@vai.org}
+#' @keywords data
+#' @usage data(hg38.tx.gr, package = "compartmap")
+NULL
+
+#' hg19 genes as a GRanges object
+#'
+#' This object was generated using the TxDb.Hsapiens.UCSC.hg19.knownGene package.
+#' The script used for this object is found in the inst/scripts directory
+#'
+#' @name hg19.tx.gr
+#' @docType data
+#' @author James Eapen \email{james.eapen@vai.org}
+#' @keywords data
+#' @usage data(hg19.tx.gr, package = "compartmap")
+NULL
+
+#' mm9 genes as a GRanges object
+#'
+#' This object was generated using the TxDb.Mmusculus.UCSC.mm9.knownGene package.
+#' The script used for this object is found in the inst/scripts directory
+#'
+#' @name mm9.tx.gr
+#' @docType data
+#' @author James Eapen \email{james.eapen@vai.org}
+#' @keywords data
+#' @usage data(mm9.tx.gr, package = "compartmap")
+NULL
+
+#' mm10 genes as a GRanges object
+#'
+#' This object was generated using the TxDb.Mmusculus.UCSC.mm10.knownGene package.
+#' The script used for this object is found in the inst/scripts directory
+#'
+#' @name mm10.tx.gr
+#' @docType data
+#' @author James Eapen \email{james.eapen@vai.org}
+#' @keywords data
+#' @usage data(mm10.tx.gr, package = "compartmap")
+NULL
