@@ -8,6 +8,7 @@
 <url><loc>https://huishenlab.github.io/compartmap/news/index.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/agrestiCoullCI.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/array.data.chr14.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/arrayCompartments.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/bootstrapCompartments.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/cleanAssay.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/cleanAssayCols.html</loc></url>
@@ -29,8 +30,6 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/flipper.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/flogit.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getABSignal.html</loc></url>
-<url><loc>https://huishenlab.github.io/compartmap/reference/getATACABsignal.html</loc></url>
-<url><loc>https://huishenlab.github.io/compartmap/reference/getArrayABsignal.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getAssayNames.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getBinMatrix.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getChrs.html</loc></url>

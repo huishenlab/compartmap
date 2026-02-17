@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Ben
 Johnson</h4>
             
-            <h4 data-toc-skip class="date">23 October 2025</h4>
+            <h4 data-toc-skip class="date">17 February 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/huishenlab/compartmap/blob/master/vignettes/compartmap.Rmd" class="external-link"><code>vignettes/compartmap.Rmd</code></a></small>
       <div class="d-none name"><code>compartmap.Rmd</code></div>
@@ -244,7 +244,7 @@ confidence intervals and median confidence estimate:</p>
 <span>  with.ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  median.conf <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="compartmap_files/figure-html/postprocessPlot-1.png" width="700"></p>
+<p><img src="compartmap_files/figure-html/postprocessPlot-1.png" class="r-plt" alt="" width="700"></p>
 <p>It is known that sometimes, the domains may be inverted relative to
 orthogonal data This is also true in Hi-C and scHi-C domain inference
 One can invert all domains by setting <code>reverse = TRUE</code> in the
@@ -318,7 +318,7 @@ well.</p>
 <span><span class="co"># generate the 1kb bins</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"hg19.gr"</span>, package <span class="op">=</span> <span class="st">"compartmap"</span><span class="op">)</span></span>
 <span><span class="va">kb_bins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/GenomicRanges/man/tileGenome.html" class="external-link">tileGenome</a></span><span class="op">(</span></span>
-<span>  seqlengths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/GenomeInfoDb/man/seqinfo.html" class="external-link">seqlengths</a></span><span class="op">(</span><span class="va">hg19.gr</span><span class="op">)</span><span class="op">[</span><span class="st">"chr14"</span><span class="op">]</span>,</span>
+<span>  seqlengths <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/Seqinfo/man/seqinfo.html" class="external-link">seqlengths</a></span><span class="op">(</span><span class="va">hg19.gr</span><span class="op">)</span><span class="op">[</span><span class="st">"chr14"</span><span class="op">]</span>,</span>
 <span>  tilewidth <span class="op">=</span> <span class="fl">1000</span>,</span>
 <span>  cut.last.tile.in.chrom <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
@@ -433,7 +433,7 @@ shown in the manuscript on chromosome 14 here as the example.</p>
 <span><span class="va">k562_scrna_chr14_tfidf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/transformTFIDF.html">transformTFIDF</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">k562_scrna_se_chr14</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Add back the TF-IDF counts to the object in the counts slot</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">k562_scrna_se_chr14</span>, <span class="st">"counts"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BiocGenerics/man/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">k562_scrna_chr14_tfidf</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">k562_scrna_se_chr14</span>, <span class="st">"counts"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">k562_scrna_chr14_tfidf</span></span>
 <span></span>
 <span><span class="co"># Compute chromatin domains at the group level</span></span>
 <span><span class="va">k562_scrna_chr14_raw_domains</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scCompartments.html">scCompartments</a></span><span class="op">(</span><span class="va">k562_scrna_se_chr14</span>,</span>
@@ -467,7 +467,7 @@ shown in the manuscript on chromosome 14 here as the example.</p>
 <span>  with.ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  median.conf <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="compartmap_files/figure-html/workflow2-1.png" width="700"></p>
+<p><img src="compartmap_files/figure-html/workflow2-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 <div class="section level3">
 <h3 id="higher-order-chromatin-interaction-maps">Higher-order chromatin interaction maps<a class="anchor" aria-label="anchor" href="#higher-order-chromatin-interaction-maps"></a>
@@ -498,7 +498,7 @@ Theory approach:</p>
 <span></span>
 <span><span class="co"># Plot the interaction map</span></span>
 <span><span class="fu"><a href="../reference/plotCorMatrix.html">plotCorMatrix</a></span><span class="op">(</span><span class="va">k562_scrna_chr14_rmt</span>, uppertri <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="compartmap_files/figure-html/denoisermt-1.png" width="700"></p>
+<p><img src="compartmap_files/figure-html/denoisermt-1.png" class="r-plt" alt="" width="700"></p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -512,7 +512,7 @@ Theory approach:</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
