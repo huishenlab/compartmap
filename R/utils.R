@@ -101,7 +101,8 @@ removeEmptyBoots <- function(obj) {
 #' Get a GRanges object from bundled compartmap genomes
 #'
 #' @param genome The desired genome to use ("hg19", "hg38", "mm9", "mm10")
-#' @param type The type of data - full genome or open sea regions
+#' @param type The type of data - full genome (`"genome"`), transcripts
+#' (`"tx"`), or open sea regions (`"openseas"`)
 #'
 #' @return Granges of the genome
 #'
@@ -121,6 +122,7 @@ getGenome <- function(
   })
   gr <- switch(type,
     genome = paste0(genome.name, ".gr"),
+    tx = paste0(genome.name, ".tx.gr"),
     openseas = paste0("openSeas.", genome.name)
   )
   return(get(gr))
