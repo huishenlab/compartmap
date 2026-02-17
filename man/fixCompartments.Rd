@@ -4,10 +4,10 @@
 \alias{fixCompartments}
 \title{Invert, or "fix", compartments that have a minimum confidence score (1-min.conf)}
 \usage{
-fixCompartments(obj, min.conf = 0.8, parallel = FALSE, cores = 1)
+fixCompartments(x, min.conf = 0.8, parallel = FALSE, cores = 1)
 }
 \arguments{
-\item{obj}{Input RaggedExperiment or output of condenseSE}
+\item{x}{Input RaggedExperiment or output of condenseSE}
 
 \item{min.conf}{Minimum confidence score to use}
 

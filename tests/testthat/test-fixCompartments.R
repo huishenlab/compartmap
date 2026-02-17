@@ -90,6 +90,6 @@ test_that("fixCompartments", {
   re <- RaggedExperiment(A = gr1, B = gr2, C = gr3)
   fix_result <- fixCompartments(re)
 
-  expect_length(fix_result, length(colnames(re)))
-  expect_equal(names(fix_result), c("A", "B", "C"))
+  expect_equal(ncol(fix_result), ncol(re))
+  expect_equal(colnames(fix_result), c("A", "B", "C"))
 })

@@ -87,7 +87,8 @@ k562_compartments.boot.fix <- fixCompartments(
 )
 
 # Look at the first cell in the GRangesList object
-k562_compartments.boot.fix[[1]]
+k562_compartments.grlist <- condenseSE(k562_compartments.boot.fix)
+k562_compartments.grlist[[1]]
 ```
 
 ### Visualization of inferred chromatin domains
@@ -107,7 +108,7 @@ intervals and median confidence estimate:
 
 ```{r postprocessPlot, warning=FALSE}
 plotAB(
-  k562_compartments.boot.fix[[1]],
+  k562_compartments.grlist[[1]],
   chr = "chr14",
   with.ci = TRUE,
   median.conf = TRUE
@@ -140,7 +141,7 @@ extract single-cell domain inflections:
 
 ```{r postprocessInflections, message=FALSE, warning=FALSE}
 k562_cell_1_inflections <- getDomainInflections(
-  k562_compartments.boot.fix[[1]],
+  k562_compartments.grlist[[1]],
   what = "flip.score",
   res = 1e6,
   chrs = "chr14",
