@@ -5,6 +5,7 @@
 #' @param x      A list object from getCorMatrix
 #' @param squeeze    Whether squeezing was used (implies Fisher's Z transformation)
 #' @param assay What kind of assay are we working on ("array", "atac", "array")
+#' @param genome The genome to use for gene-density-based sign correction
 #' 
 #' @return    A list x to pass to getABSignal
 #' 
@@ -48,7 +49,12 @@
 #' #Get A/B signal
 #' absignal <- getABSignal(bin.cor.counts)
 
-getABSignal <- function(x, squeeze = FALSE, assay = c("rna", "atac", "array")) {
+getABSignal <- function(
+  x,
+  squeeze = FALSE,
+  assay = c("rna", "atac", "array"),
+  genome = c("hg19", "hg38", "mm9", "mm10")
+) {
   assay <- match.arg(assay)
   gr <- x$gr
 
@@ -60,8 +66,16 @@ getABSignal <- function(x, squeeze = FALSE, assay = c("rna", "atac", "array")) {
   gr$pc <- meanSmoother(pc)
   message("Done smoothing.")
 
+  if (flipSign(gr, genome)) gr$pc <- -gr$pc
   gr$compartments <- extractOpenClosed(gr, assay = assay)
   return(gr)
+}
+
+flipSign <- function(gr, genome) {
+  tx.gr <- getGenome(genome, "tx")
+  gene_count <- countOverlaps(gr, tx.gr)
+  open <- gr$pc > 0
+  sum(gene_count[open]) < sum(gene_count[!open])
 }
 
 #' Get the open and closed compartment calls based on sign of singular values

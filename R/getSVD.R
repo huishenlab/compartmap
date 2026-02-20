@@ -20,16 +20,8 @@ getSVD <- function(matrix, k = 1, sing.vec = c("left", "right")) {
   sing.vec <- match.arg(sing.vec)
 
   matrix <- .centerMatrix(matrix)
-  p.mat <- .getUV(matrix, k, sing.vec)
-  csums <- colSums(matrix, na.rm = TRUE)
-
-  # check for negative correlation
-  # flip sign as necessary to ensure signal is associated with pos. values
-  if (cor(csums, p.mat) < 0) {
-    p.mat <- -p.mat
-  }
-
-  p.mat * sqrt(length(p.mat)) # Chromosome length normalization
+  V <- .getUV(matrix, k, sing.vec)
+  V * sqrt(length(V)) # Chromosome length normalization
 }
 
 # Centre the matrix subtracting the row means from each row
