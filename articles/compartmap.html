@@ -70,7 +70,7 @@
                         <h4 data-toc-skip class="author">Ben
 Johnson</h4>
             
-            <h4 data-toc-skip class="date">17 February 2026</h4>
+            <h4 data-toc-skip class="date">23 February 2026</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/huishenlab/compartmap/blob/master/vignettes/compartmap.Rmd" class="external-link"><code>vignettes/compartmap.Rmd</code></a></small>
       <div class="d-none name"><code>compartmap.Rmd</code></div>
@@ -151,73 +151,74 @@ coherence with the bootstrapping procedure, you can run:</p>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Look at the first cell in the GRangesList object</span></span>
-<span><span class="va">k562_compartments.boot.fix</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">k562_compartments.grlist</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/condenseSE.html">condenseSE</a></span><span class="op">(</span><span class="va">k562_compartments.boot.fix</span><span class="op">)</span></span>
+<span><span class="va">k562_compartments.grlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span>
 <span><span class="co">## GRanges object with 89 ranges and 13 metadata columns:</span></span>
 <span><span class="co">##                             seqnames              ranges strand |         pc</span></span>
 <span><span class="co">##                                &lt;Rle&gt;           &lt;IRanges&gt;  &lt;Rle&gt; |  &lt;numeric&gt;</span></span>
-<span><span class="co">##     chr14:19000000-19999999    chr14   19000000-19999999      * |  -1.857418</span></span>
-<span><span class="co">##     chr14:20000000-20999999    chr14   20000000-20999999      * |  -1.191918</span></span>
-<span><span class="co">##     chr14:21000000-21999999    chr14   21000000-21999999      * |  -0.909080</span></span>
-<span><span class="co">##     chr14:22000000-22999999    chr14   22000000-22999999      * |  -0.609605</span></span>
-<span><span class="co">##     chr14:23000000-23999999    chr14   23000000-23999999      * |  -0.509780</span></span>
+<span><span class="co">##     chr14:19000000-19999999    chr14   19000000-19999999      * |   1.857418</span></span>
+<span><span class="co">##     chr14:20000000-20999999    chr14   20000000-20999999      * |   1.191918</span></span>
+<span><span class="co">##     chr14:21000000-21999999    chr14   21000000-21999999      * |   0.909080</span></span>
+<span><span class="co">##     chr14:22000000-22999999    chr14   22000000-22999999      * |   0.609605</span></span>
+<span><span class="co">##     chr14:23000000-23999999    chr14   23000000-23999999      * |   0.509780</span></span>
 <span><span class="co">##                         ...      ...                 ...    ... .        ...</span></span>
-<span><span class="co">##   chr14:103000000-103999999    chr14 103000000-103999999      * | -0.0605680</span></span>
-<span><span class="co">##   chr14:104000000-104999999    chr14 104000000-104999999      * |  0.0891695</span></span>
-<span><span class="co">##   chr14:105000000-105999999    chr14 105000000-105999999      * |  0.2389070</span></span>
-<span><span class="co">##   chr14:106000000-106999999    chr14 106000000-106999999      * |  0.3886444</span></span>
-<span><span class="co">##   chr14:107000000-107349539    chr14 107000000-107349539      * |  0.5383819</span></span>
+<span><span class="co">##   chr14:103000000-103999999    chr14 103000000-103999999      * |  0.0605680</span></span>
+<span><span class="co">##   chr14:104000000-104999999    chr14 104000000-104999999      * | -0.0891695</span></span>
+<span><span class="co">##   chr14:105000000-105999999    chr14 105000000-105999999      * | -0.2389070</span></span>
+<span><span class="co">##   chr14:106000000-106999999    chr14 106000000-106999999      * | -0.3886444</span></span>
+<span><span class="co">##   chr14:107000000-107349539    chr14 107000000-107349539      * | -0.5383819</span></span>
 <span><span class="co">##                             compartments      score boot.open boot.closed</span></span>
 <span><span class="co">##                              &lt;character&gt;  &lt;numeric&gt; &lt;numeric&gt;   &lt;numeric&gt;</span></span>
-<span><span class="co">##     chr14:19000000-19999999       closed  -1.857418         1           9</span></span>
-<span><span class="co">##     chr14:20000000-20999999       closed  -1.191918         0          10</span></span>
-<span><span class="co">##     chr14:21000000-21999999       closed  -0.909080         0          10</span></span>
-<span><span class="co">##     chr14:22000000-22999999       closed  -0.609605         0          10</span></span>
-<span><span class="co">##     chr14:23000000-23999999       closed  -0.509780         0          10</span></span>
+<span><span class="co">##     chr14:19000000-19999999         open   1.857418         8           2</span></span>
+<span><span class="co">##     chr14:20000000-20999999         open   1.191918         9           1</span></span>
+<span><span class="co">##     chr14:21000000-21999999         open   0.909080         9           1</span></span>
+<span><span class="co">##     chr14:22000000-22999999         open   0.609605         9           1</span></span>
+<span><span class="co">##     chr14:23000000-23999999         open   0.509780         9           1</span></span>
 <span><span class="co">##                         ...          ...        ...       ...         ...</span></span>
-<span><span class="co">##   chr14:103000000-103999999       closed -0.0605680         4           6</span></span>
-<span><span class="co">##   chr14:104000000-104999999         open  0.0891695         9           1</span></span>
-<span><span class="co">##   chr14:105000000-105999999         open  0.2389070        10           0</span></span>
-<span><span class="co">##   chr14:106000000-106999999         open  0.3886444        10           0</span></span>
-<span><span class="co">##   chr14:107000000-107349539         open  0.5383819        10           0</span></span>
+<span><span class="co">##   chr14:103000000-103999999         open  0.0605680         7           3</span></span>
+<span><span class="co">##   chr14:104000000-104999999       closed -0.0891695         2           8</span></span>
+<span><span class="co">##   chr14:105000000-105999999       closed -0.2389070         1           9</span></span>
+<span><span class="co">##   chr14:106000000-106999999       closed -0.3886444         1           9</span></span>
+<span><span class="co">##   chr14:107000000-107349539       closed -0.5383819         1           9</span></span>
 <span><span class="co">##                              conf.est conf.est.lowerCI conf.est.upperCI</span></span>
 <span><span class="co">##                             &lt;numeric&gt;        &lt;numeric&gt;        &lt;numeric&gt;</span></span>
-<span><span class="co">##     chr14:19000000-19999999  0.788987         0.574032                1</span></span>
-<span><span class="co">##     chr14:20000000-20999999  0.861234         0.679113                1</span></span>
-<span><span class="co">##     chr14:21000000-21999999  0.861234         0.679113                1</span></span>
-<span><span class="co">##     chr14:22000000-22999999  0.861234         0.679113                1</span></span>
-<span><span class="co">##     chr14:23000000-23999999  0.861234         0.679113                1</span></span>
+<span><span class="co">##     chr14:19000000-19999999  0.716740         0.479368         0.954113</span></span>
+<span><span class="co">##     chr14:20000000-20999999  0.788987         0.574032         1.000000</span></span>
+<span><span class="co">##     chr14:21000000-21999999  0.788987         0.574032         1.000000</span></span>
+<span><span class="co">##     chr14:22000000-22999999  0.788987         0.574032         1.000000</span></span>
+<span><span class="co">##     chr14:23000000-23999999  0.788987         0.574032         1.000000</span></span>
 <span><span class="co">##                         ...       ...              ...              ...</span></span>
-<span><span class="co">##   chr14:103000000-103999999  0.572247         0.311604         0.832889</span></span>
-<span><span class="co">##   chr14:104000000-104999999  0.788987         0.574032         1.000000</span></span>
-<span><span class="co">##   chr14:105000000-105999999  0.861234         0.679113         1.000000</span></span>
-<span><span class="co">##   chr14:106000000-106999999  0.861234         0.679113         1.000000</span></span>
-<span><span class="co">##   chr14:107000000-107349539  0.861234         0.679113         1.000000</span></span>
+<span><span class="co">##   chr14:103000000-103999999  0.644493         0.392325         0.896662</span></span>
+<span><span class="co">##   chr14:104000000-104999999  0.716740         0.479368         0.954113</span></span>
+<span><span class="co">##   chr14:105000000-105999999  0.788987         0.574032         1.000000</span></span>
+<span><span class="co">##   chr14:106000000-106999999  0.788987         0.574032         1.000000</span></span>
+<span><span class="co">##   chr14:107000000-107349539  0.788987         0.574032         1.000000</span></span>
 <span><span class="co">##                             flip.compartment flip.score flip.conf.est</span></span>
 <span><span class="co">##                                    &lt;logical&gt;  &lt;numeric&gt;     &lt;numeric&gt;</span></span>
-<span><span class="co">##     chr14:19000000-19999999            FALSE  -1.857418      0.788987</span></span>
-<span><span class="co">##     chr14:20000000-20999999            FALSE  -1.191918      0.861234</span></span>
-<span><span class="co">##     chr14:21000000-21999999            FALSE  -0.909080      0.861234</span></span>
-<span><span class="co">##     chr14:22000000-22999999            FALSE  -0.609605      0.861234</span></span>
-<span><span class="co">##     chr14:23000000-23999999            FALSE  -0.509780      0.861234</span></span>
+<span><span class="co">##     chr14:19000000-19999999            FALSE   1.857418      0.716740</span></span>
+<span><span class="co">##     chr14:20000000-20999999            FALSE   1.191918      0.788987</span></span>
+<span><span class="co">##     chr14:21000000-21999999            FALSE   0.909080      0.788987</span></span>
+<span><span class="co">##     chr14:22000000-22999999            FALSE   0.609605      0.788987</span></span>
+<span><span class="co">##     chr14:23000000-23999999            FALSE   0.509780      0.788987</span></span>
 <span><span class="co">##                         ...              ...        ...           ...</span></span>
-<span><span class="co">##   chr14:103000000-103999999            FALSE -0.0605680      0.572247</span></span>
-<span><span class="co">##   chr14:104000000-104999999            FALSE  0.0891695      0.788987</span></span>
-<span><span class="co">##   chr14:105000000-105999999            FALSE  0.2389070      0.861234</span></span>
-<span><span class="co">##   chr14:106000000-106999999            FALSE  0.3886444      0.861234</span></span>
-<span><span class="co">##   chr14:107000000-107349539            FALSE  0.5383819      0.861234</span></span>
+<span><span class="co">##   chr14:103000000-103999999            FALSE  0.0605680      0.644493</span></span>
+<span><span class="co">##   chr14:104000000-104999999            FALSE -0.0891695      0.716740</span></span>
+<span><span class="co">##   chr14:105000000-105999999            FALSE -0.2389070      0.788987</span></span>
+<span><span class="co">##   chr14:106000000-106999999            FALSE -0.3886444      0.788987</span></span>
+<span><span class="co">##   chr14:107000000-107349539            FALSE -0.5383819      0.788987</span></span>
 <span><span class="co">##                             flip.conf.est.upperCI flip.conf.est.lowerCI</span></span>
 <span><span class="co">##                                         &lt;numeric&gt;             &lt;numeric&gt;</span></span>
-<span><span class="co">##     chr14:19000000-19999999                     1              0.574032</span></span>
-<span><span class="co">##     chr14:20000000-20999999                     1              0.679113</span></span>
-<span><span class="co">##     chr14:21000000-21999999                     1              0.679113</span></span>
-<span><span class="co">##     chr14:22000000-22999999                     1              0.679113</span></span>
-<span><span class="co">##     chr14:23000000-23999999                     1              0.679113</span></span>
+<span><span class="co">##     chr14:19000000-19999999              0.954113              0.479368</span></span>
+<span><span class="co">##     chr14:20000000-20999999              1.000000              0.574032</span></span>
+<span><span class="co">##     chr14:21000000-21999999              1.000000              0.574032</span></span>
+<span><span class="co">##     chr14:22000000-22999999              1.000000              0.574032</span></span>
+<span><span class="co">##     chr14:23000000-23999999              1.000000              0.574032</span></span>
 <span><span class="co">##                         ...                   ...                   ...</span></span>
-<span><span class="co">##   chr14:103000000-103999999              0.832889              0.311604</span></span>
-<span><span class="co">##   chr14:104000000-104999999              1.000000              0.574032</span></span>
-<span><span class="co">##   chr14:105000000-105999999              1.000000              0.679113</span></span>
-<span><span class="co">##   chr14:106000000-106999999              1.000000              0.679113</span></span>
-<span><span class="co">##   chr14:107000000-107349539              1.000000              0.679113</span></span>
+<span><span class="co">##   chr14:103000000-103999999              0.896662              0.392325</span></span>
+<span><span class="co">##   chr14:104000000-104999999              0.954113              0.479368</span></span>
+<span><span class="co">##   chr14:105000000-105999999              1.000000              0.574032</span></span>
+<span><span class="co">##   chr14:106000000-106999999              1.000000              0.574032</span></span>
+<span><span class="co">##   chr14:107000000-107349539              1.000000              0.574032</span></span>
 <span><span class="co">##   -------</span></span>
 <span><span class="co">##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</span></span></code></pre></div>
 </div>
@@ -239,7 +240,7 @@ worth investigating for your data set.</p>
 confidence intervals and median confidence estimate:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotAB.html">plotAB</a></span><span class="op">(</span></span>
-<span>  <span class="va">k562_compartments.boot.fix</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  <span class="va">k562_compartments.grlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  chr <span class="op">=</span> <span class="st">"chr14"</span>,</span>
 <span>  with.ci <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  median.conf <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -269,7 +270,7 @@ nearby CTCF sites, etc. We can accomplish this task using the
 Here we extract single-cell domain inflections:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">k562_cell_1_inflections</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getDomainInflections.html">getDomainInflections</a></span><span class="op">(</span></span>
-<span>  <span class="va">k562_compartments.boot.fix</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  <span class="va">k562_compartments.grlist</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,</span>
 <span>  what <span class="op">=</span> <span class="st">"flip.score"</span>,</span>
 <span>  res <span class="op">=</span> <span class="fl">1e6</span>,</span>
 <span>  chrs <span class="op">=</span> <span class="st">"chr14"</span>,</span>
@@ -281,17 +282,17 @@ Here we extract single-cell domain inflections:</p>
 <span><span class="co">## GRanges object with 18 ranges and 0 metadata columns:</span></span>
 <span><span class="co">##        seqnames    ranges strand</span></span>
 <span><span class="co">##           &lt;Rle&gt; &lt;IRanges&gt;  &lt;Rle&gt;</span></span>
-<span><span class="co">##    [1]    chr14  29000000      *</span></span>
-<span><span class="co">##    [2]    chr14  30999999      *</span></span>
-<span><span class="co">##    [3]    chr14  35000000      *</span></span>
-<span><span class="co">##    [4]    chr14  38999999      *</span></span>
-<span><span class="co">##    [5]    chr14  40000000      *</span></span>
+<span><span class="co">##    [1]    chr14  19000000      *</span></span>
+<span><span class="co">##    [2]    chr14  28999999      *</span></span>
+<span><span class="co">##    [3]    chr14  31000000      *</span></span>
+<span><span class="co">##    [4]    chr14  34999999      *</span></span>
+<span><span class="co">##    [5]    chr14  39000000      *</span></span>
 <span><span class="co">##    ...      ...       ...    ...</span></span>
-<span><span class="co">##   [14]    chr14  84999999      *</span></span>
-<span><span class="co">##   [15]    chr14  89000000      *</span></span>
-<span><span class="co">##   [16]    chr14  94999999      *</span></span>
-<span><span class="co">##   [17]    chr14 104000000      *</span></span>
-<span><span class="co">##   [18]    chr14 107349539      *</span></span>
+<span><span class="co">##   [14]    chr14  78999999      *</span></span>
+<span><span class="co">##   [15]    chr14  85000000      *</span></span>
+<span><span class="co">##   [16]    chr14  88999999      *</span></span>
+<span><span class="co">##   [17]    chr14  95000000      *</span></span>
+<span><span class="co">##   [18]    chr14 103999999      *</span></span>
 <span><span class="co">##   -------</span></span>
 <span><span class="co">##   seqinfo: 1 sequence from an unspecified genome; no seqlengths</span></span></code></pre></div>
 </div>

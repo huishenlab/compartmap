@@ -16,7 +16,8 @@ getGenome(genome = c("hg19", "hg38", "mm9", "mm10"), type = "genome")
 
 - type:
 
-  The type of data - full genome or open sea regions
+  The type of data - full genome (`"genome"`), transcripts (`"tx"`), or
+  open sea regions (`"openseas"`)
 
 ## Value
 

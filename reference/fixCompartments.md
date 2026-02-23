@@ -6,12 +6,12 @@ Invert, or "fix", compartments that have a minimum confidence score
 ## Usage
 
 ``` r
-fixCompartments(obj, min.conf = 0.8, parallel = FALSE, cores = 1)
+fixCompartments(x, min.conf = 0.8, parallel = FALSE, cores = 1)
 ```
 
 ## Arguments
 
-- obj:
+- x:
 
   Input RaggedExperiment or output of condenseSE
 

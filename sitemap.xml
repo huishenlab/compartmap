@@ -45,7 +45,9 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/getShrinkageTargets.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hdf5TFIDF.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hg19.gr.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/hg19.tx.gr.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hg38.gr.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/hg38.tx.gr.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/ifisherZ.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/importBigWig.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/imputeKNN.html</loc></url>
@@ -55,7 +57,9 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/k562_scrna_se_chr14.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/meanSmoother.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/mm10.gr.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/mm10.tx.gr.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/mm9.gr.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/mm9.tx.gr.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/openSeas.hg19.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/openSeas.hg38.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/openSeas.mm10.html</loc></url>

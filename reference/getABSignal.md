@@ -5,7 +5,12 @@ This function is used to generate a list x to be passed to getABSignal
 ## Usage
 
 ``` r
-getABSignal(x, squeeze = FALSE, assay = c("rna", "atac", "array"))
+getABSignal(
+  x,
+  squeeze = FALSE,
+  assay = c("rna", "atac", "array"),
+  genome = c("hg19", "hg38", "mm9", "mm10")
+)
 ```
 
 ## Arguments
@@ -21,6 +26,10 @@ getABSignal(x, squeeze = FALSE, assay = c("rna", "atac", "array"))
 - assay:
 
   What kind of assay are we working on ("array", "atac", "array")
+
+- genome:
+
+  The genome to use for gene-density-based sign correction
 
 ## Value
 
