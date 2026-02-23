@@ -7,13 +7,19 @@ Invert, or "fix", compartments that have a minimum confidence score
 
 ``` r
 fixCompartments(x, min.conf = 0.8, parallel = FALSE, cores = 1)
+
+# S4 method for class 'GRanges'
+fixCompartments(x, min.conf = 0.8, parallel = FALSE, cores = 1)
+
+# S4 method for class 'RaggedExperiment'
+fixCompartments(x, min.conf = 0.8, parallel = FALSE, cores = 1)
 ```
 
 ## Arguments
 
 - x:
 
-  Input RaggedExperiment or output of condenseSE
+  RaggedExperiment
 
 - min.conf:
 
