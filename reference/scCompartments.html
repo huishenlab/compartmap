@@ -56,16 +56,14 @@
 <span>  <span class="va">obj</span>,</span>
 <span>  res <span class="op">=</span> <span class="fl">1000000</span>,</span>
 <span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  targets <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cores <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  bootstrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  num.bootstraps <span class="op">=</span> <span class="fl">100</span>,</span>
-<span>  boot.parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  boot.cores <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  genome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hg19"</span>, <span class="st">"hg38"</span>, <span class="st">"mm9"</span>, <span class="st">"mm10"</span><span class="op">)</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  assay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"atac"</span>, <span class="st">"rna"</span><span class="op">)</span></span>
+<span>  assay <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"atac"</span>, <span class="st">"rna"</span><span class="op">)</span>,</span>
+<span>  boot.parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  BPPARAM <span class="op">=</span> <span class="fu">bpparam</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -85,16 +83,12 @@
 <dd><p>What chromosome to work on (leave as NULL to run on all chromosomes)</p></dd>
 
 
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>Whether to treat this as a group set of samples</p></dd>
+
+
 <dt id="arg-targets">targets<a class="anchor" aria-label="anchor" href="#arg-targets"></a></dt>
 <dd><p>Samples/cells to shrink towards</p></dd>
-
-
-<dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>Whether to run samples in parallel</p></dd>
-
-
-<dt id="arg-cores">cores<a class="anchor" aria-label="anchor" href="#arg-cores"></a></dt>
-<dd><p>How many cores to use when running samples in parallel</p></dd>
 
 
 <dt id="arg-bootstrap">bootstrap<a class="anchor" aria-label="anchor" href="#arg-bootstrap"></a></dt>
@@ -105,29 +99,92 @@
 <dd><p>How many bootstraps to run</p></dd>
 
 
-<dt id="arg-boot-parallel">boot.parallel<a class="anchor" aria-label="anchor" href="#arg-boot-parallel"></a></dt>
-<dd><p>Whether to run the bootstrapping in parallel</p></dd>
-
-
-<dt id="arg-boot-cores">boot.cores<a class="anchor" aria-label="anchor" href="#arg-boot-cores"></a></dt>
-<dd><p>How many cores to use for the bootstrapping</p></dd>
-
-
 <dt id="arg-genome">genome<a class="anchor" aria-label="anchor" href="#arg-genome"></a></dt>
 <dd><p>What genome to work on ("hg19", "hg38", "mm9", "mm10")</p></dd>
-
-
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>Whether to treat this as a group set of samples</p></dd>
 
 
 <dt id="arg-assay">assay<a class="anchor" aria-label="anchor" href="#arg-assay"></a></dt>
 <dd><p>What type of single-cell assay is the input data ("atac" or "rna")</p></dd>
 
+
+<dt id="arg-boot-parallel">boot.parallel<a class="anchor" aria-label="anchor" href="#arg-boot-parallel"></a></dt>
+<dd><p>Whether to run the bootstrapping in parallel. See details.</p></dd>
+
+
+<dt id="arg-bpparam">BPPARAM<a class="anchor" aria-label="anchor" href="#arg-bpparam"></a></dt>
+<dd><p>BiocParallelParam object to use for parallelization. See details.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A RaggedExperiment of inferred compartments</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>compartmap uses <code>BiocParallel</code> to parallelize operations in four
+configurations. The default setting is to parallelize across columns but not
+bootstraps using the thread count as reported by <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">BiocParallel::bpparam()</a></code>,
+which is usually two cores fewer than the number of available cores.
+Parallel bootstrapping is disabled by default to avoid nested parallelism
+issues but can be done independent of column-wise parallelization.</p><div class="section">
+<h3 id="available-configurations">Available configurations<a class="anchor" aria-label="anchor" href="#available-configurations"></a></h3>
+
+<div class="section">
+<h4 id="serial-bootstrapping">Serial bootstrapping<a class="anchor" aria-label="anchor" href="#serial-bootstrapping"></a></h4>
+
+<ul><li><p>Serially with just one core:
+<code>BPPARAM = BiocParallel::SerialParam()</code></p></li>
+<li><p>Parallel across columns and serially across bootstraps:
+<code>BPPARAM = BiocParallel::MulticoreParam(n)</code> where <code>n</code> is the number of
+threads to use</p></li>
+</ul><p>See <code><a href="https://rdrr.io/pkg/BiocParallel/man/BiocParallelParam-class.html" class="external-link">?BiocParallel::BiocParallelParam</a></code> for other parallel backends. Parallel
+backends may also be passed to <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">BiocParallel::register()</a></code> to make them
+available to <code>bpparam()</code>.</p>
+</div>
+
+<div class="section">
+<h4 id="parallel-bootstrapping">Parallel bootstrapping<a class="anchor" aria-label="anchor" href="#parallel-bootstrapping"></a></h4>
+
+
+<p>Set <code>boot.parallel = TRUE</code> for one the these configurations:</p><ul><li><p>Serially across columns and parallel across bootstraps: Set `BPPARAM =
+list(SerialParam(), MulticoreParam(n))'</p></li>
+<li><p>Parallel across both columns and bootstraps: Set <code>BPPARAM = list(MulticoreParam(outer), MulticoreParam(inner))</code> where <code>outer</code> is the
+thread count for column-wise operations and <code>inner</code> the thread count for
+bootstrapping. The required number of threads is given by</p></li>
+</ul><p><code>( outer * inner ) + outer</code></p>
+<p>which is more easily calculated as <code>outer * (inner + 1)</code>.</p>
+<p>We recommend using an explicit list of two BiocParallelParam backends over
+relying on <code>register()</code> and <code>bpparam()</code> for parallelizing across bootstraps.
+With nested <code>bplapply</code> calls, the registered backend is used for both the
+outer and inner parallel loops. On a system with 8 available threads if the
+registered backend asks for 4 workers, it will try to use 20 threads in the
+nested loops. Instead to use all 8 cores, set
+<code>BPPARAM = list(MulticoreParam(2), MulticoreParam(3))</code>.</p>
+</div>
+
+<div class="section">
+<h4 id="load-balancing">Load balancing<a class="anchor" aria-label="anchor" href="#load-balancing"></a></h4>
+
+
+<p>Unless you have only 1 chromosome or are not bootstrapping/not bootstrapping
+in parallel, you can use nested parallelism. If you are working on just 1
+chromosome, put all cores into the inner bootstrapping backend. Conversely
+with multiple chromosomes without bootstrapping, put all available workers in
+the outer loop.</p>
+<p>In general, use more 'outer' workers, which loop over chromosomes when <code>group = TRUE</code> and cells when <code>group = FALSE</code>, than 'inner' workers that loop over
+bootstraps. Using 8 outer and 7 inner workers is faster than 7 outer and 8
+inner.</p>
+<p>When <code>group = FALSE</code>, use <code>MulticoreParam()</code> only on the outer workers. We
+find that parallelizing at both column and bootstrap levels with the
+single-cell inference is slower than only parallelizing at the column-level.</p>
+<p>With <code>group = TRUE</code>, minimize the difference between the two worker counts:
+with 64 total cores, doing 8 outer and 7 inner is faster than 16 outer and 3
+inner.</p>
+</div>
+
+
+</div>
+
     </div>
 
     <div class="section level2">
@@ -136,570 +193,13 @@
 <span class="r-in"><span><span class="va">sc_compartments</span> <span class="op">&lt;-</span> <span class="fu">scCompartments</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">k562_scrna_chr14</span>,</span></span>
 <span class="r-in"><span>  chr <span class="op">=</span> <span class="st">"chr14"</span>,</span></span>
-<span class="r-in"><span>  parallel <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>  group <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  bootstrap <span class="op">=</span> <span class="cn">FALSE</span>,</span></span>
-<span class="r-in"><span>  genome <span class="op">=</span> <span class="st">"hg19"</span></span></span>
+<span class="r-in"><span>  genome <span class="op">=</span> <span class="st">"hg19"</span>,</span></span>
+<span class="r-in"><span>  BPPARAM <span class="op">=</span> <span class="fu">BiocParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SerialParam-class.html" class="external-link">SerialParam</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A10_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on A9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on B9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on C9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on D8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on E9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on F9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on G9_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H1_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H2_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H3_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H4_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H5_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H6_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H7_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on H8_hg19Aligned.sortedByCoord.out.bw</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> INFO [2026-02-23 21:24:14] Computing group level compartments</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> INFO [2026-02-23 21:24:14] </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

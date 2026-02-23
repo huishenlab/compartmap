@@ -9,17 +9,16 @@ bootstraps/compute confidence intervals
 bootstrapCompartments(
   obj,
   original.obj,
+  BPPARAM,
   bootstrap.samples = 1000,
   chr = "chr14",
+  group = FALSE,
   assay = c("rna", "atac", "array"),
-  parallel = TRUE,
-  cores = 2,
   targets = NULL,
   res = 1000000,
   genome = c("hg19", "hg38", "mm9", "mm10"),
   q = 0.95,
   svd = NULL,
-  group = FALSE,
   bootstrap.means = NULL
 )
 ```
@@ -35,6 +34,10 @@ bootstrapCompartments(
 
   The original, full input SummarizedExperiment of all samples/cells
 
+- BPPARAM:
+
+  BiocParallelParam for parallelizing bootstrapping
+
 - bootstrap.samples:
 
   How many bootstraps to run
@@ -43,17 +46,13 @@ bootstrapCompartments(
 
   Which chromosome to operate on
 
+- group:
+
+  Whether this is for group-level inference
+
 - assay:
 
   What sort of assay are we working on
-
-- parallel:
-
-  Whether to run the bootstrapping in parallel
-
-- cores:
-
-  How many cores to use for parallel processing
 
 - targets:
 
@@ -75,10 +74,6 @@ bootstrapCompartments(
 - svd:
 
   The original compartment calls as a GRanges object
-
-- group:
-
-  Whether this is for group-level inference
 
 - bootstrap.means:
 

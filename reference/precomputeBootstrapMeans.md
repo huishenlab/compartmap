@@ -7,11 +7,10 @@ Pre-compute the global means for bootstrapping compartments
 ``` r
 precomputeBootstrapMeans(
   obj,
+  BPPARAM,
   targets = NULL,
   num.bootstraps = 100,
-  assay = c("atac", "rna", "array"),
-  parallel = FALSE,
-  num.cores = 1
+  assay = c("atac", "rna", "array")
 )
 ```
 
@@ -20,6 +19,10 @@ precomputeBootstrapMeans(
 - obj:
 
   Input SummarizedExperiment object
+
+- BPPARAM:
+
+  BiocParallelParam for parallelizing computation
 
 - targets:
 
@@ -33,14 +36,6 @@ precomputeBootstrapMeans(
 
   What type of assay the data are from
 
-- parallel:
-
-  Whether to run in parallel
-
-- num.cores:
-
-  How many cores to use for parallel processing
-
 ## Value
 
 A matrix of bootstrapped global means
@@ -51,9 +46,8 @@ A matrix of bootstrapped global means
 data("k562_scrna_chr14", package = "compartmap")
 scrna.bootstrap.global.means <- precomputeBootstrapMeans(
   k562_scrna_chr14,
+  BPPARAM = BiocParallel::SerialParam(),
   assay = "rna",
   num.bootstraps = 2
 )
-#> Working on bootstrap 1
-#> Working on bootstrap 2
 ```

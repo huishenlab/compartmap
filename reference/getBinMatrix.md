@@ -92,5 +92,4 @@ bin.counts <- getBinMatrix(
   chr = "chr14",
   genome = "hg19"
 )
-#> 1074 bins created...
 ```

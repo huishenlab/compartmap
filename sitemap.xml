@@ -10,6 +10,9 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/array.data.chr14.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/arrayCompartments.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/bootstrapCompartments.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/bpnworkers.list.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/check_optim.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/check_worker_count.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/cleanAssay.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/cleanAssayCols.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/cleanAssayRows.html</loc></url>
@@ -33,6 +36,7 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/getAssayNames.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getBinMatrix.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getChrs.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/getCompartments.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getCorMatrix.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getDenoisedMatrix.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getDomainInflections.html</loc></url>
@@ -43,6 +47,8 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/getSVD.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getSeqLengths.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/getShrinkageTargets.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/get_bpnworkers.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/get_nested_params.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hdf5TFIDF.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hg19.gr.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/hg19.tx.gr.html</loc></url>
@@ -78,5 +84,7 @@
 <url><loc>https://huishenlab.github.io/compartmap/reference/verifyAssayNames.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/verifyCoords.html</loc></url>
 <url><loc>https://huishenlab.github.io/compartmap/reference/verifySE.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/verify_bp.html</loc></url>
+<url><loc>https://huishenlab.github.io/compartmap/reference/verify_workers.html</loc></url>
 </urlset>
 

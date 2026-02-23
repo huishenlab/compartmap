@@ -64,9 +64,6 @@ A denoised correlation matrix object for plotting with plotCorMatrix
 data("k562_scrna_chr14", package = "compartmap")
 denoised_cor_mat <- getDenoisedCorMatrix(k562_scrna_chr14, genome = "hg19", assay = "rna")
 #> Shrinking bins with the JSE.
-#> 108 bins created...
-#> Calculating correlations...
-#> Done...
 #> Denoising the correlation matrix using RMT.
 #> Iterative denoising. Iteration: 2
 ```

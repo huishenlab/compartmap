@@ -56,18 +56,16 @@
 <span>  <span class="va">obj</span>,</span>
 <span>  res <span class="op">=</span> <span class="fl">1000000</span>,</span>
 <span>  chr <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  targets <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  preprocess <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  cores <span class="op">=</span> <span class="fl">2</span>,</span>
 <span>  bootstrap <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  num.bootstraps <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>  boot.parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  boot.cores <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  preprocess <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  array.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hm450"</span>, <span class="st">"EPIC"</span><span class="op">)</span>,</span>
 <span>  genome <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hg19"</span>, <span class="st">"hg38"</span>, <span class="st">"mm9"</span>, <span class="st">"mm10"</span><span class="op">)</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  other <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  array.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hm450"</span>, <span class="st">"EPIC"</span><span class="op">)</span></span>
+<span>  boot.parallel <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  BPPARAM <span class="op">=</span> <span class="fu">bpparam</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -87,20 +85,12 @@
 <dd><p>What chromosome to work on (leave as NULL to run on all chromosomes)</p></dd>
 
 
+<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>Whether to treat this as a group set of samples</p></dd>
+
+
 <dt id="arg-targets">targets<a class="anchor" aria-label="anchor" href="#arg-targets"></a></dt>
 <dd><p>Samples/cells to shrink towards</p></dd>
-
-
-<dt id="arg-preprocess">preprocess<a class="anchor" aria-label="anchor" href="#arg-preprocess"></a></dt>
-<dd><p>Whether to preprocess the arrays prior to compartment inference</p></dd>
-
-
-<dt id="arg-parallel">parallel<a class="anchor" aria-label="anchor" href="#arg-parallel"></a></dt>
-<dd><p>Whether to run samples in parallel</p></dd>
-
-
-<dt id="arg-cores">cores<a class="anchor" aria-label="anchor" href="#arg-cores"></a></dt>
-<dd><p>How many cores to use when running samples in parallel</p></dd>
 
 
 <dt id="arg-bootstrap">bootstrap<a class="anchor" aria-label="anchor" href="#arg-bootstrap"></a></dt>
@@ -111,33 +101,100 @@
 <dd><p>How many bootstraps to run</p></dd>
 
 
-<dt id="arg-boot-parallel">boot.parallel<a class="anchor" aria-label="anchor" href="#arg-boot-parallel"></a></dt>
-<dd><p>Whether to run the bootstrapping in parallel</p></dd>
+<dt id="arg-preprocess">preprocess<a class="anchor" aria-label="anchor" href="#arg-preprocess"></a></dt>
+<dd><p>Whether to preprocess the arrays prior to compartment inference</p></dd>
 
 
-<dt id="arg-boot-cores">boot.cores<a class="anchor" aria-label="anchor" href="#arg-boot-cores"></a></dt>
-<dd><p>How many cores to use for the bootstrapping</p></dd>
+<dt id="arg-array-type">array.type<a class="anchor" aria-label="anchor" href="#arg-array-type"></a></dt>
+<dd><p>What type of array is this ("hm450", "EPIC")</p></dd>
 
 
 <dt id="arg-genome">genome<a class="anchor" aria-label="anchor" href="#arg-genome"></a></dt>
 <dd><p>What genome to work on ("hg19", "hg38", "mm9", "mm10")</p></dd>
 
 
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>Whether to treat this as a group set of samples</p></dd>
-
-
 <dt id="arg-other">other<a class="anchor" aria-label="anchor" href="#arg-other"></a></dt>
 <dd><p>Another arbitrary genome to compute compartments on</p></dd>
 
 
-<dt id="arg-array-type">array.type<a class="anchor" aria-label="anchor" href="#arg-array-type"></a></dt>
-<dd><p>What type of array is this ("hm450", "EPIC")</p></dd>
+<dt id="arg-boot-parallel">boot.parallel<a class="anchor" aria-label="anchor" href="#arg-boot-parallel"></a></dt>
+<dd><p>Whether to run the bootstrapping in parallel. See details.</p></dd>
+
+
+<dt id="arg-bpparam">BPPARAM<a class="anchor" aria-label="anchor" href="#arg-bpparam"></a></dt>
+<dd><p>BiocParallelParam object to use for parallelization. See details.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A RaggedExperiment of inferred compartments</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>compartmap uses <code>BiocParallel</code> to parallelize operations in four
+configurations. The default setting is to parallelize across columns but not
+bootstraps using the thread count as reported by <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">BiocParallel::bpparam()</a></code>,
+which is usually two cores fewer than the number of available cores.
+Parallel bootstrapping is disabled by default to avoid nested parallelism
+issues but can be done independent of column-wise parallelization.</p><div class="section">
+<h3 id="available-configurations">Available configurations<a class="anchor" aria-label="anchor" href="#available-configurations"></a></h3>
+
+<div class="section">
+<h4 id="serial-bootstrapping">Serial bootstrapping<a class="anchor" aria-label="anchor" href="#serial-bootstrapping"></a></h4>
+
+<ul><li><p>Serially with just one core:
+<code>BPPARAM = BiocParallel::SerialParam()</code></p></li>
+<li><p>Parallel across columns and serially across bootstraps:
+<code>BPPARAM = BiocParallel::MulticoreParam(n)</code> where <code>n</code> is the number of
+threads to use</p></li>
+</ul><p>See <code><a href="https://rdrr.io/pkg/BiocParallel/man/BiocParallelParam-class.html" class="external-link">?BiocParallel::BiocParallelParam</a></code> for other parallel backends. Parallel
+backends may also be passed to <code><a href="https://rdrr.io/pkg/BiocParallel/man/register.html" class="external-link">BiocParallel::register()</a></code> to make them
+available to <code>bpparam()</code>.</p>
+</div>
+
+<div class="section">
+<h4 id="parallel-bootstrapping">Parallel bootstrapping<a class="anchor" aria-label="anchor" href="#parallel-bootstrapping"></a></h4>
+
+
+<p>Set <code>boot.parallel = TRUE</code> for one the these configurations:</p><ul><li><p>Serially across columns and parallel across bootstraps: Set `BPPARAM =
+list(SerialParam(), MulticoreParam(n))'</p></li>
+<li><p>Parallel across both columns and bootstraps: Set <code>BPPARAM = list(MulticoreParam(outer), MulticoreParam(inner))</code> where <code>outer</code> is the
+thread count for column-wise operations and <code>inner</code> the thread count for
+bootstrapping. The required number of threads is given by</p></li>
+</ul><p><code>( outer * inner ) + outer</code></p>
+<p>which is more easily calculated as <code>outer * (inner + 1)</code>.</p>
+<p>We recommend using an explicit list of two BiocParallelParam backends over
+relying on <code>register()</code> and <code>bpparam()</code> for parallelizing across bootstraps.
+With nested <code>bplapply</code> calls, the registered backend is used for both the
+outer and inner parallel loops. On a system with 8 available threads if the
+registered backend asks for 4 workers, it will try to use 20 threads in the
+nested loops. Instead to use all 8 cores, set
+<code>BPPARAM = list(MulticoreParam(2), MulticoreParam(3))</code>.</p>
+</div>
+
+<div class="section">
+<h4 id="load-balancing">Load balancing<a class="anchor" aria-label="anchor" href="#load-balancing"></a></h4>
+
+
+<p>Unless you have only 1 chromosome or are not bootstrapping/not bootstrapping
+in parallel, you can use nested parallelism. If you are working on just 1
+chromosome, put all cores into the inner bootstrapping backend. Conversely
+with multiple chromosomes without bootstrapping, put all available workers in
+the outer loop.</p>
+<p>In general, use more 'outer' workers, which loop over chromosomes when <code>group = TRUE</code> and cells when <code>group = FALSE</code>, than 'inner' workers that loop over
+bootstraps. Using 8 outer and 7 inner workers is faster than 7 outer and 8
+inner.</p>
+<p>When <code>group = FALSE</code>, use <code>MulticoreParam()</code> only on the outer workers. We
+find that parallelizing at both column and bootstrap levels with the
+single-cell inference is slower than only parallelizing at the column-level.</p>
+<p>With <code>group = TRUE</code>, minimize the difference between the two worker counts:
+with 64 total cores, doing 8 outer and 7 inner is faster than 16 outer and 3
+inner.</p>
+</div>
+
+
+</div>
+
     </div>
 
     <div class="section level2">
@@ -148,17 +205,16 @@
 <span class="r-in"><span>  <span class="va">array_compartments</span> <span class="op">&lt;-</span> <span class="fu">arrayCompartments</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">array.data.chr14</span>,</span></span>
 <span class="r-in"><span>    chr<span class="op">=</span><span class="st">"chr14"</span>,</span></span>
-<span class="r-in"><span>    parallel<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
+<span class="r-in"><span>    group<span class="op">=</span><span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>    bootstrap<span class="op">=</span><span class="cn">FALSE</span>,</span></span>
 <span class="r-in"><span>    genome<span class="op">=</span><span class="st">"hg19"</span>,</span></span>
-<span class="r-in"><span>    array.type<span class="op">=</span><span class="st">"hm450"</span></span></span>
+<span class="r-in"><span>    array.type<span class="op">=</span><span class="st">"hm450"</span>,</span></span>
+<span class="r-in"><span>    BPPARAM <span class="op">=</span> <span class="fu">BiocParallel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocParallel/man/SerialParam-class.html" class="external-link">SerialParam</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Setting options('download.file.method.GEOquery'='auto')</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Setting options('GEOquery.inmemory.gpl'=FALSE)</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Filtering to open sea CpG loci...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Converting to squeezed M-values.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Imputing missing values.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Dropping samples with &gt;80% NAs.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Imputing missing data with kNN.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cluster size 3332 broken into 518 2814 </span>
@@ -170,94 +226,8 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> Done cluster 1245 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Done cluster 1845 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Done cluster 2814 </span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on naive.1</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on rTreg.2</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on act_naive.3</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on naive.4</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on act_naive.5</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on act_rTreg.6</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on naive.7</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on rTreg.8</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on act_naive.9</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on act_rTreg.10</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Working on birth.11</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Computing compartments for chr14</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> 108 bins created...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating correlations...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Calculating eigenvectors.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Smoothing eigenvector.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Done smoothing.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> INFO [2026-02-23 21:23:37] Computing group level compartments</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> INFO [2026-02-23 21:23:37] </span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

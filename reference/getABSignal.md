@@ -64,16 +64,10 @@ bin.counts <- getBinMatrix(
   chr = "chr14",
   genome = "hg19"
 )
-#> 1074 bins created...
 
 #Calculate correlations
 bin.cor.counts <- getCorMatrix(bin.counts)
-#> Calculating correlations...
-#> Done...
 
 #Get A/B signal
 absignal <- getABSignal(bin.cor.counts)
-#> Calculating eigenvectors.
-#> Smoothing eigenvector.
-#> Done smoothing.
 ```

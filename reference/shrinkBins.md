@@ -77,5 +77,4 @@ shrunken.bin.scrna <- shrinkBins(
   original.x = k562_scrna_chr14,
   chr = "chr14", assay = "rna"
 )
-#> 108 bins created...
 ```
