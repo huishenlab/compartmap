@@ -50,10 +50,10 @@ chr14_domains <- scCompartments(k562_scrna_chr14,
   res = 1e6, genome = "hg19",
   group = TRUE, bootstrap = FALSE
 )
-#> INFO [2026-02-25 20:10:59] Grouped inference with more outer workers than chromosomes leaves 2 of 2 workers unused
-#> INFO [2026-02-25 20:10:59] Assuming we want to process all chromosomes.
-#> INFO [2026-02-25 20:10:59] Computing group level compartments
-#> INFO [2026-02-25 20:10:59] 
+#> INFO [2026-02-25 20:23:07] Grouped inference with more outer workers than chromosomes leaves 2 of 2 workers unused
+#> INFO [2026-02-25 20:23:07] Assuming we want to process all chromosomes.
+#> INFO [2026-02-25 20:23:07] Computing group level compartments
+#> INFO [2026-02-25 20:23:07] 
 chr14_domain_inflections <- getDomainInflections(chr14_domains, what = "pc")
 #> Tiling genome.
 #> Warning: GRanges object contains 23 out-of-bound ranges located on sequences chr1,
