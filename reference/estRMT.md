@@ -6,8 +6,8 @@ Denoising of Covariance matrix using Random Matrix Theory
 
 ``` r
 estRMT(
-  R,
-  Q = NA,
+  mat,
+  dim_ratio = NA,
   cutoff = c("max", "each"),
   eigenTreat = c("average", "delete"),
   numEig = 1
@@ -16,11 +16,11 @@ estRMT(
 
 ## Arguments
 
-- R:
+- mat:
 
   input matrix
 
-- Q:
+- dim_ratio:
 
   ratio of rows/size. Can be supplied externally or fit using data
 
@@ -68,5 +68,4 @@ Rohit Arora
 ``` r
 rand_cor_mat <- cor(matrix(rnorm(100), nrow = 10))
 denoised_rand_cor_mat <- estRMT(rand_cor_mat)$cov
-       
 ```
