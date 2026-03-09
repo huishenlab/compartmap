@@ -68,6 +68,178 @@
         </dt>
         <dd>Estimate A/B compartments from methylation array data</dd>
       </dl></div><div class="section level2">
+      <h2 id="compartment-analysis">Compartment analysis<a class="anchor" aria-label="anchor" href="#compartment-analysis"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+      <h3 id="objects">Objects<a class="anchor" aria-label="anchor" href="#objects"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="CompartmentCall.html">CompartmentCall()</a></code> <code><a href="CompartmentCall.html">CompartmapCall()</a></code> <code><a href="CompartmentCall.html">MultiCompartmapCall()</a></code> <code><a href="CompartmentCall.html">scCompartmapCall()</a></code>
+
+        </dt>
+        <dd>Compartment Call objects for analysis (experimental)</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="property-getters">Property getters<a class="anchor" aria-label="anchor" href="#property-getters"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="DF.html">DF()</a></code>
+
+        </dt>
+        <dd>Get the <code>@df</code> slot from a CompartmentCall object.</dd>
+
+        <dt>
+
+          <code><a href="get_filter_threshold.html">get_filter_threshold()</a></code>
+
+        </dt>
+        <dd>Check the threshold at which an object's calls were filtered, returning 0 if not filtered</dd>
+
+        <dt>
+
+          <code><a href="get_name.html">get_name()</a></code>
+
+        </dt>
+        <dd>Get the name of the <code>CompartmentCall</code> object</dd>
+
+        <dt>
+
+          <code><a href="is_filtered.html">is_filtered()</a></code>
+
+        </dt>
+        <dd>Check if the <code>CompartmentCall</code> was filtered.</dd>
+
+        <dt>
+
+          <code><a href="is_unitarized.html">is_unitarized()</a></code>
+
+        </dt>
+        <dd>Check if the <code>CompartmentCall</code> was unitarized</dd>
+
+        <dt>
+
+          <code><a href="mat.html">mat()</a></code>
+
+        </dt>
+        <dd>Get the data matrix from a <code>MultiCompartmapCall</code> or <code>scCompartmapCall</code></dd>
+
+        <dt>
+
+          <code><a href="resolution.html">resolution()</a></code>
+
+        </dt>
+        <dd>Get the resolution of the <code>CompartmentCall</code></dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="fill_missing.html">fill_missing()</a></code>
+
+        </dt>
+        <dd>Fill missing genomic bins in <code>CompartmentCalls</code> using a reference GRanges</dd>
+
+        <dt>
+
+          <code><a href="sub-.compartmap-colon-colon-CompartmentCall.html">`[`(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Subset rows of a <code>CompartmentCall</code> object</dd>
+
+        <dt>
+
+          <code><a href="sub-.compartmap-colon-colon-MultiCompartmapCall.html">`[`(<i>&lt;compartmap::MultiCompartmapCall&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Subset <code>MultiCompartmapCall</code> object</dd>
+
+        <dt>
+
+          <code><a href="subset_chr.html">subset_chr()</a></code>
+
+        </dt>
+        <dd>Subset the <code>CompartmentCall</code> object by chromosome</dd>
+
+        <dt>
+
+          <code><a href="CompartmentCall_difference.html">`-`(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Get the difference between two CompartmentCall objects call values</dd>
+
+        <dt>
+
+          <code><a href="agreement.html">agreement()</a></code>
+
+        </dt>
+        <dd>Compute agreement between compartment calls</dd>
+
+        <dt>
+
+          <code><a href="corr.html">corr()</a></code>
+
+        </dt>
+        <dd>Compute correlation between compartment calls</dd>
+
+        <dt>
+
+          <code><a href="differentiate.html">differentiate()</a></code>
+
+        </dt>
+        <dd>Compute the direction of change of singular vectors in the MultiCompartmentCall object</dd>
+
+        <dt>
+
+          <code><a href="filter.html">filter()</a></code>
+
+        </dt>
+        <dd>Filter to bins with call values greater than or equal to a threshold value</dd>
+
+        <dt>
+
+          <code><a href="fix_sign.html">fix_sign()</a></code>
+
+        </dt>
+        <dd>Correct the sign of the compartment call vector</dd>
+
+        <dt>
+
+          <code><a href="flip.html">flip()</a></code>
+
+        </dt>
+        <dd>Flip the singular values signs in a <code>CompartmentCall</code></dd>
+
+        <dt>
+
+          <code><a href="unitarize.html">unitarize()</a></code>
+
+        </dt>
+        <dd>Unitarize the singular values in a <code>CompartmentCall</code> or <code>MultiCompartmapCall</code></dd>
+      </dl></div><div class="section level2">
       <h2 id="compartment-helper">Compartment helper<a class="anchor" aria-label="anchor" href="#compartment-helper"></a></h2>
 
 
@@ -421,6 +593,20 @@
 
 
       <dl><dt>
+
+          <code><a href="plot.compartmap-colon-colon-CompartmentCall.html">plot(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot singular values of a <code>CompartmentCall</code> object</dd>
+
+        <dt>
+
+          <code><a href="plot.compartmap-colon-colon-MultiCompartmapCall.html">plot(<i>&lt;compartmap::MultiCompartmapCall&gt;</i>)</a></code>
+
+        </dt>
+        <dd>Plot singular values from a <code>MultiCompartmapCall</code> object</dd>
+
+        <dt>
 
           <code><a href="plotAB.html">plotAB()</a></code>
 

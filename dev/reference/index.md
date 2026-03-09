@@ -8,6 +8,106 @@
 - [`arrayCompartments()`](https://huishenlab.github.io/compartmap/dev/reference/arrayCompartments.md)
   : Estimate A/B compartments from methylation array data
 
+## Compartment analysis
+
+### Objects
+
+- [`CompartmentCall()`](https://huishenlab.github.io/compartmap/dev/reference/CompartmentCall.md)
+  [`CompartmapCall()`](https://huishenlab.github.io/compartmap/dev/reference/CompartmentCall.md)
+  [`MultiCompartmapCall()`](https://huishenlab.github.io/compartmap/dev/reference/CompartmentCall.md)
+  [`scCompartmapCall()`](https://huishenlab.github.io/compartmap/dev/reference/CompartmentCall.md)
+  : Compartment Call objects for analysis (experimental)
+
+### Property getters
+
+- [`DF()`](https://huishenlab.github.io/compartmap/dev/reference/DF.md)
+  :
+
+  Get the `@df` slot from a CompartmentCall object.
+
+- [`get_filter_threshold()`](https://huishenlab.github.io/compartmap/dev/reference/get_filter_threshold.md)
+  : Check the threshold at which an object's calls were filtered,
+  returning 0 if not filtered
+
+- [`get_name()`](https://huishenlab.github.io/compartmap/dev/reference/get_name.md)
+  :
+
+  Get the name of the `CompartmentCall` object
+
+- [`is_filtered()`](https://huishenlab.github.io/compartmap/dev/reference/is_filtered.md)
+  :
+
+  Check if the `CompartmentCall` was filtered.
+
+- [`is_unitarized()`](https://huishenlab.github.io/compartmap/dev/reference/is_unitarized.md)
+  :
+
+  Check if the `CompartmentCall` was unitarized
+
+- [`mat()`](https://huishenlab.github.io/compartmap/dev/reference/mat.md)
+  :
+
+  Get the data matrix from a `MultiCompartmapCall` or `scCompartmapCall`
+
+- [`resolution()`](https://huishenlab.github.io/compartmap/dev/reference/resolution.md)
+  :
+
+  Get the resolution of the `CompartmentCall`
+
+### Methods
+
+- [`fill_missing()`](https://huishenlab.github.io/compartmap/dev/reference/fill_missing.md)
+  :
+
+  Fill missing genomic bins in `CompartmentCalls` using a reference
+  GRanges
+
+- [`` `[`( ``*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/sub-.compartmap-colon-colon-CompartmentCall.md)
+  :
+
+  Subset rows of a `CompartmentCall` object
+
+- [`` `[`( ``*`<compartmap::MultiCompartmapCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/sub-.compartmap-colon-colon-MultiCompartmapCall.md)
+  :
+
+  Subset `MultiCompartmapCall` object
+
+- [`subset_chr()`](https://huishenlab.github.io/compartmap/dev/reference/subset_chr.md)
+  :
+
+  Subset the `CompartmentCall` object by chromosome
+
+- [`` `-`( ``*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/CompartmentCall_difference.md)
+  : Get the difference between two CompartmentCall objects call values
+
+- [`agreement()`](https://huishenlab.github.io/compartmap/dev/reference/agreement.md)
+  : Compute agreement between compartment calls
+
+- [`corr()`](https://huishenlab.github.io/compartmap/dev/reference/corr.md)
+  : Compute correlation between compartment calls
+
+- [`differentiate()`](https://huishenlab.github.io/compartmap/dev/reference/differentiate.md)
+  : Compute the direction of change of singular vectors in the
+  MultiCompartmentCall object
+
+- [`filter()`](https://huishenlab.github.io/compartmap/dev/reference/filter.md)
+  : Filter to bins with call values greater than or equal to a threshold
+  value
+
+- [`fix_sign()`](https://huishenlab.github.io/compartmap/dev/reference/fix_sign.md)
+  : Correct the sign of the compartment call vector
+
+- [`flip()`](https://huishenlab.github.io/compartmap/dev/reference/flip.md)
+  :
+
+  Flip the singular values signs in a `CompartmentCall`
+
+- [`unitarize()`](https://huishenlab.github.io/compartmap/dev/reference/unitarize.md)
+  :
+
+  Unitarize the singular values in a `CompartmentCall` or
+  `MultiCompartmapCall`
+
 ## Compartment helper
 
 - [`filterCompartments()`](https://huishenlab.github.io/compartmap/dev/reference/filterCompartments.md)
@@ -123,8 +223,19 @@
 
 ## Plotting
 
+- [`plot(`*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-colon-colon-CompartmentCall.md)
+  :
+
+  Plot singular values of a `CompartmentCall` object
+
+- [`plot(`*`<compartmap::MultiCompartmapCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-colon-colon-MultiCompartmapCall.md)
+  :
+
+  Plot singular values from a `MultiCompartmapCall` object
+
 - [`plotAB()`](https://huishenlab.github.io/compartmap/dev/reference/plotAB.md)
   : Plots A/B compartment estimates on a per chromosome basis
+
 - [`plotCorMatrix()`](https://huishenlab.github.io/compartmap/dev/reference/plotCorMatrix.md)
   : Plot a denoised correlation matrix
 

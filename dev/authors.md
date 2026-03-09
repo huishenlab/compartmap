@@ -23,12 +23,12 @@ Source:
 Johnson B, Eapen J, Triche T, Shen H (2026). *compartmap: Higher-order
 chromatin domain inference in single samples from methylation arrays and
 single cells from scRNA-seq and scATAC-seq*. R package version 1.13.05,
-<https://github.com/huishenlab/compartmap>.
+<https://huishenlab.github.io/compartmap>.
 
     @Manual{,
       title = {compartmap: Higher-order chromatin domain inference in single samples from methylation arrays and single cells from scRNA-seq and scATAC-seq},
       author = {Benjamin Johnson and James Eapen and Tim Triche and Hui Shen},
       year = {2026},
       note = {R package version 1.13.05},
-      url = {https://github.com/huishenlab/compartmap},
+      url = {https://huishenlab.github.io/compartmap},
     }

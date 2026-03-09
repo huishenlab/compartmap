@@ -78,13 +78,13 @@
 <span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html" class="external-link">runif</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0002544 0.2452321 0.5274872 0.5070668 0.7782408 0.9997144 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 0.0002544 0.2430427 0.5285060 0.5059655 0.7759185 0.9997144 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">sqz</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">/</span> <span class="op">(</span><span class="fl">10</span><span class="op">**</span><span class="fl">6</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">flogit</span><span class="op">(</span><span class="va">p</span>, sqz <span class="op">=</span> <span class="va">sqz</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> -8.2755 -1.1242  0.1101  0.0348  1.2554  8.1596 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> -8.27550 -1.13607  0.11415  0.02439  1.24204  8.15963 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/all.html" class="external-link">all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">p</span> <span class="op">-</span> <span class="fu"><a href="fexpit.html">fexpit</a></span><span class="op">(</span><span class="va">x</span>, sqz <span class="op">=</span> <span class="va">sqz</span><span class="op">)</span><span class="op">)</span> <span class="op">&lt;</span> <span class="va">sqz</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
