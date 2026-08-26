@@ -7,6 +7,9 @@ value
 
 ``` r
 filter(x, threshold = 0.02)
+
+## S7 method for class <compartmap::MultiCompartmapCall>
+filter(x, threshold = 0.02)
 ```
 
 ## Arguments

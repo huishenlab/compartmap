@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Package index"><meta name="robots" content="noindex"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Package index"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -107,6 +107,20 @@
 
         <dt>
 
+          <code><a href="dim.html">dim()</a></code>
+
+        </dt>
+        <dd>Get dimensions of <code>CompartmapCall</code> matrix</dd>
+
+        <dt>
+
+          <code><a href="get_assay.html">get_assay()</a></code>
+
+        </dt>
+        <dd>Get the assay of the <code>CompartmentCall</code></dd>
+
+        <dt>
+
           <code><a href="get_filter_threshold.html">get_filter_threshold()</a></code>
 
         </dt>
@@ -121,10 +135,31 @@
 
         <dt>
 
+          <code><a href="get_resolution.html">get_resolution()</a></code>
+
+        </dt>
+        <dd>Get the resolution of the <code>CompartmentCall</code></dd>
+
+        <dt>
+
+          <code><a href="granges-compartmap-CompartmentCall-method.html">granges()</a></code>
+
+        </dt>
+        <dd>Get GRanges of the <code>CompartmentCall</code></dd>
+
+        <dt>
+
           <code><a href="is_filtered.html">is_filtered()</a></code>
 
         </dt>
         <dd>Check if the <code>CompartmentCall</code> was filtered.</dd>
+
+        <dt>
+
+          <code><a href="is_open.html">is_open()</a></code> <code><a href="is_open.html">is_closed()</a></code>
+
+        </dt>
+        <dd>Find indices of open and closed compartments</dd>
 
         <dt>
 
@@ -142,10 +177,24 @@
 
         <dt>
 
-          <code><a href="resolution.html">resolution()</a></code>
+          <code><a href="names-compartmap-MultiCompartmapCall-method.html">names()</a></code>
 
         </dt>
-        <dd>Get the resolution of the <code>CompartmentCall</code></dd>
+        <dd>Get column names of <code>MultiCompartmapCall</code> matrix</dd>
+
+        <dt>
+
+          <code><a href="seqinfo-compartmap-CompartmentCall-method.html">seqinfo()</a></code>
+
+        </dt>
+        <dd>Get Seqinfo of the <code>CompartmentCall</code></dd>
+
+        <dt>
+
+          <code><a href="seqlevels-compartmap-CompartmentCall-method.html">seqlevels()</a></code>
+
+        </dt>
+        <dd>Get 'seqlevels' of the <code>CompartmentCall</code></dd>
       </dl></div><div class="section level2">
 
       <h3 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a></h3>
@@ -165,17 +214,10 @@
 
         <dt>
 
-          <code><a href="sub-.compartmap-colon-colon-CompartmentCall.html">`[`(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
+          <code><a href="findOverlaps-compartmap-CompartmentCall-compartmap-CompartmentCall-method.html">findOverlaps()</a></code>
 
         </dt>
-        <dd>Subset rows of a <code>CompartmentCall</code> object</dd>
-
-        <dt>
-
-          <code><a href="sub-.compartmap-colon-colon-MultiCompartmapCall.html">`[`(<i>&lt;compartmap::MultiCompartmapCall&gt;</i>)</a></code>
-
-        </dt>
-        <dd>Subset <code>MultiCompartmapCall</code> object</dd>
+        <dd>Find overlaps between <code>CompartmentCall</code> objects</dd>
 
         <dt>
 
@@ -235,6 +277,13 @@
 
         <dt>
 
+          <code><a href="get_md.html">get_md()</a></code>
+
+        </dt>
+        <dd>Compute Mahalanobis distances and pvalues - unfiltered</dd>
+
+        <dt>
+
           <code><a href="unitarize.html">unitarize()</a></code>
 
         </dt>
@@ -265,17 +314,47 @@
 
         <dt>
 
-          <code><a href="extractOpenClosed.html">extractOpenClosed()</a></code>
-
-        </dt>
-        <dd>Get the open and closed compartment calls based on sign of singular values</dd>
-
-        <dt>
-
           <code><a href="getABSignal.html">getABSignal()</a></code>
 
         </dt>
         <dd>Calculate Pearson correlations of smoothed eigenvectors</dd>
+      </dl></div><div class="section level2">
+      <h2 id="differential-compartment-utilities">Differential compartment utilities<a class="anchor" aria-label="anchor" href="#differential-compartment-utilities"></a></h2>
+
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="compute_mahalanobis.html">compute_mahalanobis()</a></code>
+
+        </dt>
+        <dd>Get the Mahalanobis distances for the compartment scores</dd>
+
+        <dt>
+
+          <code><a href="dc_bins.html">dc_bins()</a></code>
+
+        </dt>
+        <dd>Get bins with significant Mahalanobis distances</dd>
+
+        <dt>
+
+          <code><a href="get_dc.html">get_dc()</a></code>
+
+        </dt>
+        <dd>Compute differential compartments based on Mahalanobis distance</dd>
+
+        <dt>
+
+          <code><a href="plot_dc.html">plot_dc()</a></code>
+
+        </dt>
+        <dd>Plot differential compartments based on Mahalanobis distance</dd>
       </dl></div><div class="section level2">
       <h2 id="correlation-matrix">Correlation matrix<a class="anchor" aria-label="anchor" href="#correlation-matrix"></a></h2>
 
@@ -306,6 +385,13 @@
 
         </dt>
         <dd>Wrapper to denoise a correlation matrix using a Random Matrix Theory approach</dd>
+
+        <dt>
+
+          <code><a href="denoiseCorMatrix.html">denoiseCorMatrix()</a></code>
+
+        </dt>
+        <dd>Denoising of Covariance matrix using Random Matrix Theory</dd>
       </dl></div><div class="section level2">
       <h2 id="data-transformation">Data transformation<a class="anchor" aria-label="anchor" href="#data-transformation"></a></h2>
 
@@ -594,14 +680,14 @@
 
       <dl><dt>
 
-          <code><a href="plot.compartmap-colon-colon-CompartmentCall.html">plot(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
+          <code><a href="plot.compartmap-CompartmentCall.html">plot(<i>&lt;compartmap::CompartmentCall&gt;</i>)</a></code>
 
         </dt>
         <dd>Plot singular values of a <code>CompartmentCall</code> object</dd>
 
         <dt>
 
-          <code><a href="plot.compartmap-colon-colon-MultiCompartmapCall.html">plot(<i>&lt;compartmap::MultiCompartmapCall&gt;</i>)</a></code>
+          <code><a href="plot.compartmap-MultiCompartmapCall.html">plot(<i>&lt;compartmap::MultiCompartmapCall&gt;</i>)</a></code>
 
         </dt>
         <dd>Plot singular values from a <code>MultiCompartmapCall</code> object</dd>
@@ -619,6 +705,13 @@
 
         </dt>
         <dd>Plot a denoised correlation matrix</dd>
+
+        <dt>
+
+          <code><a href="plot_dc.html">plot_dc()</a></code>
+
+        </dt>
+        <dd>Plot differential compartments based on Mahalanobis distance</dd>
       </dl></div><div class="section level2">
       <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
 
@@ -682,34 +775,6 @@
 
         <dt>
 
-          <code><a href="hg19.gr.html">hg19.gr</a></code>
-
-        </dt>
-        <dd>hg19 seqlengths as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="hg19.tx.gr.html">hg19.tx.gr</a></code>
-
-        </dt>
-        <dd>hg19 genes as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="hg38.gr.html">hg38.gr</a></code>
-
-        </dt>
-        <dd>hg38 seqlengths as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="hg38.tx.gr.html">hg38.tx.gr</a></code>
-
-        </dt>
-        <dd>hg38 genes as a GRanges object</dd>
-
-        <dt>
-
           <code><a href="k562_scatac_chr14.html">k562_scatac_chr14</a></code>
 
         </dt>
@@ -731,66 +796,31 @@
 
         <dt>
 
-          <code><a href="mm10.gr.html">mm10.gr</a></code>
-
-        </dt>
-        <dd>mm10 seqlengths as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="mm10.tx.gr.html">mm10.tx.gr</a></code>
-
-        </dt>
-        <dd>mm10 genes as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="mm9.gr.html">mm9.gr</a></code>
-
-        </dt>
-        <dd>mm9 seqlengths as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="mm9.tx.gr.html">mm9.tx.gr</a></code>
-
-        </dt>
-        <dd>mm9 genes as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="openSeas.hg19.html">openSeas.hg19</a></code>
-
-        </dt>
-        <dd>hg19 open sea CpG as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="openSeas.hg38.html">openSeas.hg38</a></code>
-
-        </dt>
-        <dd>hg38 open sea CpG as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="openSeas.mm10.html">openSeas.mm10</a></code>
-
-        </dt>
-        <dd>mm10 open sea CpG as a GRanges object</dd>
-
-        <dt>
-
-          <code><a href="openSeas.mm9.html">openSeas.mm9</a></code>
-
-        </dt>
-        <dd>mm9 open sea CpG as a GRanges object</dd>
-
-        <dt>
-
           <code><a href="ss3_umi_sce.html">ss3_umi_sce</a></code>
 
         </dt>
         <dd>Example SMART-seq3 scRNA-seq data for compartmap</dd>
+
+        <dt>
+
+          <code><a href="genes.html">hg38.tx.gr</a></code> <code><a href="genes.html">hg19.tx.gr</a></code> <code><a href="genes.html">mm9.tx.gr</a></code> <code><a href="genes.html">mm10.tx.gr</a></code>
+
+        </dt>
+        <dd>Human and mouse genes as GRanges objects</dd>
+
+        <dt>
+
+          <code><a href="openSeas.html">openSeas.hg38</a></code> <code><a href="openSeas.html">openSeas.hg19</a></code> <code><a href="openSeas.html">openSeas.mm9</a></code> <code><a href="openSeas.html">openSeas.mm10</a></code>
+
+        </dt>
+        <dd>Human and mouse open sea CpGs as GRanges objects</dd>
+
+        <dt>
+
+          <code><a href="seqlengths.html">hg38.gr</a></code> <code><a href="seqlengths.html">hg19.gr</a></code> <code><a href="seqlengths.html">mm9.gr</a></code> <code><a href="seqlengths.html">mm10.gr</a></code>
+
+        </dt>
+        <dd>Human and mouse seqlengths as GRanges objects</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -801,7 +831,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

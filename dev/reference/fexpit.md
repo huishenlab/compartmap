@@ -27,14 +27,14 @@ fexpit(x, sqz = 0.000001)
 ``` r
 x <- rnorm(n = 1000)
 summary(x)
-#>      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-#> -3.583908 -0.705677 -0.006277 -0.029761  0.578246  3.273838 
+#>     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+#> -3.38866 -0.72615 -0.03265 -0.04192  0.62820  2.97110 
 
 sqz <- 1 / (10**6)
 p <- fexpit(x, sqz = sqz)
 summary(p)
 #>    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-#> 0.02702 0.33055 0.49843 0.49349 0.64066 0.96352 
+#> 0.03265 0.32604 0.49184 0.49080 0.65208 0.95125 
 
 all((abs(x - flogit(p)) / x) < sqz)
 #> [1] TRUE

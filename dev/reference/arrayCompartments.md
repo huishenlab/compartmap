@@ -18,6 +18,7 @@ arrayCompartments(
   array.type = c("hm450", "EPIC"),
   genome = c("hg19", "hg38", "mm9", "mm10"),
   other = NULL,
+  smooth = TRUE,
   boot.parallel = TRUE,
   BPPARAM = bpparam()
 )
@@ -68,6 +69,10 @@ arrayCompartments(
 - other:
 
   Another arbitrary genome to compute compartments on
+
+- smooth:
+
+  Whether to smooth the singular vector
 
 - boot.parallel:
 
@@ -184,6 +189,6 @@ if (requireNamespace("minfi", quietly = TRUE)) {
 #> Done cluster 1245 
 #> Done cluster 1845 
 #> Done cluster 2814 
-#> INFO [2026-03-11 19:32:51] Computing group level compartments
-#> INFO [2026-03-11 19:32:51] 
+#> INFO [2026-08-26 17:14:14] Computing group level compartments
+#> INFO [2026-08-26 17:14:14] 
 ```

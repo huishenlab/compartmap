@@ -27,8 +27,8 @@ bootstrapCompartments(
 
 - obj:
 
-  List object of computed compartments for a sample with 'pc' and 'gr'
-  as elements
+  List object of computed compartments for a sample with 'cscore' and
+  'gr' as elements
 
 - original.obj:
 

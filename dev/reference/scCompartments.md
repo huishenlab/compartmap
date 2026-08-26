@@ -15,6 +15,7 @@ scCompartments(
   num.bootstraps = 100,
   genome = c("hg19", "hg38", "mm9", "mm10"),
   assay = c("atac", "rna"),
+  smooth = TRUE,
   boot.parallel = FALSE,
   BPPARAM = bpparam()
 )
@@ -57,6 +58,10 @@ scCompartments(
 - assay:
 
   What type of single-cell assay is the input data ("atac" or "rna")
+
+- smooth:
+
+  Whether to smooth the singular vector
 
 - boot.parallel:
 
@@ -156,6 +161,6 @@ sc_compartments <- scCompartments(
   genome = "hg19",
   BPPARAM = BiocParallel::SerialParam()
 )
-#> INFO [2026-03-11 19:33:30] Computing group level compartments
-#> INFO [2026-03-11 19:33:30] 
+#> INFO [2026-08-26 17:14:52] Computing group level compartments
+#> INFO [2026-08-26 17:14:52] 
 ```

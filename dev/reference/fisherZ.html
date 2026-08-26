@@ -5,7 +5,7 @@
       fontURL: "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/output/chtml/fonts/woff-v2"
     }
   };
-</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Fisher's Z transformation — fisherZ"><meta name="description" content="fisherZ returns (squeezed) Fisher's Z transformed Pearson's r"><meta property="og:description" content="fisherZ returns (squeezed) Fisher's Z transformed Pearson's r"><meta name="robots" content="noindex"></head><body>
+</script><script src="../lightswitch.js"></script><script src="../deps/jquery-3.6.1/jquery-3.6.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"><link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"><script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet"><meta property="og:title" content="Fisher's Z transformation — fisherZ"><meta name="description" content="fisherZ returns (squeezed) Fisher's Z transformed Pearson's r"><meta property="og:description" content="fisherZ returns (squeezed) Fisher's Z transformed Pearson's r"><meta name="robots" content="noindex"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
@@ -74,23 +74,23 @@
 <span class="r-in"><span><span class="co">#Generate a random binary (-1, 1) matrix</span></span></span>
 <span class="r-in"><span><span class="op">(</span><span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fl">25</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      [,1] [,2] [,3] [,4] [,5]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    1   -1   -1    1   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]    1    1    1   -1   -1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [2,]   -1    1   -1    1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -1    1   -1    1    1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]   -1   -1   -1   -1   -1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]   -1    1    1    1   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,]   -1   -1    1    1   -1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]    1   -1    1    1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]    1   -1   -1   -1   -1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Correct matrix diag</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">mat</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">#Transform</span></span></span>
 <span class="r-in"><span><span class="fu">fisherZ</span><span class="op">(</span><span class="va">mat</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]      [,3]     [,4]      [,5]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  7.254329 -7.254329 -7.254329 7.254329 -7.254329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -7.254329  7.254329 -7.254329 7.254329  7.254329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -7.254329  7.254329  7.254329 7.254329  7.254329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [4,] -7.254329 -7.254329 -7.254329 7.254329 -7.254329</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [5,] -7.254329  7.254329  7.254329 7.254329  7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           [,1]      [,2]      [,3]      [,4]      [,5]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1,]  7.254329  7.254329  7.254329 -7.254329 -7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [2,] -7.254329  7.254329 -7.254329  7.254329  7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [3,] -7.254329 -7.254329  7.254329  7.254329 -7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [4,]  7.254329 -7.254329  7.254329  7.254329  7.254329</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5,]  7.254329 -7.254329 -7.254329 -7.254329  7.254329</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -102,7 +102,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

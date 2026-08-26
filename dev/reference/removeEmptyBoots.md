@@ -14,7 +14,7 @@ removeEmptyBoots(obj)
 
 - obj:
 
-  Input list object with elements 'pc' and 'gr'
+  Input list object with elements 'cscore' and 'gr'
 
 ## Value
 

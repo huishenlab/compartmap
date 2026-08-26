@@ -11,6 +11,6 @@ x - y
 
 ## Arguments
 
-- x, :
+- x, y:
 
-  y CompartmentCall objects to compare
+  CompartmentCall objects to compare

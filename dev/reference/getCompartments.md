@@ -15,6 +15,7 @@ getCompartments(
   num.bootstraps,
   genome,
   assay,
+  smooth = smooth,
   boot.parallel,
   bpparams
 )

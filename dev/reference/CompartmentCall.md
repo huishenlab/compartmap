@@ -8,9 +8,9 @@ which `CompartmapCall()` and `MultiCompartmapCall()` are derived.
 ## Usage
 
 ``` r
-CompartmentCall(pc, res, gr, name = NULL, unitarized = FALSE)
+CompartmentCall(cscore, res, gr, assay, name = NULL, unitarized = FALSE)
 
-CompartmapCall(gr, res, name = NULL, unitarized = FALSE)
+CompartmapCall(gr, res, assay, name = NULL, unitarized = FALSE)
 
 MultiCompartmapCall(
   ccalls,
@@ -20,12 +20,20 @@ MultiCompartmapCall(
   filter_threshold = 0.02
 )
 
-scCompartmapCall(re, res, name, unitarized = FALSE, unitarize = FALSE)
+scCompartmapCall(
+  re,
+  res,
+  name,
+  assay = c("rna", "atac", "array"),
+  unitarized = FALSE,
+  unitarize = FALSE,
+  BPPARAM = bpparam()
+)
 ```
 
 ## Arguments
 
-- pc:
+- cscore:
 
   The singular values from a compartment call
 
@@ -36,7 +44,11 @@ scCompartmapCall(re, res, name, unitarized = FALSE, unitarize = FALSE)
 - gr:
 
   The GRanges of the bins or the output of `scCompartments` or
-  `getArrayCompartments` containing the 'pc' column
+  `getArrayCompartments` containing the 'cscore' column
+
+- assay:
+
+  What assay is this from: RNA, ATAC, methylation, Hi-C?
 
 - name:
 
@@ -65,6 +77,10 @@ scCompartmapCall(re, res, name, unitarized = FALSE, unitarize = FALSE)
 - re:
 
   A `RaggedExperiment` of single-cell compartment calls
+
+- BPPARAM:
+
+  BiocParallelParam for parallelizing computation
 
 ## Details
 
@@ -115,13 +131,12 @@ classes like `GRanges` and `SummarizedExperiment`.
 - `df`,
   [`DF()`](https://huishenlab.github.io/compartmap/dev/reference/DF.md):
   a `data.table` of bin indices in column `n` and compartment call
-  singular values in column `pc`. For `MultiCompartmapCall` and
+  singular values in column `cscore`. For `MultiCompartmapCall` and
   `scCompartmapCall` objects, this is in a tidy format, with an
   additional `name` column.
 
-- `res`,
-  [`resolution()`](https://huishenlab.github.io/compartmap/dev/reference/resolution.md):
-  The genomic resolution at which the compartments were called
+- `res`, `resolution()`: The genomic resolution at which the
+  compartments were called
 
 - `unitarized`,
   [`is_unitarized()`](https://huishenlab.github.io/compartmap/dev/reference/is_unitarized.md):

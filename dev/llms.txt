@@ -97,6 +97,16 @@ submitted through GitHub issues.
 
   Get the `@df` slot from a CompartmentCall object.
 
+- [`dim()`](https://huishenlab.github.io/compartmap/dev/reference/dim.md)
+  :
+
+  Get dimensions of `CompartmapCall` matrix
+
+- [`get_assay()`](https://huishenlab.github.io/compartmap/dev/reference/get_assay.md)
+  :
+
+  Get the assay of the `CompartmentCall`
+
 - [`get_filter_threshold()`](https://huishenlab.github.io/compartmap/dev/reference/get_filter_threshold.md)
   : Check the threshold at which an object's calls were filtered,
   returning 0 if not filtered
@@ -106,10 +116,24 @@ submitted through GitHub issues.
 
   Get the name of the `CompartmentCall` object
 
+- [`get_resolution()`](https://huishenlab.github.io/compartmap/dev/reference/get_resolution.md)
+  :
+
+  Get the resolution of the `CompartmentCall`
+
+- [`granges()`](https://huishenlab.github.io/compartmap/dev/reference/granges-compartmap-CompartmentCall-method.md)
+  :
+
+  Get GRanges of the `CompartmentCall`
+
 - [`is_filtered()`](https://huishenlab.github.io/compartmap/dev/reference/is_filtered.md)
   :
 
   Check if the `CompartmentCall` was filtered.
+
+- [`is_open()`](https://huishenlab.github.io/compartmap/dev/reference/is_open.md)
+  [`is_closed()`](https://huishenlab.github.io/compartmap/dev/reference/is_open.md)
+  : Find indices of open and closed compartments
 
 - [`is_unitarized()`](https://huishenlab.github.io/compartmap/dev/reference/is_unitarized.md)
   :
@@ -121,10 +145,20 @@ submitted through GitHub issues.
 
   Get the data matrix from a `MultiCompartmapCall` or `scCompartmapCall`
 
-- [`resolution()`](https://huishenlab.github.io/compartmap/dev/reference/resolution.md)
+- [`names()`](https://huishenlab.github.io/compartmap/dev/reference/names-compartmap-MultiCompartmapCall-method.md)
   :
 
-  Get the resolution of the `CompartmentCall`
+  Get column names of `MultiCompartmapCall` matrix
+
+- [`seqinfo()`](https://huishenlab.github.io/compartmap/dev/reference/seqinfo-compartmap-CompartmentCall-method.md)
+  :
+
+  Get Seqinfo of the `CompartmentCall`
+
+- [`seqlevels()`](https://huishenlab.github.io/compartmap/dev/reference/seqlevels-compartmap-CompartmentCall-method.md)
+  :
+
+  Get 'seqlevels' of the `CompartmentCall`
 
 ### Methods
 
@@ -134,15 +168,10 @@ submitted through GitHub issues.
   Fill missing genomic bins in `CompartmentCalls` using a reference
   GRanges
 
-- [`` `[`( ``*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/sub-.compartmap-colon-colon-CompartmentCall.md)
+- [`findOverlaps()`](https://huishenlab.github.io/compartmap/dev/reference/findOverlaps-compartmap-CompartmentCall-compartmap-CompartmentCall-method.md)
   :
 
-  Subset rows of a `CompartmentCall` object
-
-- [`` `[`( ``*`<compartmap::MultiCompartmapCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/sub-.compartmap-colon-colon-MultiCompartmapCall.md)
-  :
-
-  Subset `MultiCompartmapCall` object
+  Find overlaps between `CompartmentCall` objects
 
 - [`subset_chr()`](https://huishenlab.github.io/compartmap/dev/reference/subset_chr.md)
   :
@@ -174,6 +203,9 @@ submitted through GitHub issues.
 
   Flip the singular values signs in a `CompartmentCall`
 
+- [`get_md()`](https://huishenlab.github.io/compartmap/dev/reference/get_md.md)
+  : Compute Mahalanobis distances and pvalues - unfiltered
+
 - [`unitarize()`](https://huishenlab.github.io/compartmap/dev/reference/unitarize.md)
   :
 
@@ -188,11 +220,19 @@ submitted through GitHub issues.
 - [`fixCompartments()`](https://huishenlab.github.io/compartmap/dev/reference/fixCompartments.md)
   : Invert, or "fix", compartments that have a minimum confidence score
   (1-min.conf)
-- [`extractOpenClosed()`](https://huishenlab.github.io/compartmap/dev/reference/extractOpenClosed.md)
-  : Get the open and closed compartment calls based on sign of singular
-  values
 - [`getABSignal()`](https://huishenlab.github.io/compartmap/dev/reference/getABSignal.md)
   : Calculate Pearson correlations of smoothed eigenvectors
+
+## Differential compartment utilities
+
+- [`compute_mahalanobis()`](https://huishenlab.github.io/compartmap/dev/reference/compute_mahalanobis.md)
+  : Get the Mahalanobis distances for the compartment scores
+- [`dc_bins()`](https://huishenlab.github.io/compartmap/dev/reference/dc_bins.md)
+  : Get bins with significant Mahalanobis distances
+- [`get_dc()`](https://huishenlab.github.io/compartmap/dev/reference/get_dc.md)
+  : Compute differential compartments based on Mahalanobis distance
+- [`plot_dc()`](https://huishenlab.github.io/compartmap/dev/reference/plot_dc.md)
+  : Plot differential compartments based on Mahalanobis distance
 
 ## Correlation matrix
 
@@ -203,6 +243,8 @@ submitted through GitHub issues.
 - [`getDenoisedCorMatrix()`](https://huishenlab.github.io/compartmap/dev/reference/getDenoisedMatrix.md)
   : Wrapper to denoise a correlation matrix using a Random Matrix Theory
   approach
+- [`denoiseCorMatrix()`](https://huishenlab.github.io/compartmap/dev/reference/denoiseCorMatrix.md)
+  : Denoising of Covariance matrix using Random Matrix Theory
 
 ## Data transformation
 
@@ -295,12 +337,12 @@ submitted through GitHub issues.
 
 ## Plotting
 
-- [`plot(`*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-colon-colon-CompartmentCall.md)
+- [`plot(`*`<compartmap::CompartmentCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-CompartmentCall.md)
   :
 
   Plot singular values of a `CompartmentCall` object
 
-- [`plot(`*`<compartmap::MultiCompartmapCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-colon-colon-MultiCompartmapCall.md)
+- [`plot(`*`<compartmap::MultiCompartmapCall>`*`)`](https://huishenlab.github.io/compartmap/dev/reference/plot.compartmap-MultiCompartmapCall.md)
   :
 
   Plot singular values from a `MultiCompartmapCall` object
@@ -310,6 +352,9 @@ submitted through GitHub issues.
 
 - [`plotCorMatrix()`](https://huishenlab.github.io/compartmap/dev/reference/plotCorMatrix.md)
   : Plot a denoised correlation matrix
+
+- [`plot_dc()`](https://huishenlab.github.io/compartmap/dev/reference/plot_dc.md)
+  : Plot differential compartments based on Mahalanobis distance
 
 ## Helpers
 
@@ -338,38 +383,29 @@ submitted through GitHub issues.
 
 - [`array_data_chr14`](https://huishenlab.github.io/compartmap/dev/reference/array.data.chr14.md)
   : Example Illumina 450k methylation array data for compartmap
-- [`hg19.gr`](https://huishenlab.github.io/compartmap/dev/reference/hg19.gr.md)
-  : hg19 seqlengths as a GRanges object
-- [`hg19.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/hg19.tx.gr.md)
-  : hg19 genes as a GRanges object
-- [`hg38.gr`](https://huishenlab.github.io/compartmap/dev/reference/hg38.gr.md)
-  : hg38 seqlengths as a GRanges object
-- [`hg38.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/hg38.tx.gr.md)
-  : hg38 genes as a GRanges object
 - [`k562_scatac_chr14`](https://huishenlab.github.io/compartmap/dev/reference/k562_scatac_chr14.md)
   : Example scATAC-seq data for compartmap
 - [`k562_scrna_chr14`](https://huishenlab.github.io/compartmap/dev/reference/k562_scrna_chr14.md)
   : Example scRNA-seq data for compartmap
 - [`k562_scrna_raw`](https://huishenlab.github.io/compartmap/dev/reference/k562_scrna_se_chr14.md)
   : Example scRNA-seq data for compartmap
-- [`mm10.gr`](https://huishenlab.github.io/compartmap/dev/reference/mm10.gr.md)
-  : mm10 seqlengths as a GRanges object
-- [`mm10.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/mm10.tx.gr.md)
-  : mm10 genes as a GRanges object
-- [`mm9.gr`](https://huishenlab.github.io/compartmap/dev/reference/mm9.gr.md)
-  : mm9 seqlengths as a GRanges object
-- [`mm9.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/mm9.tx.gr.md)
-  : mm9 genes as a GRanges object
-- [`openSeas.hg19`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.hg19.md)
-  : hg19 open sea CpG as a GRanges object
-- [`openSeas.hg38`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.hg38.md)
-  : hg38 open sea CpG as a GRanges object
-- [`openSeas.mm10`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.mm10.md)
-  : mm10 open sea CpG as a GRanges object
-- [`openSeas.mm9`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.mm9.md)
-  : mm9 open sea CpG as a GRanges object
 - [`ss3_umi_sce`](https://huishenlab.github.io/compartmap/dev/reference/ss3_umi_sce.md)
   : Example SMART-seq3 scRNA-seq data for compartmap
+- [`hg38.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/genes.md)
+  [`hg19.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/genes.md)
+  [`mm9.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/genes.md)
+  [`mm10.tx.gr`](https://huishenlab.github.io/compartmap/dev/reference/genes.md)
+  : Human and mouse genes as GRanges objects
+- [`openSeas.hg38`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.md)
+  [`openSeas.hg19`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.md)
+  [`openSeas.mm9`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.md)
+  [`openSeas.mm10`](https://huishenlab.github.io/compartmap/dev/reference/openSeas.md)
+  : Human and mouse open sea CpGs as GRanges objects
+- [`hg38.gr`](https://huishenlab.github.io/compartmap/dev/reference/seqlengths.md)
+  [`hg19.gr`](https://huishenlab.github.io/compartmap/dev/reference/seqlengths.md)
+  [`mm9.gr`](https://huishenlab.github.io/compartmap/dev/reference/seqlengths.md)
+  [`mm10.gr`](https://huishenlab.github.io/compartmap/dev/reference/seqlengths.md)
+  : Human and mouse seqlengths as GRanges objects
 
 # Articles
 

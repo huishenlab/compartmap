@@ -9,7 +9,8 @@ getABSignal(
   x,
   squeeze = FALSE,
   assay = c("rna", "atac", "array"),
-  genome = c("hg19", "hg38", "mm9", "mm10")
+  genome = c("hg19", "hg38", "mm9", "mm10"),
+  smooth = TRUE
 )
 ```
 
@@ -30,6 +31,10 @@ getABSignal(
 - genome:
 
   The genome to use for gene-density-based sign correction
+
+- smooth:
+
+  Whether to smooth the singular vector
 
 ## Value
 
